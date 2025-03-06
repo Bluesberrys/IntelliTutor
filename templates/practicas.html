@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prácticas</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('index') }}">Inicio</a></li>
+            <li><a href="{{ url_for('practicas') }}">Prácticas</a></li>
+            <li><a href="{{ url_for('evaluacion') }}">Evaluación</a></li>
+        </ul>
+    </nav>
+    <form action="{{ url_for('practicas') }}" method="POST">
+        <!-- Otros campos del formulario -->
+        <label for="titulo">Título:</label>
+        <input type="text" id="titulo" name="titulo" required>
+        <br>
+        <label for="materia_id">Materia:</label>
+        <select id="materia_id" name="materia_id" required>
+            {% for materia in materias %}
+                <option value="{{ materia.id }}">{{ materia.nombre }}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <label for="nivel_id">Nivel:</label>
+        <select id="nivel_id" name="nivel_id" required>
+            {% for nivel in niveles %}
+                <option value="{{ nivel.id }}">{{ nivel.nombre }}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <label for="autor_id">Autor:</label>
+        <select id="autor_id" name="autor_id" required>
+            {% for usuario in usuarios %}
+                <option value="{{ usuario.id }}">{{ usuario.nombre }}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <label for="objetivo">Objetivo:</label>
+        <textarea id="objetivo" name="objetivo" required></textarea>
+        <br>
+        <label for="fecha_entrega">Fecha de Entrega:</label>
+        <input type="date" id="fecha_entrega" name="fecha_entrega" required>
+        <br>
+        <label for="tiempo_estimado">Tiempo Estimado (horas):</label>
+        <input type="number" id="tiempo_estimado" name="tiempo_estimado" required>
+        <br>
+        <label for="concepto_id">Concepto:</label>
+        <select id="concepto_id" name="concepto_id" required>
+            {% for concepto in conceptos %}
+                <option value="{{ concepto.id }}">{{ concepto.nombre }}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <label for="herramienta_id">Herramienta:</label>
+        <select id="herramienta_id" name="herramienta_id" required>
+            {% for herramienta in herramientas %}
+                <option value="{{ herramienta.id }}">{{ herramienta.nombre }}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <button type="submit">Agregar Práctica</button>
+    </form>
+    <h2>Lista de Prácticas</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Título</th>
+                <th>Materia</th>
+                <th>Fecha de Entrega</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for practica in practicas %}
+                <tr>
+                    <td>{{ practica.id }}</td>
+                    <td><a href="{{ url_for('ver_practica', practica_id=practica.id) }}">{{ practica.titulo }}</a></td>
+                    <td>{{ practica.materia }}</td>
+                    <td>{{ practica.fecha_entrega.strftime('%Y-%m-%d') }}</td>
+                    <td>{{ practica.estado }}</td>
+                    <td>
+                        <form action="{{ url_for('eliminar_practica', practica_id=practica.id) }}" method="POST" style="display:inline;">
+                            <button type="submit">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

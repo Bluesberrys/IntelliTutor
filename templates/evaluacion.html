@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluación de Prácticas</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('index') }}">Inicio</a></li>
+            <li><a href="{{ url_for('usuarios') }}">Evaluación</a></li>
+            <li><a href="{{ url_for('practicas') }}">Prácticas</a></li>
+        </ul>
+    </nav>
+    
+    <h2>Evaluaciones</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Estudiante</th>
+                <th>Práctica</th>
+                <th>Fecha de Evaluación</th>
+                <th>Estado</th>
+                <th>Comentario</th>
+                <th>Calificación</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for evaluacion in evaluaciones %}
+                <tr>
+                    <td>{{ evaluacion.id }}</td>
+                    <td>{{ evaluacion.estudiante }}</td>
+                    <td>{{ evaluacion.practica }}</td>
+                    <td>{{ evaluacion.fecha_evaluacion.strftime('%Y-%m-%d') if evaluacion.fecha_evaluacion else '' }}</td>
+                    <td>{{ evaluacion.estado }}</td>
+                    <td>{{ evaluacion.comentarios }}</td>
+                    <td>{{ evaluacion.calificacion }}</td>
+                    <td>
+                        <form action="{{ url_for('evaluacion') }}" method="POST">
+                            <input type="hidden" name="evaluacion_id" value="{{ evaluacion.id }}">
+                            <textarea name="comentario" placeholder="Agregar comentario">{{ evaluacion.comentarios }}</textarea>
+                            <input type="number" name="calificacion" placeholder="Calificación" value="{{ evaluacion.calificacion }}">
+                            <button type="submit">Guardar</button>
+                        </form>
+                        <a href="{{ url_for('eliminar_evaluacion', evaluacion_id=evaluacion.id) }}">Eliminar</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

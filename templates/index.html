@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Generación de Prácticas</title>
+    <script src="https://kit.fontawesome.com/71a7ab61a9.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div>
+        <div class="contenedor">
+            <img src="{{ url_for('static', filename='img/fondo_improvisado5.jpeg') }}" alt="Fondo UNAM">
+            <section class="info_inicio">
+                <h1>Bienvenidos</h1>
+                <br>
+                <h2>Descubre una nueva forma de estudiar en UNAM INFO, donde la inteligencia artificial y la innovación se unen para brindarte una experiencia educativa única. Aprovecha al máximo nuestras herramientas interactivas y contenido especializado.</h2>
+                <button id="inicio-btn"></button>
+            </section>
+        </div>
+        <div class="contenedor_medio">
+            <h1 class="titulo_medio">Inicio</h1>
+            <div class="cuadro">
+                <img src="{{ url_for('static', filename='img/programador.avif') }}" alt="Imagen 1">
+                <h1>Cuadro 1</h1>
+                <p>Aqui tendras la posibilidad de modificar tu perfil para reflejar tus intereses academicos.</p>
+                <a class="link" href="{{ url_for('usuarios') }}">Usuario</a>
+            </div>
+            <div class="cuadro">
+                <img src="{{ url_for('static', filename='img/practicas.jpeg') }}" alt="Imagen 2">
+                <h1>Cuadro 2</h1>
+                <p>Aqui puedes ingresar tus practicas y subirlas de manera facil y eficiente.</p>
+                <a class="link" href="{{ url_for('practicas') }}">Prácticas</a>
+            </div>
+            <div class="cuadro">
+                <img src="{{ url_for('static', filename='img/evaluacion.webp') }}" alt="Imagen 3">
+                <h1>Cuadro 3</h1>
+                <p>Aqui, el usuario podra visualizar el porcentaje de calificación de cada práctica, lo que permite una evaluación clara y objetiva de su rendimiento.</p>
+                <a class="link" href="{{ url_for('evaluacion') }}">Evaluación</a>
+            </div>
+            <div class="cuadro">
+                <img src="{{ url_for('static', filename='img/ayuda.jpg') }}" alt="Imagen 4">
+                <h1>Cuadro 4</h1>
+                <p>Si necesitas ayuda adicional, no dudes en contactarnos.</p>
+                <a class="link" href="">Sobre Nosotros</a>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.getElementById('inicio-btn').addEventListener('click', function() {
+            document.querySelector('.contenedor_medio').scrollIntoView({ behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>
+

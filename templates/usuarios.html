@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Usuarios</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('index') }}">Inicio</a></li>
+            <li><a href="{{ url_for('practicas') }}">Prácticas</a></li>
+            <li><a href="{{ url_for('evaluacion') }}">Evaluación</a></li>
+        </ul>
+    </nav>
+    
+    <h2>Agregar Usuario</h2>
+    <form action="{{ url_for('usuarios') }}" method="POST">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" required>
+        <br>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        <br>
+        <label for="rol">Rol:</label>
+        <select id="rol" name="rol" required>
+            <option value="estudiante">Estudiante</option>
+            <option value="profesor">Profesor</option>
+        </select>
+        <br>
+        <button type="submit">Agregar Usuario</button>
+    </form>
+    
+    <h2>Lista de Usuarios</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Rol</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for usuario in usuarios %}
+                <tr>
+                    <td>{{ usuario.id }}</td>
+                    <td>{{ usuario.nombre }}</td>
+                    <td>{{ usuario.email }}</td>
+                    <td>{{ usuario.rol }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
