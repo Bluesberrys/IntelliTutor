@@ -1,4 +1,4 @@
 Flask==2.0.1
-mysql.connector
-datetime
+mysql-connector-python
+cachetools
 scikit-learn
