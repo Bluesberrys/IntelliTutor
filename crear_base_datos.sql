@@ -1,5 +1,7 @@
+-- Active: 1741277438732@@127.0.0.1@3306@generador_practicas
 -- Crear base de datos
 CREATE DATABASE IF NOT EXISTS generador_practicas;
+
 USE generador_practicas;
 
 -- Tabla de usuarios
@@ -11,7 +13,6 @@ CREATE TABLE IF NOT EXISTS usuarios (
     rol ENUM('estudiante', 'profesor', 'admin') NOT NULL,
     fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP
 );
-
 -- Tabla de materias
 CREATE TABLE IF NOT EXISTS materias (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -237,23 +238,20 @@ INSERT INTO herramientas (nombre, descripcion, tipo) VALUES
 ('DBeaver', 'Cliente universal de bases de datos', 'Cliente');
 
 -- Completar conceptos para todas las materias
-INSERT INTO conceptos (materia_id, nombre, descripcion) VALUES
 -- Base de datos (continuación)
+INSERT INTO conceptos (materia_id, nombre, descripcion) VALUES
 (1, 'Bases de datos NoSQL', 'Sistemas de bases de datos no relacionales'),
 (1, 'Seguridad en BD', 'Implementación de medidas de seguridad'),
-
 -- Programación
 (2, 'Estructuras de datos', 'Organización y manipulación de datos'),
 (2, 'Algoritmos', 'Diseño y análisis de algoritmos'),
 (2, 'POO', 'Programación Orientada a Objetos'),
 (2, 'Patrones de diseño', 'Soluciones comunes a problemas de diseño'),
-
 -- Machine Learning
 (3, 'Regresión', 'Modelos de regresión y predicción'),
 (3, 'Clasificación', 'Algoritmos de clasificación'),
 (3, 'Clustering', 'Agrupamiento de datos'),
 (3, 'Redes neuronales', 'Deep learning y redes neuronales'),
-
 -- Seguridad Informática
 (4, 'Criptografía', 'Técnicas de cifrado y seguridad'),
 (4, 'Seguridad en redes', 'Protección de redes y comunicaciones'),
