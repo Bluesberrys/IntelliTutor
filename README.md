@@ -21,3 +21,9 @@ from project directory in a terminal run:
 5. ```console
    flask run
    ```
+
+### ES
+## Problemas actuales
+- Practicas se generan pero no se almacenan en bd
+- Funciones faltantes
+   - Agregar actividades manualmente para administradores o profesores

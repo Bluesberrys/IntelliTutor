@@ -10510,3 +10510,28 @@ Traceback (most recent call last):
   File "C:\Users\maxim\Documents\Projects\proyectoWebServicio\venv\Lib\site-packages\flask\templating.py", line 99, in _get_source_fast
     raise TemplateNotFound(template)
 jinja2.exceptions.TemplateNotFound: 500.html
+2025-03-07 15:09:11,334 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-03-07 15:09:11,334 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-03-07 15:09:17,644 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-03-07 15:09:17,644 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-03-07 15:09:17,646 - werkzeug - INFO -  * Restarting with stat
+2025-03-07 15:09:18,674 - werkzeug - WARNING -  * Debugger is active!
+2025-03-07 15:09:18,677 - werkzeug - INFO -  * Debugger PIN: 199-937-759
+2025-03-07 15:11:06,883 - GeneradorPracticas - ERROR - Error al obtener prácticas activas: 1054 (42S22): Unknown column 'estado' in 'where clause'
+2025-03-07 15:11:06,931 - GeneradorPracticas - ERROR - Error al obtener actividades recientes: 1146 (42S02): Table 'generador_practicas.actividades' doesn't exist
+2025-03-07 15:11:06,968 - werkzeug - INFO - 127.0.0.1 - - [07/Mar/2025 15:11:06] "GET / HTTP/1.1" 200 -
+2025-03-07 15:11:07,217 - werkzeug - INFO - 127.0.0.1 - - [07/Mar/2025 15:11:07] "GET /static/styles.css HTTP/1.1" 200 -
+2025-03-07 15:11:07,476 - werkzeug - INFO - 127.0.0.1 - - [07/Mar/2025 15:11:07] "GET /static/img/fondo_improvisado5.jpeg HTTP/1.1" 200 -
+2025-03-07 15:11:07,494 - werkzeug - INFO - 127.0.0.1 - - [07/Mar/2025 15:11:07] "GET /static/img/programador.avif HTTP/1.1" 200 -
+2025-03-07 15:11:07,824 - werkzeug - INFO - 127.0.0.1 - - [07/Mar/2025 15:11:07] "GET /static/img/practicas.jpeg HTTP/1.1" 200 -
+2025-03-07 15:11:07,855 - werkzeug - INFO - 127.0.0.1 - - [07/Mar/2025 15:11:07] "GET /static/img/evaluacion.webp HTTP/1.1" 200 -
+2025-03-07 15:11:08,122 - werkzeug - INFO - 127.0.0.1 - - [07/Mar/2025 15:11:08] "GET /static/img/ayuda.jpg HTTP/1.1" 200 -
+2025-03-07 15:11:09,113 - werkzeug - INFO - 127.0.0.1 - - [07/Mar/2025 15:11:09] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-03-07 15:11:10,702 - werkzeug - INFO - 127.0.0.1 - - [07/Mar/2025 15:11:10] "GET /usuarios HTTP/1.1" 200 -
+2025-03-07 15:11:11,098 - werkzeug - INFO - 127.0.0.1 - - [07/Mar/2025 15:11:11] "[36mGET /static/styles.css HTTP/1.1[0m" 304 -
+2025-03-07 15:11:11,350 - werkzeug - INFO - 127.0.0.1 - - [07/Mar/2025 15:11:11] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-03-07 15:11:49,455 - werkzeug - INFO - 127.0.0.1 - - [07/Mar/2025 15:11:49] "GET /practicas HTTP/1.1" 200 -
+2025-03-07 15:11:49,826 - werkzeug - INFO - 127.0.0.1 - - [07/Mar/2025 15:11:49] "[36mGET /static/styles.css HTTP/1.1[0m" 304 -
+2025-03-07 15:11:50,097 - werkzeug - INFO - 127.0.0.1 - - [07/Mar/2025 15:11:50] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
