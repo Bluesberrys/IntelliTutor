@@ -1,4 +1,3 @@
--- Active: 1741277438732@@127.0.0.1@3306@generador_practicas
 -- Crear base de datos
 CREATE DATABASE IF NOT EXISTS generador_practicas;
 
@@ -63,6 +62,7 @@ CREATE TABLE IF NOT EXISTS practicas (
     objetivo TEXT NOT NULL,
     fecha_entrega DATETIME NOT NULL,
     tiempo_estimado INT NOT NULL,
+    estado ENUM('Pendiente','Completado','Cancelado') NOT NULL DEFAULT 'Pendiente',
     fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (materia_id) REFERENCES materias(id),
     FOREIGN KEY (nivel_id) REFERENCES niveles(id),
@@ -204,6 +204,8 @@ CREATE TABLE IF NOT EXISTS evaluaciones (
     FOREIGN KEY (evaluador_id) REFERENCES usuarios(id)
 );
 
+
+
 -- Insertar usuarios de ejemplo
 INSERT INTO usuarios (nombre, email, password_hash, rol) VALUES
 ('Juan Pérez', 'juan@universidad.edu', 'hash123', 'profesor'),
@@ -258,14 +260,15 @@ INSERT INTO conceptos (materia_id, nombre, descripcion) VALUES
 (4, 'Ethical Hacking', 'Pruebas de penetración'),
 (4, 'Forense digital', 'Análisis forense de sistemas');
 
+-- Insertar una práctica de ejemplo
+INSERT INTO practicas (titulo, materia_id, nivel_id, autor_id, concepto_id, herramienta_id, objetivo, fecha_entrega, tiempo_estimado, estado) VALUES
+('Diseño de Base de Datos E-commerce', 1, 2, 1, 1, 1, 'Diseñar una base de datos normalizada para un sistema de comercio electrónico', 
+ DATE_ADD(CURRENT_TIMESTAMP, INTERVAL 14 DAY), 10, 'Pendiente');
+
 -- Insertar un grupo de ejemplo
 INSERT INTO grupos (nombre, descripcion, practica_id) VALUES
 ('Grupo 1', 'Grupo de práctica de bases de datos', 1);
 
--- Insertar una práctica de ejemplo
-INSERT INTO practicas (titulo, materia_id, nivel_id, autor_id, concepto_id, herramienta_id, objetivo, fecha_entrega, tiempo_estimado) VALUES
-('Diseño de Base de Datos E-commerce', 1, 2, 1, 1, 1, 'Diseñar una base de datos normalizada para un sistema de comercio electrónico', 
- DATE_ADD(CURRENT_TIMESTAMP, INTERVAL 14 DAY), 10);
 
 -- Insertar una rúbrica de ejemplo
 INSERT INTO rubricas (practica_id, criterio, descripcion, puntaje_maximo) VALUES

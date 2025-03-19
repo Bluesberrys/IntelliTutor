@@ -7,6 +7,7 @@ import json
 import os
 
 # Inicializar aplicación Flask
+port = 5000
 app = Flask(__name__)
 app.secret_key = APP_CONFIG["SECRET_KEY"]
 app.config['DEBUG'] = APP_CONFIG["DEBUG"]
@@ -239,6 +240,9 @@ def error_servidor(e):
 if __name__ == '__main__':
     # Crear directorios necesarios
     os.makedirs(APP_CONFIG["UPLOAD_FOLDER"], exist_ok=True)
+
+    # Ruta del servidor
+    print(f"Servidor corriendo en http://localhost:{port}")
     
     # Iniciar aplicación
-    app.run(debug=APP_CONFIG["DEBUG"], host='127.0.0.1', port=5000)
+    app.run(debug=APP_CONFIG["DEBUG"], host='127.0.0.1', port=port)
