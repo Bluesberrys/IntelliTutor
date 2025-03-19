@@ -18,12 +18,19 @@ from project directory in a terminal run:
 4. ```console
    set FLASK_APP=app.py
    ```
-5. ```console
+5. For deployment
+   ```console
    flask run
+   ```
+   or for development
+   ```console
+   python app.py
    ```
 
 ### ES
+
 ## Problemas actuales
-- Practicas se generan pero no se almacenan en bd
+
+- Detalles de diseño de frontend
 - Funciones faltantes
-   - Agregar actividades manualmente para administradores o profesores
+  - Agregar actividades manualmente para administradores o profesores
