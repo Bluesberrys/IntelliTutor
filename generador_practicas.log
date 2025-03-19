@@ -10557,3 +10557,21 @@ jinja2.exceptions.TemplateNotFound: 500.html
 2025-03-19 11:00:07,137 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 11:00:07] "GET /practicas?__debugger__=yes&cmd=resource&f=console.png&s=M3sQFdBZFz28iFy3awbA HTTP/1.1" 200 -
 2025-03-19 11:00:07,488 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 11:00:07] "GET /practicas?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
 2025-03-19 11:00:17,491 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 11:00:17] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-03-19 11:07:50,777 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-03-19 11:07:50,778 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-03-19 11:07:50,781 - werkzeug - INFO -  * Restarting with stat
+2025-03-19 11:07:52,733 - werkzeug - WARNING -  * Debugger is active!
+2025-03-19 11:07:52,735 - werkzeug - INFO -  * Debugger PIN: 183-304-169
+2025-03-19 11:07:52,888 - GeneradorPracticas - ERROR - Error al obtener actividades recientes: 1146 (42S02): Table 'generador_practicas.actividades' doesn't exist
+2025-03-19 11:07:52,898 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 11:07:52] "GET / HTTP/1.1" 200 -
+2025-03-19 11:07:52,999 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 11:07:52] "[36mGET /static/styles.css HTTP/1.1[0m" 304 -
+2025-03-19 11:07:53,262 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 11:07:53] "[36mGET /static/img/fondo_improvisado5.jpeg HTTP/1.1[0m" 304 -
+2025-03-19 11:07:53,264 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 11:07:53] "[36mGET /static/img/programador.avif HTTP/1.1[0m" 304 -
+2025-03-19 11:07:53,579 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 11:07:53] "[36mGET /static/img/practicas.jpeg HTTP/1.1[0m" 304 -
+2025-03-19 11:07:53,605 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 11:07:53] "[36mGET /static/img/evaluacion.webp HTTP/1.1[0m" 304 -
+2025-03-19 11:07:53,843 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 11:07:53] "[36mGET /static/img/ayuda.jpg HTTP/1.1[0m" 304 -
+2025-03-19 11:07:53,892 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 11:07:53] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-03-19 11:07:56,399 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 11:07:56] "GET /practicas HTTP/1.1" 200 -
+2025-03-19 11:07:56,653 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 11:07:56] "[36mGET /static/styles.css HTTP/1.1[0m" 304 -
+2025-03-19 11:07:56,758 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 11:07:56] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
