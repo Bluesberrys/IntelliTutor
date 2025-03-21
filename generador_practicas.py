@@ -579,8 +579,12 @@ class GeneradorPracticasExtendido:
             if cache_key in self.cache:
                 return self.cache[cache_key]
                 
-            query = "SELECT * FROM practicas WHERE id = %s"
-            self.cursor.execute(query, (practica_id,))
+            query = f"""
+                SELECT practicas.*, materias.nombre 
+                FROM practicas 
+                JOIN materias ON practicas.materia_id = materias.id 
+                WHERE practicas.id = {practica_id}"""
+            self.cursor.execute(query)
             result = self.cursor.fetchone()
             
             if result:
@@ -588,6 +592,7 @@ class GeneradorPracticasExtendido:
                     id=result['id'],
                     titulo=result['titulo'],
                     materia_id=result['materia_id'],
+                    nombre_materia=result['nombre'],
                     nivel_id=result['nivel_id'],
                     autor_id=result['autor_id'],
                     objetivo=result['objetivo'],
