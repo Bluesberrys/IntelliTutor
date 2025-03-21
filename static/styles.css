@@ -42,8 +42,10 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 20px;
   height: 80px;
   width: 100%;
+  padding: 0 20px;
   border-bottom: 2px solid var(--gold-unam);
 }
 
@@ -63,6 +65,62 @@ header .btn {
   font-size: 1.5rem;
   &:hover {
     background-color: var(--azul-unam-d2);
+    transition: background-color 0.3s ease;
+  }
+}
+
+.logo a {
+  text-decoration: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  color: var(--white);
+  &:hover {
+    color: var(--gold-unam);
+    transition: color 0.3s ease;
+  }
+}
+
+.logo img {
+  width: 80px;
+  padding: 10px;
+}
+
+.user-menu {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  align-items: center;
+  color: var(--white);
+}
+
+#regis {
+  background-color: transparent;
+  color: var(--white);
+  border: 2px solid var(--gold-unam);
+  padding: 10px 20px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 1.5rem;
+  &:hover {
+    background-color: var(--gold-unam-d1);
+    color: var(--black);
+    border: 2px solid var(--gold-unam-d1);
+    transition: all 0.3s ease;
+  }
+}
+
+#login {
+  background-color: var(--gold-unam);
+  color: var(--black);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 1.5rem;
+  &:hover {
+    background-color: var(--gold-unam-d1);
     transition: background-color 0.3s ease;
   }
 }
