@@ -13930,3 +13930,17 @@ jinja2.exceptions.TemplateNotFound: 500.html
 2025-03-20 21:31:43,445 - werkzeug - INFO -  * Debugger PIN: 183-304-169
 2025-03-20 21:31:48,793 - werkzeug - INFO -  * Detected change in 'D:\\Max\\Proyectos\\proyectoWebServicio\\app.py', reloading
 2025-03-20 21:31:48,961 - werkzeug - INFO -  * Restarting with stat
+2025-03-20 21:31:50,557 - werkzeug - WARNING -  * Debugger is active!
+2025-03-20 21:31:50,559 - werkzeug - INFO -  * Debugger PIN: 183-304-169
+2025-03-20 21:32:00,321 - GeneradorPracticas - ERROR - Error al obtener actividades recientes: 1146 (42S02): Table 'generador_practicas.actividades' doesn't exist
+2025-03-20 21:32:00,330 - werkzeug - INFO - 127.0.0.1 - - [20/Mar/2025 21:32:00] "GET / HTTP/1.1" 200 -
+2025-03-20 21:32:00,438 - werkzeug - INFO - 127.0.0.1 - - [20/Mar/2025 21:32:00] "GET /static/img/programador.avif HTTP/1.1" 200 -
+2025-03-20 21:32:00,439 - werkzeug - INFO - 127.0.0.1 - - [20/Mar/2025 21:32:00] "GET /static/styles.css HTTP/1.1" 200 -
+2025-03-20 21:32:00,441 - werkzeug - INFO - 127.0.0.1 - - [20/Mar/2025 21:32:00] "GET /static/img/practicas.jpeg HTTP/1.1" 200 -
+2025-03-20 21:32:00,450 - werkzeug - INFO - 127.0.0.1 - - [20/Mar/2025 21:32:00] "GET /static/img/evaluacion.webp HTTP/1.1" 200 -
+2025-03-20 21:32:00,458 - werkzeug - INFO - 127.0.0.1 - - [20/Mar/2025 21:32:00] "GET /static/img/ayuda.jpg HTTP/1.1" 200 -
+2025-03-20 21:32:00,846 - werkzeug - INFO - 127.0.0.1 - - [20/Mar/2025 21:32:00] "GET /static/img/fondo_improvisado5.jpg HTTP/1.1" 200 -
+2025-03-20 21:32:01,157 - werkzeug - INFO - 127.0.0.1 - - [20/Mar/2025 21:32:01] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-03-20 21:32:06,938 - werkzeug - INFO - 127.0.0.1 - - [20/Mar/2025 21:32:06] "GET /usuarios HTTP/1.1" 200 -
+2025-03-20 21:32:06,988 - werkzeug - INFO - 127.0.0.1 - - [20/Mar/2025 21:32:06] "[36mGET /static/styles.css HTTP/1.1[0m" 304 -
+2025-03-20 21:32:07,061 - werkzeug - INFO - 127.0.0.1 - - [20/Mar/2025 21:32:07] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
