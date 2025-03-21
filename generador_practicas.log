@@ -13944,3 +13944,11 @@ jinja2.exceptions.TemplateNotFound: 500.html
 2025-03-20 21:32:06,938 - werkzeug - INFO - 127.0.0.1 - - [20/Mar/2025 21:32:06] "GET /usuarios HTTP/1.1" 200 -
 2025-03-20 21:32:06,988 - werkzeug - INFO - 127.0.0.1 - - [20/Mar/2025 21:32:06] "[36mGET /static/styles.css HTTP/1.1[0m" 304 -
 2025-03-20 21:32:07,061 - werkzeug - INFO - 127.0.0.1 - - [20/Mar/2025 21:32:07] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-03-20 21:34:40,967 - GeneradorPracticas - ERROR - Error al obtener actividades recientes: 1146 (42S02): Table 'generador_practicas.actividades' doesn't exist
+2025-03-20 21:34:40,968 - werkzeug - INFO - 127.0.0.1 - - [20/Mar/2025 21:34:40] "GET / HTTP/1.1" 200 -
+2025-03-20 21:34:41,018 - werkzeug - INFO - 127.0.0.1 - - [20/Mar/2025 21:34:41] "[36mGET /static/styles.css HTTP/1.1[0m" 304 -
+2025-03-20 21:34:41,018 - werkzeug - INFO - 127.0.0.1 - - [20/Mar/2025 21:34:41] "[36mGET /static/img/practicas.jpeg HTTP/1.1[0m" 304 -
+2025-03-20 21:34:41,019 - werkzeug - INFO - 127.0.0.1 - - [20/Mar/2025 21:34:41] "[36mGET /static/img/programador.avif HTTP/1.1[0m" 304 -
+2025-03-20 21:34:41,027 - werkzeug - INFO - 127.0.0.1 - - [20/Mar/2025 21:34:41] "[36mGET /static/img/evaluacion.webp HTTP/1.1[0m" 304 -
+2025-03-20 21:34:41,032 - werkzeug - INFO - 127.0.0.1 - - [20/Mar/2025 21:34:41] "[36mGET /static/img/ayuda.jpg HTTP/1.1[0m" 304 -
+2025-03-20 21:34:41,391 - werkzeug - INFO - 127.0.0.1 - - [20/Mar/2025 21:34:41] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
