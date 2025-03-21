@@ -83,7 +83,7 @@ def practicas():
     practicas = generador.obtener_practicas()
     materias = generador.obtener_materias()
     niveles = generador.obtener_niveles()
-    usuarios = generador.obtener_usuarios()
+    autorizados = generador.obtetener_usuarios_autorizados()
     conceptos = generador.obtener_conceptos()
     herramientas = generador.obtener_herramientas()
     
@@ -91,7 +91,7 @@ def practicas():
                           practicas=practicas, 
                           materias=materias, 
                           niveles=niveles,
-                          usuarios=usuarios,
+                          autorizados=autorizados,
                           conceptos=conceptos,
                           herramientas=herramientas)
 
@@ -242,7 +242,7 @@ if __name__ == '__main__':
     os.makedirs(APP_CONFIG["UPLOAD_FOLDER"], exist_ok=True)
 
     # Ruta del servidor
-    print(f"Servidor corriendo en http://localhost:{port}")
+    print(f"Server running on: http://127.0.0.1:{port}")
     
     # Iniciar aplicación
     app.run(debug=APP_CONFIG["DEBUG"], host='127.0.0.1', port=port)

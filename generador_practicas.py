@@ -25,6 +25,7 @@ class Practica:
     id: Optional[int]
     titulo: str
     materia_id: int
+    nombre_materia: Optional[str]
     nivel_id: int
     autor_id: int
     objetivo: str
@@ -304,7 +305,7 @@ class GeneradorPracticasExtendido:
     def obtener_usuarios(self) -> List[Usuario]:
         """Obtiene todos los usuarios"""
         try:
-            query = "SELECT * FROM usuarios ORDER BY nombre ASC"
+            query = "SELECT * FROM usuarios ORDER BY rol DESC"
             self.cursor.execute(query)
             results = self.cursor.fetchall()
             
@@ -320,6 +321,27 @@ class GeneradorPracticasExtendido:
             return usuarios
         except Error as e:
             self.logger.error(f"Error al obtener usuarios: {str(e)}")
+            return []
+        
+    def obtetener_usuarios_autorizados(self) -> List[Usuario]:
+        """Obtiene todos los usuarios autorizados"""
+        try:
+            query = "SELECT * FROM usuarios WHERE NOT rol = 'estudiante' ORDER BY nombre ASC"
+            self.cursor.execute(query)
+            results = self.cursor.fetchall()
+            
+            usuarios_autorizados = []
+            for result in results:
+                usuario = Usuario(
+                    id=result['id'],
+                    nombre=result['nombre'],
+                    email=result['email'],
+                    rol=result['rol']
+                )
+                usuarios_autorizados.append(usuario)
+            return usuarios_autorizados
+        except Error as e:
+            self.logger.error(f"Error al obtener usuarios autorizados: {str(e)}")
             return []
 
     def obtener_evaluaciones(self) -> List[Dict[str, Any]]:
@@ -365,7 +387,11 @@ class GeneradorPracticasExtendido:
     def obtener_practicas(self) -> List[Practica]:
         """Obtiene todas las prácticas"""
         try:
-            query = "SELECT * FROM practicas ORDER BY fecha_entrega DESC"
+            query = """
+                SELECT practicas.*, materias.nombre 
+                FROM practicas 
+                JOIN materias ON practicas.materia_id = materias.id 
+                ORDER BY fecha_entrega DESC"""
             self.cursor.execute(query)
             results = self.cursor.fetchall()
             
@@ -375,6 +401,7 @@ class GeneradorPracticasExtendido:
                     id=result['id'],
                     titulo=result['titulo'],
                     materia_id=result['materia_id'],
+                    nombre_materia=result['nombre'],
                     nivel_id=result['nivel_id'],
                     autor_id=result['autor_id'],
                     objetivo=result['objetivo'],

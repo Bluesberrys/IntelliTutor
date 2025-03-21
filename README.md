@@ -2,6 +2,11 @@
 
 Flask web application project that creates programming activities and exercises
 
+## Tech stack
+
+- **Server side:** Flask
+- **Database:** MySQL via XAMPP
+
 ## Install
 
 from project directory in a terminal run:
@@ -18,13 +23,13 @@ from project directory in a terminal run:
 4. ```console
    set FLASK_APP=app.py
    ```
-5. For deployment
+5. For **development**
    ```console
-   flask run
+   pyhton app.py
    ```
-   or for development
+   or for **deployment**
    ```console
-   python app.py
+   flask ren
    ```
 
 ### ES

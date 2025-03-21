@@ -1,60 +1,78 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+      rel="stylesheet" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Detalles de la Práctica</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
-    <style>
-        li { color: #e4e4e4; }
-        p { color: #f1f1f3; }
-        </style>
-    <nav>
-        <ul>
-            <li><a href="{{ url_for('index') }}">Inicio</a></li>
-            <li><a href="{{ url_for('practicas') }}">Prácticas</a></li>
-            <li><a href="{{ url_for('evaluacion') }}">Evaluación</a></li>
-        </ul>
-    </nav>
-    <h2>{{ practica.titulo }}</h2>
-    <p><strong>Materia:</strong> {{ practica.materia_id }}</p>
-    <p><strong>Fecha de Entrega:</strong> {{ practica.fecha_entrega.strftime('%Y-%m-%d') }}</p>
-    <p><strong>Estado:</strong> {{ practica.estado }}</p>
-    <h3>Descripción</h3>
-    <p>{{ contenido.descripcion }}</p>
-    <h3>Objetivos Específicos</h3>
-    <ul>
-        {% for objetivo in contenido.objetivos_especificos %}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Gabarito:wght@400..900&family=Josefin+Slab:wght@100..700&display=swap"
+      rel="stylesheet" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+  </head>
+
+  <body>
+    <header>
+      <div class="logo"></div>
+      <div class="header-btns">
+        <a href="{{ url_for('index') }}" class="btn alt-font">Inicio</a>
+        <a href="{{ url_for('practicas') }}" class="btn alt-font">Prácticas</a>
+        <a href="{{ url_for('evaluacion') }}" class="btn alt-font">Evaluación</a>
+      </div>
+      <div class="user-menu"></div>
+    </header>
+
+    <main id="ver-practica">
+      <div class="practica-content">
+        <h1 class="practica-title">Visualización de practicas</h1>
+        <h2>{{ practica.titulo }}</h2>
+        <div>
+          <h4><span>Materia:</span> {{ practica.materia_id }}</h4>
+          <h4><span>Fecha de Entrega:</span> {{ practica.fecha_entrega.strftime('%Y-%m-%d') }}</h4>
+          <h4><span>Estado:</span> {{ practica.estado }}</h4>
+        </div>
+        <div>
+          <h3>Descripción</h3>
+          <p>{{ contenido.descripcion }}</p>
+        </div>
+        <div>
+          <h3>Objetivos Específicos</h3>
+          <ul>
+            {% for objetivo in contenido.objetivos_especificos %}
             <li>{{ objetivo }}</li>
-        {% endfor %}
-    </ul>
-    <h3>Actividades</h3>
-    <ul>
-        {% for actividad in contenido.actividades %}
-            <li>{{ actividad.numero }}. {{ actividad.descripcion }} ({{ actividad.tiempo_estimado }})</li>
-        {% endfor %}
-    </ul>
-    <h3>Recursos</h3>
-    <ul>
-        {% for recurso in contenido.recursos %}
-            <li>{{ recurso }}</li>
-        {% endfor %}
-    </ul>
-    <h3>Criterios de Evaluación</h3>
-    <ul>
-        {% for criterio in contenido.criterios_evaluacion %}
-            <li>{{ criterio }}</li>
-        {% endfor %}
-    </ul>
-    <h3>Recomendaciones</h3>
-    <p>{{ contenido.recomendaciones }}</p>
-    <h3>Datos Generados por IA</h3>
-    <p><strong>Predicción de Éxito:</strong> {{ modelo_ml.prediccion_exito }}</p>
-    <p><strong>Recomendaciones Personalizadas:</strong> {{ modelo_ml.recomendaciones_personalizadas }}</p>
-</body>
+            {% endfor %}
+          </ul>
+        </div>
+        <h3>Actividades</h3>
+        <ol>
+          {% for actividad in contenido.actividades %}
+          <li>{{ actividad.descripcion }} ({{ actividad.tiempo_estimado }})</li>
+          {% endfor %}
+        </ol>
+        <h3>Recursos</h3>
+        <ul>
+          {% for recurso in contenido.recursos %}
+          <li>{{ recurso }}</li>
+          {% endfor %}
+        </ul>
+        <h3>Criterios de Evaluación</h3>
+        <ul>
+          {% for criterio in contenido.criterios_evaluacion %}
+          <li>{{ criterio }}</li>
+          {% endfor %}
+        </ul>
+        <h3>Recomendaciones</h3>
+        <p>{{ contenido.recomendaciones }}</p>
+        <h3>Datos Generados por IA</h3>
+        <p><span>Predicción de Éxito:</span> {{ modelo_ml.prediccion_exito }}</p>
+        <p><span>Recomendaciones Personalizadas:</span> {{ modelo_ml.recomendaciones_personalizadas }}</p>
+      </div>
+    </main>
+  </body>
 </html>

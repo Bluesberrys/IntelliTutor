@@ -210,7 +210,18 @@ CREATE TABLE IF NOT EXISTS evaluaciones (
 INSERT INTO usuarios (nombre, email, password_hash, rol) VALUES
 ('Juan Pérez', 'juan@universidad.edu', 'hash123', 'profesor'),
 ('María García', 'maria@universidad.edu', 'hash456', 'estudiante'),
-('Admin Sistema', 'admin@universidad.edu', 'hash789', 'admin');
+('Admin Sistema', 'admin@universidad.edu', 'hash789', 'admin'),
+('Urban', 'udullaghan0@webeden.co.uk', 'zO4@V<fg\vrqZNq', 'estudiante'),
+('Melantha', 'mpetrelli1@icq.com', 'hJ9={pfZq*>U9ir', 'estudiante'),
+('Felicity', 'fmerrilees2@unicef.org', 'iV8=,ykM2O_I#z', 'estudiante'),
+('Barbee', 'belfes3@wunderground.com', 'wZ8,fkGk', 'profesor'),
+('Trstram', 'tdeavall4@irs.gov', 'qG3*q~{Qz=S7', 'profesor'),
+('Calley', 'cherrema5@hubpages.com', 'xK6`CG#PW', 'estudiante'),
+('Nani', 'nzeale6@epa.gov', 'dW6=Q2kZ0Xka', 'estudiante'),
+('Launce', 'lkitchenman7@hugedomains.com', 'aB9_Zw5y!f"A)pV', 'estudiante'),
+('Lebbie', 'lsolley8@oracle.com', 'iA7>%Sn&u?', 'profesor'),
+('Tara', 'thalpeine9@theglobeandmail.com', 'hZ6)Q''Qi?bE*4Tp', 'profesor');
+
 
 -- Insertar materias
 INSERT INTO materias (nombre, descripcion) VALUES
