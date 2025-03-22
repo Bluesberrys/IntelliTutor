@@ -59,6 +59,7 @@ def practicas():
             id=None,
             titulo=titulo,
             materia_id=materia_id,
+            nombre_materia=materia_id,  
             nivel_id=nivel_id,
             autor_id=autor_id,
             objetivo=objetivo,

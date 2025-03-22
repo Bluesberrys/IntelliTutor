@@ -49,9 +49,24 @@ header {
   border-bottom: 2px solid var(--gold-unam);
 }
 
+.menu {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  align-items: center;
+  width: 70%;
+  justify-content: space-between;
+}
+
 .header-btns {
   display: flex;
   gap: 20px;
+}
+
+.burger-menu {
+  display: none;
+  cursor: pointer;
+  font-size: 3.5rem;
 }
 
 header .btn {
@@ -83,8 +98,7 @@ header .btn {
 }
 
 .logo img {
-  width: 80px;
-  padding: 10px;
+  width: 60px;
 }
 
 .user-menu {
@@ -349,11 +363,11 @@ tr:hover {
 }
 
 .hero {
-  background-image: url(./img/fondo_improvisado5.jpg);
+  background-image: url(./img/fondo_improvisado5.jpeg);
   background-size: cover;
   background-position: center;
   height: calc(100vh - 80px);
-  padding: 50px;
+  padding: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -369,7 +383,7 @@ tr:hover {
   background-color: #040406cc;
   width: 60%;
   padding: 40px;
-  font-size: 1.1rem;
+  font-size: 1.5rem;
 }
 
 .info_inicio button {
@@ -390,6 +404,7 @@ tr:hover {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
   gap: 50px;
+  justify-items: center;
   width: 90%;
   padding: 50px;
   font-size: 1.5rem;
@@ -443,5 +458,64 @@ tr:hover {
   &:hover {
     background-color: var(--gold-unam-d1);
     transition: background-color 0.3s ease;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .menu {
+    display: none;
+  }
+
+  .burger-menu {
+    display: block;
+  }
+
+  .menu.active {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    position: absolute;
+    top: 80px;
+    right: 0;
+    background-color: var(--azul-unam);
+    width: 100%;
+    padding: 20px;
+    z-index: 100;
+  }
+
+  .hero {
+    padding: 5%;
+  }
+
+  .info_inicio {
+    width: 90%;
+    font-size: 1.3rem;
+  }
+
+  #container-cards {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+
+  .card img {
+    height: 200px;
+  }
+
+  #practica-gen-form {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+@media screen and (max-width: 440px) {
+  .menu.active {
+    padding: 20px 0;
+  }
+  .header-btns {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .user-menu {
+    flex-direction: column;
   }
 }
