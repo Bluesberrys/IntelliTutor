@@ -29,7 +29,7 @@ from project directory in a terminal run:
    ```
    or for **deployment**
    ```console
-   flask ren
+   flask run
    ```
 
 ### ES
