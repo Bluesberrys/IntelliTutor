@@ -25,7 +25,7 @@ from project directory in a terminal run:
    ```
 5. For **development**
    ```console
-   pyhton app.py
+   python app.py
    ```
    or for **deployment**
    ```console
