@@ -2,6 +2,7 @@
 
 ## File structure
 
+```
 proyectoWebServicio/
 │
 ├── static/
@@ -23,7 +24,7 @@ proyectoWebServicio/
 │ ├── practicas.html
 │ ├── usuarios.html
 │ └── ver_practicas.html
-|
+│
 ├── .gitignore
 ├── app.py
 ├── bd_prueba.py
@@ -34,5 +35,6 @@ proyectoWebServicio/
 ├── modelo_ml_scikit.py
 ├── README.md
 └── requirements.txt
+```
 
 ## Homepage
