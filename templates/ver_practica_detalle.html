@@ -1,0 +1,381 @@
+{% extends 'layout.html' %}
+
+{% block title %}Detalles de Práctica - IntelliTutor UNAM{% endblock %}
+
+{% block extra_css %}
+<style>
+  :root {
+    --bg: #f9fafb;
+    --fg: #111827;
+    --primary: #2563eb;
+    --primary-hover: #1d4ed8;
+    --muted: #6b7280;
+    --accent: #fcd34d;
+    --white: #ffffff;
+    --radius: 12px;
+    --shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+  }
+
+  body {
+    background-color: var(--bg);
+    font-family: 'Inter', sans-serif;
+    color: var(--text-color);
+  }
+
+  #ver-practica {
+    max-width: 1000px;
+    margin: 4rem auto;
+    padding: 2rem;
+    animation: fadeIn 0.5s ease-in-out;
+  }
+
+  .practica-content {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 2.5rem 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  h1.practica-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--accent-primary);
+    text-align: center;
+  }
+
+  h2, h3 {
+    font-weight: 600;
+    margin-top: 1rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    text-align: center;
+  }
+
+  h3 {
+    font-size: 1.2rem;
+    color: var(--accent-primary);
+    border-left: 4px solid var(--accent);
+    padding-left: 0.75rem;
+  }
+
+  h4 {
+    color: var(--muted);
+    font-weight: 500;
+    font-size: 1rem;
+  }
+
+  p, li {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  ul, ol {
+    padding-left: 1.5rem;
+  }
+
+  .ai-section {
+    background: #f3f4f6;
+    padding: 2rem;
+    border-radius: var(--radius);
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+
+  .ai-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+  }
+
+  .metric-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 1rem;
+    text-align: center;
+    box-shadow: var(--shadow);
+  }
+
+  .metric-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent-primary);
+  }
+
+  .metric-label {
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+
+  .feedback-btn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    padding: 0.8rem 1.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    align-self: flex-start;
+    transition: background 0.3s, transform 0.2s;
+  }
+
+  .feedback-btn:hover {
+    background: var(--primary-hover);
+    transform: translateY(-2px);
+  }
+
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+
+  .modal-overlay.active {
+    display: flex;
+  }
+
+  .modal-container {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 2rem;
+    max-width: 700px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow);
+    animation: popIn 0.3s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .modal-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--accent-primary);
+  }
+
+  .modal-close {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: var(--muted);
+  }
+
+  .feedback-section h4 {
+    font-size: 1rem;
+    color: var(--accent-primary);
+    margin-top: 1.5rem;
+  }
+
+  .strengths-list li {
+    color: #16a34a;
+  }
+
+  .weaknesses-list li {
+    color: #dc2626;
+  }
+
+  .resource-card {
+    background: #fefce8;
+    border-left: 4px solid var(--accent);
+    padding: 1rem;
+    border-radius: var(--radius);
+    margin-bottom: 1rem;
+  }
+
+  .resource-title {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+
+  .resource-link {
+    font-size: 0.9rem;
+    color: var(--accent-primary);
+  }
+
+  .resource-link:hover {
+    text-decoration: underline;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<main id="ver-practica">
+  <div class="practica-content">
+    <h1 class="practica-title">Detalles de la Práctica</h1>
+    <h2>{{ practica.titulo }}</h2>
+
+    <h4><span>Materia:</span> {{ practica.nombre_materia }}</h4>
+    <h4><span>Fecha de Entrega:</span> {{ practica.fecha_entrega.strftime('%Y-%m-%d') }}</h4>
+    <h4><span>Estado:</span> {{ practica.estado }}</h4>
+
+    <h3>Descripción</h3>
+    <p>{{ contenido.descripcion }}</p>
+
+    <h3>Objetivos de Aprendizaje</h3>
+    <ul>
+      {% for objetivo in contenido.objetivos_aprendizaje %}
+      <li>{{ objetivo }}</li>
+      {% endfor %}
+    </ul>
+
+    <h3>Actividades</h3>
+    <ol>
+      {% for actividad in contenido.actividades %}
+      <li>{{ actividad }}</li>
+      {% endfor %}
+    </ol>
+
+    <h3>Recursos</h3>
+    <ul>
+      {% for recurso in contenido.recursos %}
+      <li>{{ recurso }}</li>
+      {% endfor %}
+    </ul>
+
+    <h3>Criterios de Evaluación</h3>
+    <ul>
+      {% for criterio in contenido.criterios_evaluacion %}
+      <li>{{ criterio }}</li>
+      {% endfor %}
+    </ul>
+
+    <h3>Recomendaciones</h3>
+    <p>{{ contenido.recomendaciones }}</p>
+
+    {% if evaluacion %}
+    <div class="ai-section">
+      <h3><i class="fas fa-robot"></i> Análisis de Inteligencia Artificial</h3>
+
+      <div class="ai-metrics">
+        <div class="metric-card">
+          <div class="metric-value">{{ '%.1f'|format(evaluacion.calificacion) }}/10</div>
+          <div class="metric-label">Calificación</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-value">{{ evaluacion.relevancia }}%</div>
+          <div class="metric-label">Relevancia</div>
+        </div>
+
+        {% if evaluacion.metricas %}
+          {% for nombre, valor in evaluacion.metricas.items() %}
+            {% if nombre != 'relevancia' %}
+            <div class="metric-card">
+              <div class="metric-value">{{ valor }}</div>
+              <div class="metric-label">{{ nombre|capitalize }}</div>
+            </div>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+      </div>
+
+      <button class="feedback-btn" onclick="openFeedbackModal()">
+        <i class="fas fa-comment-dots"></i> Ver Retroalimentación Detallada
+      </button>
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="modal-overlay" id="feedbackModal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h2 class="modal-title">Retroalimentación Detallada</h2>
+        <button class="modal-close" onclick="closeFeedbackModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        {% if evaluacion %}
+        <div class="feedback-section">
+          <h4>Comentarios Generales</h4>
+          <div class="feedback-content">{{ evaluacion.comentarios }}</div>
+        </div>
+        <div class="feedback-section">
+          <h4>Sugerencias de Mejora</h4>
+          <div class="feedback-content">{{ evaluacion.sugerencias }}</div>
+        </div>
+        <div class="feedback-section">
+          <h4>Fortalezas Identificadas</h4>
+          <ul class="strengths-list">
+            {% for fortaleza in evaluacion.fortalezas %}
+            <li>{{ fortaleza }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="feedback-section">
+          <h4>Áreas de Mejora</h4>
+          <ul class="weaknesses-list">
+            {% for debilidad in evaluacion.debilidades %}
+            <li>{{ debilidad }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="feedback-section">
+          <h4>Recursos Recomendados</h4>
+          {% for recurso in evaluacion.recursos_recomendados %}
+          <div class="resource-card">
+            <div class="resource-title">{{ recurso.titulo }}</div>
+            <a href="{{ recurso.url }}" class="resource-link" target="_blank">
+              <i class="fas fa-external-link-alt"></i> Acceder al recurso
+            </a>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <p>No hay retroalimentación disponible.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+function openFeedbackModal() {
+  document.getElementById('feedbackModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeFeedbackModal() {
+  document.getElementById('feedbackModal').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('feedbackModal').addEventListener('click', function(e) {
+  if (e.target === this) closeFeedbackModal();
+});
+
+document.querySelector('.modal-container').addEventListener('click', function(e) {
+  e.stopPropagation();
+});
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeFeedbackModal();
+});
+</script>
+{% endblock %}

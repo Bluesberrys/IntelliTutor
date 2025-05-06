@@ -1,0 +1,79 @@
+{% extends 'layout.html' %}
+
+{% block title %}Evaluar Entrega con IA - IntelliTutor UNAM{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="page-title">Evaluar Entrega con Inteligencia Artificial</h1>
+    
+    <div class="card">
+        <div class="card-header">
+            <h2>Información de la Entrega</h2>
+        </div>
+        <div class="card-body">
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Práctica:</span>
+                    <span class="info-value">{{ evaluacion.titulo }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Estudiante:</span>
+                    <span class="info-value">{{ evaluacion.estudiante_nombre }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Objetivo:</span>
+                    <span class="info-value">{{ evaluacion.objetivo }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Estilo de Aprendizaje:</span>
+                    <span class="info-value">{{ estilo_aprendizaje if estilo_aprendizaje else 'No detectado' }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card mt-4">
+        <div class="card-header">
+            <h2>Contenido de la Entrega</h2>
+        </div>
+        <div class="card-body">
+            <div class="content-preview">
+                {{ entrega.contenido|safe }}
+            </div>
+        </div>
+    </div>
+    
+    <div class="card mt-4">
+        <div class="card-header">
+            <h2>Evaluación con IA</h2>
+        </div>
+        <div class="card-body">
+            <p>El sistema de Inteligencia Artificial evaluará esta entrega considerando los siguientes criterios:</p>
+            
+            <ul class="criteria-list">
+                <li><strong>Relevancia:</strong> Alineación con el objetivo de la práctica</li>
+                <li><strong>Profundidad:</strong> Nivel de análisis y comprensión del tema</li>
+                <li><strong>Claridad:</strong> Organización y expresión de ideas</li>
+                <li><strong>Originalidad:</strong> Aportaciones propias y creatividad</li>
+            </ul>
+            
+            <p>Además, el sistema detectará el estilo de aprendizaje del estudiante (si no está registrado) y proporcionará retroalimentación personalizada.</p>
+            
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i> La evaluación automática es una herramienta de apoyo. Como profesor, puedes revisar y ajustar la calificación y retroalimentación generadas.
+            </div>
+            
+            <form method="POST" action="{{ url_for('evaluacion_ia.evaluar_entrega', evaluacion_id=evaluacion.id) }}">
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-robot"></i> Evaluar con IA
+                    </button>
+                    <a href="{{ url_for('evaluaciones') }}" class="btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Volver
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

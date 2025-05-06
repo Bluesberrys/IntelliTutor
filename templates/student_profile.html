@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tu Perfil Académico - IntelliTutor UNAM</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='custom.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='student_profile.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='notification.css') }}">
+</head>
+<body>
+    <div class="interactive-bg" id="interactiveBg"></div>
+    
+    <div class="profile-container">
+        <div class="profile-header">
+            <img src="{{ url_for('static', filename='img/Escudo-UNAM-white.svg') }}" alt="Logo UNAM" class="logo-unam" onerror="this.src='https://www.unam.mx/sites/default/files/escudo_unam_150.png'">
+            <h1 class="welcome-title">¡Bienvenido a IntelliTutor UNAM!</h1>
+            <p class="welcome-subtitle">Personaliza tu experiencia de aprendizaje</p>
+        </div>
+
+        <div class="profile-content">
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-steps">
+                    <div class="step active" data-step="1">
+                        <div class="step-icon"><i class="fas fa-user-graduate"></i></div>
+                        <div class="step-label">Información Académica</div>
+                    </div>
+                    <div class="step" data-step="2">
+                        <div class="step-icon"><i class="fas fa-brain"></i></div>
+                        <div class="step-label">Estilo de Aprendizaje</div>
+                    </div>
+                    <div class="step" data-step="3">
+                        <div class="step-icon"><i class="fas fa-check-circle"></i></div>
+                        <div class="step-label">Finalizar</div>
+                    </div>
+                </div>
+            </div>
+
+            <form id="profileForm" action="{{ url_for('guardar_perfil_estudiante') }}" method="POST">
+                <div class="form-section active" id="section1">
+                    <div class="section-header">
+                        <h2><i class="fas fa-university"></i> Información Académica</h2>
+                        <p>Cuéntanos sobre tu trayectoria académica para personalizar tu experiencia</p>
+                    </div>
+                    
+                    <div class="animated-card">
+                        <div class="form-group">
+                            <label for="semestre">Semestre actual:</label>
+                            <select id="semestre" name="semestre" required>
+                                <option value="" disabled selected>Selecciona tu semestre</option>
+                                {% for i in range(1, 11) %}
+                                <option value="{{ i }}">Semestre {{ i }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="facultad">Facultad:</label>
+                            <select id="facultad" name="facultad" required>
+                                <option value="" disabled selected>Selecciona tu facultad</option>
+                                <option value="Arquitectura">Arquitectura</option>
+                                <option value="Artes y Diseño">Artes y Diseño</option>
+                                <option value="Ciencias">Ciencias</option>
+                                <option value="Ciencias Políticas y Sociales">Ciencias Políticas y Sociales</option>
+                                <option value="Contaduría y Administración">Contaduría y Administración</option>
+                                <option value="Derecho">Derecho</option>
+                                <option value="Economía">Economía</option>
+                                <option value="FES Acatlán">FES Acatlán</option>
+                                <option value="FES Aragón">FES Aragón</option>
+                                <option value="FES Cuautitlán">FES Cuautitlán</option>
+                                <option value="FES Iztacala">FES Iztacala</option>
+                                <option value="FES Zaragoza">FES Zaragoza</option>
+                                <option value="Filosofía y Letras">Filosofía y Letras</option>
+                                <option value="Ingeniería">Ingeniería</option>
+                                <option value="Medicina">Medicina</option>
+                                <option value="Medicina Veterinaria y Zootecnia">Medicina Veterinaria y Zootecnia</option>
+                                <option value="Música">Música</option>
+                                <option value="Odontología">Odontología</option>
+                                <option value="Psicología">Psicología</option>
+                                <option value="Química">Química</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="carrera">Carrera:</label>
+                            <input type="text" id="carrera" name="carrera" placeholder="Ej. Ingeniería en Computación" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-navigation">
+                        <button type="button" class="btn-next" onclick="nextSection(1, 2)">Siguiente <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                </div>
+
+                <div class="form-section" id="section2">
+                    <div class="section-header">
+                        <h2><i class="fas fa-brain"></i> Estilo de Aprendizaje</h2>
+                        <p>Conocer tu estilo de aprendizaje nos ayudará a ofrecerte recursos personalizados</p>
+                    </div>
+                    
+                    <div class="learning-styles-container">
+                        <div class="learning-style-card" data-style="visual">
+                            <input type="checkbox" id="visual" name="estilos_aprendizaje" value="visual" class="style-checkbox">
+                            <label for="visual" class="style-label">
+                                <div class="style-icon"><i class="fas fa-eye"></i></div>
+                                <div class="style-title">Visual</div>
+                                <div class="style-description">Aprendes mejor con imágenes, diagramas y videos</div>
+                            </label>
+                        </div>
+                        
+                        <div class="learning-style-card" data-style="auditivo">
+                            <input type="checkbox" id="auditivo" name="estilos_aprendizaje" value="auditivo" class="style-checkbox">
+                            <label for="auditivo" class="style-label">
+                                <div class="style-icon"><i class="fas fa-headphones"></i></div>
+                                <div class="style-title">Auditivo</div>
+                                <div class="style-description">Prefieres escuchar explicaciones y discusiones</div>
+                            </label>
+                        </div>
+                        
+                        <div class="learning-style-card" data-style="kinestesico">
+                            <input type="checkbox" id="kinestesico" name="estilos_aprendizaje" value="kinestesico" class="style-checkbox">
+                            <label for="kinestesico" class="style-label">
+                                <div class="style-icon"><i class="fas fa-hands"></i></div>
+                                <div class="style-title">Kinestésico</div>
+                                <div class="style-description">Aprendes haciendo y experimentando</div>
+                            </label>
+                        </div>
+                        
+                        <div class="learning-style-card" data-style="lectura_escritura">
+                            <input type="checkbox" id="lectura_escritura" name="estilos_aprendizaje" value="lectura_escritura" class="style-checkbox">
+                            <label for="lectura_escritura" class="style-label">
+                                <div class="style-icon"><i class="fas fa-book"></i></div>
+                                <div class="style-title">Lectura/Escritura</div>
+                                <div class="style-description">Prefieres leer y escribir para aprender</div>
+                            </label>
+                        </div>
+                        
+                        <div class="learning-style-card" data-style="colaborativo">
+                            <input type="checkbox" id="colaborativo" name="estilos_aprendizaje" value="colaborativo" class="style-checkbox">
+                            <label for="colaborativo" class="style-label">
+                                <div class="style-icon"><i class="fas fa-users"></i></div>
+                                <div class="style-title">Colaborativo</div>
+                                <div class="style-description">Aprendes mejor trabajando en equipo</div>
+                            </label>
+                        </div>
+                        
+                        <div class="learning-style-card" data-style="autonomo">
+                            <input type="checkbox" id="autonomo" name="estilos_aprendizaje" value="autonomo" class="style-checkbox">
+                            <label for="autonomo" class="style-label">
+                                <div class="style-icon"><i class="fas fa-user-clock"></i></div>
+                                <div class="style-title">Autónomo</div>
+                                <div class="style-description">Prefieres estudiar a tu propio ritmo</div>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-navigation">
+                        <button type="button" class="btn-prev" onclick="prevSection(2, 1)"><i class="fas fa-arrow-left"></i> Anterior</button>
+                        <button type="button" class="btn-next" onclick="nextSection(2, 3)">Siguiente <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                </div>
+
+                <div class="form-section" id="section3">
+                    <div class="section-header">
+                        <h2><i class="fas fa-check-circle"></i> ¡Casi listo!</h2>
+                        <p>Revisa tu información y completa tu perfil</p>
+                    </div>
+                    
+                    <div class="summary-container">
+                        <div class="summary-card">
+                            <h3>Resumen de tu perfil</h3>
+                            <div class="summary-item">
+                                <span class="summary-label">Semestre:</span>
+                                <span class="summary-value" id="summary-semestre">-</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Facultad:</span>
+                                <span class="summary-value" id="summary-facultad">-</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Carrera:</span>
+                                <span class="summary-value" id="summary-carrera">-</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Estilos de aprendizaje:</span>
+                                <span class="summary-value" id="summary-estilos">-</span>
+                            </div>
+                        </div>
+                        
+                        <div class="benefits-card">
+                            <h3>Beneficios de completar tu perfil</h3>
+                            <ul class="benefits-list">
+                                <li><i class="fas fa-check"></i> Recursos educativos personalizados según tu estilo de aprendizaje</li>
+                                <li><i class="fas fa-check"></i> Recomendaciones adaptadas a tu nivel académico</li>
+                                <li><i class="fas fa-check"></i> Seguimiento de tu progreso académico</li>
+                                <li><i class="fas fa-check"></i> Experiencia de aprendizaje optimizada</li>
+                                <li><i class="fas fa-award"></i> Desbloquea marcos de perfil especiales al cumplir logros</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="form-navigation">
+                        <button type="button" class="btn-prev" onclick="prevSection(3, 2)"><i class="fas fa-arrow-left"></i> Anterior</button>
+                        <button type="submit" class="btn-submit">Completar Perfil <i class="fas fa-check"></i></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="profile-footer">
+        <p>&copy; {{ año_actual }} Universidad Nacional Autónoma de México. Todos los derechos reservados.</p>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/student_profile.js') }}"></script>
+</body>
+</html>

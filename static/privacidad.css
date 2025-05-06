@@ -1,0 +1,141 @@
+/* Estilos modernos para la página de políticas de privacidad */
+:root {
+    --glass-bg: rgba(255, 255, 255, 0.08);
+    --glass-bg-dark: rgba(30, 30, 30, 0.3);
+    --blur: blur(20px);
+  }
+  
+  .page-title {
+    font-size: 2.8rem;
+    color: var(--text-primary);
+    margin-bottom: 2.5rem;
+    text-align: center;
+    position: relative;
+    padding-bottom: 1rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .page-title:after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: var(--accent-primary);
+    border-radius: 2px;
+    animation: pulse-line 2s infinite ease-in-out;
+  }
+  
+  @keyframes pulse-line {
+    0%, 100% {
+      transform: translateX(-50%) scaleX(1);
+      opacity: 0.8;
+    }
+    50% {
+      transform: translateX(-50%) scaleX(1.4);
+      opacity: 1;
+    }
+  }
+  
+  .card {
+    background: var(--glass-bg);
+    backdrop-filter: var(--blur);
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    margin-bottom: 2rem;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.2);
+  }
+  
+  .card-body {
+    padding: 2rem 2.5rem;
+    animation: fadeInUp 0.7s ease-out both;
+  }
+  
+  h2 {
+    font-size: 1.6rem;
+    color: var(--text-primary);
+    border-left: 4px solid var(--accent-primary);
+    padding-left: 1rem;
+    margin: 2rem 0 1rem;
+  }
+  
+  p, li {
+    color: var(--text-secondary);
+    line-height: 1.75;
+    font-size: 1.05rem;
+  }
+  
+  ul {
+    padding-left: 2rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  li {
+    margin-bottom: 0.8rem;
+  }
+  
+  strong {
+    color: var(--accent-primary);
+    font-weight: 700;
+  }
+  
+  .mt-4 {
+    margin-top: 2rem;
+  }
+  
+  /* Fade-in animation */
+  @keyframes fadeInUp {
+    0% {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .page-title {
+      font-size: 2.2rem;
+    }
+  
+    .card-body {
+      padding: 1.5rem;
+    }
+  
+    h2 {
+      font-size: 1.3rem;
+    }
+  }
+  
+  /* Dark mode */
+  [data-theme="dark"] .card {
+    background: var(--glass-bg-dark);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  
+  [data-theme="dark"] h2 {
+    color: var(--text-primary-dark);
+    border-left-color: var(--accent-primary-dark);
+  }
+  
+  [data-theme="dark"] p,
+  [data-theme="dark"] li {
+    color: var(--text-secondary-dark);
+  }
+  

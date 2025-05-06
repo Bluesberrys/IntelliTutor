@@ -1,0 +1,28 @@
+sass
+
+node -v
+
+Get-ExecutionPolicy
+
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+
+89.25
+
+//instalacion de sass
+
+
+//En nuestro proyecto
+npm init -y
+
+npm install sass --save-dev
+
+//Instalacion global
+npm install -g sass
+
+*Se crea una carpeta (sass) con unu archivo extension .scss*
+
+//Guarda los cambios de sass a css
+sass --watch sass:css
+
+
+

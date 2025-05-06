@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor de Código - IntelliTutor UNAM</title>
+    <link rel="icon" href="{{ url_for('static', filename='img/Escudo-UNAM-white.svg') }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/dracula.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/monokai.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/material.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/nord.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='code-editor.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='notification.css') }}">
+</head>
+<body data-theme="{{ session.get('tema', 'light') }}">
+    <div class="editor-container">
+        <div class="editor-header">
+            <div class="editor-title">
+                <div class="window-controls">
+                    <span class="control red"></span>
+                    <span class="control yellow"></span>
+                    <span class="control green"></span>
+                </div>
+                <h1 id="editorTitle">Editor de Código</h1>
+            </div>
+            <div class="editor-actions">
+                <select id="languageSelector" class="editor-select">
+                    <option value="python">Python</option>
+                    <option value="javascript">JavaScript</option>
+                    <option value="cpp">C++</option>
+                    <option value="java">Java</option>
+                </select>
+                <select id="themeSelector" class="editor-select">
+                    <option value="dracula">Dracula</option>
+                    <option value="monokai">Monokai</option>
+                    <option value="material">Material</option>
+                    <option value="nord">Nord</option>
+                </select>
+                <button id="runButton" class="editor-button run">
+                    <i class="fas fa-play"></i> Ejecutar
+                </button>
+                <button id="saveButton" class="editor-button save">
+                    <i class="fas fa-save"></i> Guardar
+                </button>
+                <button id="submitButton" class="editor-button submit">
+                    <i class="fas fa-paper-plane"></i> Entregar
+                </button>
+            </div>
+        </div>
+        
+        <div class="editor-main">
+            <div class="editor-wrapper">
+                <textarea id="codeEditor"></textarea>
+            </div>
+            
+            <div class="editor-resizer" id="editorResizer"></div>
+            
+            <div class="terminal-container" id="terminalContainer">
+                <div class="terminal-header">
+                    <span>Terminal</span>
+                    <div class="terminal-actions">
+                        <button id="clearTerminal" class="terminal-button">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        <button id="toggleTerminal" class="terminal-button">
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="terminal-output" id="terminalOutput">
+                    <div class="terminal-welcome">
+                        <span class="terminal-prompt">$</span> Bienvenido al terminal. Ejecuta tu código para ver la salida.
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="editor-footer">
+            <div class="editor-status">
+                <span id="statusMessage">Listo</span>
+            </div>
+            <div class="editor-info">
+                <span id="cursorPosition">Línea: 1, Columna: 1</span>
+                <span id="languageIndicator">Python</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal de guardado -->
+    <div class="modal" id="saveModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Guardar Código</h2>
+                <button class="modal-close" id="closeSaveModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="saveForm">
+                    <div class="form-group">
+                        <label for="fileName">Nombre del archivo:</label>
+                        <input type="text" id="fileName" name="fileName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Descripción:</label>
+                        <textarea id="description" name="description" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="practiceId">Práctica asociada:</label>
+                        <select id="practiceId" name="practiceId">
+                            <option value="">Ninguna</option>
+                            {% for practica in practicas %}
+                            <option value="{{ practica.id }}">{{ practica.titulo }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="editor-button save">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal de entrega -->
+    <div class="modal" id="submitModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Entregar Código</h2>
+                <button class="modal-close" id="closeSubmitModal">&times;</button>
+            </div>
+            <div class="modal-body">
+              <form id="submitForm" action="{{ url_for('code_editor.entregar_codigo') }}" method="POST">
+                    <input type="hidden" id="submitCode" name="codigo">
+                    <input type="hidden" id="submitLanguage" name="lenguaje">
+                    
+                    <div class="form-group">
+                        <label for="submitPracticeId">Práctica:</label>
+                        <select id="submitPracticeId" name="practica_id" required>
+                            {% for practica in practicas %}
+                            <option value="{{ practica.id }}">
+                                {{ practica.titulo }} - {{ practica.nombre_materia }} ({{ practica.nombre_grupo }})
+                            </option>
+                            {% endfor %}
+                        </select>                        
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="submitComments">Comentarios:</label>
+                        <textarea id="submitComments" name="comentarios" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="editor-button submit">Entregar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification-container"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/python/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/clike/clike.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/edit/matchbrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/edit/closebrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/comment/comment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/selection/active-line.min.js"></script>
+    <script src="{{ url_for('static', filename='js/notification.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/code-editor.js') }}"></script>
+</body>
+</html>

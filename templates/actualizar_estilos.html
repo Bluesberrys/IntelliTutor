@@ -1,0 +1,321 @@
+{% extends 'layout.html' %}
+{% block title %}Actualizar Estilos de Aprendizaje - IntelliTutor UNAM{% endblock %}
+
+{% block extra_css %}
+<style>
+    .estilos-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 2rem;
+        background-color: var(--light);
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    .estilos-header {
+        text-align: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid #e9ecef;
+    }
+    
+    .estilos-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-color);
+        margin-bottom: 0.5rem;
+    }
+    
+    .estilos-subtitle {
+        font-size: 1.1rem;
+        color: #6c757d;
+    }
+    
+    .learning-styles-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .learning-style-card {
+        position: relative;
+        perspective: 1000px;
+        transform-style: preserve-3d;
+        transition: transform 0.6s;
+    }
+    
+    .style-checkbox {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+    }
+    
+    .style-label {
+        display: block;
+        background-color: var(--light);
+        border-radius: 15px;
+        padding: 2.8rem;
+        box-shadow: 0px 10px 10px 3px rgba(0, 0, 0, 0.219);
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        border: 2px solid transparent;
+        height: 100%;
+        backface-visibility: hidden;
+    }
+    
+    .learning-style-card[data-style="visual"] .style-label {
+        border-top: 4px solid #4361ee;
+    }
+    
+    .learning-style-card[data-style="auditivo"] .style-label {
+        border-top: 4px solid #7209b7;
+    }
+    
+    .learning-style-card[data-style="kinestesico"] .style-label {
+        border-top: 4px solid #f72585;
+    }
+    
+    .learning-style-card[data-style="lectura_escritura"] .style-label {
+        border-top: 4px solid #3a0ca3;
+    }
+    
+    .learning-style-card[data-style="colaborativo"] .style-label {
+        border-top: 4px solid #4cc9f0;
+    }
+    
+    .learning-style-card[data-style="autonomo"] .style-label {
+        border-top: 4px solid #4895ef;
+    }
+    
+    .style-label:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    }
+    
+    .style-checkbox:checked + .style-label {
+        transform: translateY(-5px) rotateY(10deg);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        border: 2px solid #003d79;
+        background-color: rgba(0, 61, 121, 0.05);
+    }
+    
+    .style-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+    
+    .learning-style-card[data-style="visual"] .style-icon {
+        color: #4361ee;
+    }
+    
+    .learning-style-card[data-style="auditivo"] .style-icon {
+        color: #7209b7;
+    }
+    
+    .learning-style-card[data-style="kinestesico"] .style-icon {
+        color: #f72585;
+    }
+    
+    .learning-style-card[data-style="lectura_escritura"] .style-icon {
+        color: #3a0ca3;
+    }
+    
+    .learning-style-card[data-style="colaborativo"] .style-icon {
+        color: #4cc9f0;
+    }
+    
+    .learning-style-card[data-style="autonomo"] .style-icon {
+        color: #4895ef;
+    }
+    
+    .style-checkbox:checked + .style-label .style-icon {
+        transform: scale(1.2);
+    }
+    
+    .style-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        text-align: center;
+        color: var(--text-color);
+    }
+    
+    .style-description {
+        font-size: 0.9rem;
+        color: #6c757d;
+        text-align: center;
+    }
+    
+    .btn-container {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 2rem;
+    }
+    
+    .btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        border: none;
+    }
+    
+    .btn-primary {
+        background-color: #003d79;
+        color: white;
+    }
+    
+    .btn-primary:hover {
+        background-color: #002855;
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 40, 85, 0.3);
+    }
+    
+    .btn-secondary {
+        background-color: #6c757d;
+        color: white;
+    }
+    
+    .btn-secondary:hover {
+        background-color: #5a6268;
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(90, 98, 104, 0.3);
+    }
+    
+    /* Animaciones */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .fade-in {
+        animation: fadeIn 0.5s ease forwards;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .learning-styles-container {
+            grid-template-columns: 1fr;
+        }
+        
+        .btn-container {
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .btn {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="estilos-container">
+    <div class="estilos-header">
+        <h1 class="estilos-title">Actualiza tus Estilos de Aprendizaje</h1>
+        <p class="estilos-subtitle">Selecciona los estilos que mejor se adapten a tu forma de aprender</p>
+    </div>
+    
+    <form action="{{ url_for('actualizar_estilos') }}" method="POST">
+        <div class="learning-styles-container">
+            <div class="learning-style-card fade-in" data-style="visual" style="animation-delay: 0.1s;">
+                <input type="checkbox" id="visual" name="estilos_aprendizaje" value="visual" class="style-checkbox" {% if 'visual' in estilos_actuales %}checked{% endif %}>
+                <label for="visual" class="style-label">
+                    <div class="style-icon"><i class="fas fa-eye"></i></div>
+                    <div class="style-title">Visual</div>
+                    <div class="style-description">Aprendes mejor con imágenes, diagramas y videos</div>
+                </label>
+            </div>
+            
+            <div class="learning-style-card fade-in" data-style="auditivo" style="animation-delay: 0.2s;">
+                <input type="checkbox" id="auditivo" name="estilos_aprendizaje" value="auditivo" class="style-checkbox" {% if 'auditivo' in estilos_actuales %}checked{% endif %}>
+                <label for="auditivo" class="style-label">
+                    <div class="style-icon"><i class="fas fa-headphones"></i></div>
+                    <div class="style-title">Auditivo</div>
+                    <div class="style-description">Prefieres escuchar explicaciones y discusiones</div>
+                </label>
+            </div>
+            
+            <div class="learning-style-card fade-in" data-style="kinestesico" style="animation-delay: 0.3s;">
+                <input type="checkbox" id="kinestesico" name="estilos_aprendizaje" value="kinestesico" class="style-checkbox" {% if 'kinestesico' in estilos_actuales %}checked{% endif %}>
+                <label for="kinestesico" class="style-label">
+                    <div class="style-icon"><i class="fas fa-hands"></i></div>
+                    <div class="style-title">Kinestésico</div>
+                    <div class="style-description">Aprendes haciendo y experimentando</div>
+                </label>
+            </div>
+            
+            <div class="learning-style-card fade-in" data-style="lectura_escritura" style="animation-delay: 0.4s;">
+                <input type="checkbox" id="lectura_escritura" name="estilos_aprendizaje" value="lectura_escritura" class="style-checkbox" {% if 'lectura_escritura' in estilos_actuales %}checked{% endif %}>
+                <label for="lectura_escritura" class="style-label">
+                    <div class="style-icon"><i class="fas fa-book"></i></div>
+                    <div class="style-title">Lectura/Escritura</div>
+                    <div class="style-description">Prefieres leer y escribir para aprender</div>
+                </label>
+            </div>
+            
+            <div class="learning-style-card fade-in" data-style="colaborativo" style="animation-delay: 0.5s;">
+                <input type="checkbox" id="colaborativo" name="estilos_aprendizaje" value="colaborativo" class="style-checkbox" {% if 'colaborativo' in estilos_actuales %}checked{% endif %}>
+                <label for="colaborativo" class="style-label">
+                    <div class="style-icon"><i class="fas fa-users"></i></div>
+                    <div class="style-title">Colaborativo</div>
+                    <div class="style-description">Aprendes mejor trabajando en equipo</div>
+                </label>
+            </div>
+            
+            <div class="learning-style-card fade-in" data-style="autonomo" style="animation-delay: 0.6s;">
+                <input type="checkbox" id="autonomo" name="estilos_aprendizaje" value="autonomo" class="style-checkbox" {% if 'autonomo' in estilos_actuales %}checked{% endif %}>
+                <label for="autonomo" class="style-label">
+                    <div class="style-icon"><i class="fas fa-user-clock"></i></div>
+                    <div class="style-title">Autónomo</div>
+                    <div class="style-description">Prefieres estudiar a tu propio ritmo</div>
+                </label>
+            </div>
+        </div>
+        
+        <div class="btn-container">
+            <a href="{{ url_for('perfil') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Volver al Perfil
+            </a>
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Guardar Cambios
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Asegurar que las animaciones se ejecuten correctamente
+        const cards = document.querySelectorAll('.learning-style-card');
+        cards.forEach((card) => {
+            card.style.opacity = '0';
+            setTimeout(() => {
+                card.style.opacity = '1';
+            }, 100);
+        });
+        
+        // Validar que al menos un estilo esté seleccionado
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const checkboxes = document.querySelectorAll('input[name="estilos_aprendizaje"]:checked');
+            if (checkboxes.length === 0) {
+                e.preventDefault();
+                alert('Por favor selecciona al menos un estilo de aprendizaje.');
+            }
+        });
+    });
+</script>
+{% endblock %}

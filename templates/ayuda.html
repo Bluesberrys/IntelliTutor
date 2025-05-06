@@ -1,0 +1,127 @@
+{% extends 'layout.html' %}
+
+{% block title %}Ayuda - IntelliTutor UNAM{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='ayuda.css') }}">
+{% endblock %}
+{% block content %}
+<h1 class="page-title">Centro de Ayuda</h1>
+
+<div class="card fade-in">
+    <div class="card-header">
+        <h2 class="card-title">Preguntas Frecuentes</h2>
+    </div>
+    <div class="card-body">
+        <div class="accordion">
+            <div class="accordion-item">
+              <button class="accordion-button collapsed">¿Cómo funciona el sistema?</button>
+              <div class="accordion-collapse">
+                <div class="accordion-body">
+                  El sistema analiza automáticamente tus entregas, proporciona retroalimentación y se adapta a tu ritmo de aprendizaje.
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+                <button class="accordion-button collapsed">¿Cómo entrego una práctica?</button>
+                <div class="accordion-collapse">
+                  <div class="accordion-body">
+                    Para entregar una práctica, ve a la sección "Mis Prácticas" y busca la práctica que deseas entregar. Haz clic en el botón "Seleccionar archivo" para subir tu archivo o utiliza el "Editor de Código" para escribir tu código directamente. Finalmente, haz clic en "Entregar" para completar el proceso.
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <button class="accordion-button collapsed">¿Cómo puedo ver mis calificaciones?</button>
+                <div class="accordion-collapse">
+                  <div class="accordion-body">
+                    Puedes ver tus calificaciones en la sección "Mis Evaluaciones" o haciendo clic en "Mis Calificaciones" en el menú desplegable de tu perfil. Allí encontrarás un historial completo de tus calificaciones y evaluaciones.
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <button class="accordion-button collapsed">¿Cómo cambio mi contraseña?</button>
+                <div class="accordion-collapse">
+                  <div class="accordion-body">
+                    Para cambiar tu contraseña, ve a "Mi Perfil" desde el menú desplegable de tu usuario. En la sección "Cambiar Contraseña", ingresa tu contraseña actual y la nueva contraseña que deseas utilizar. Haz clic en "Actualizar Contraseña" para guardar los cambios.
+                  </div>
+                </div>
+              </div>
+          </div>
+        </div>
+    </div>
+</div>
+
+<div class="card fade-in mt-4">
+    <div class="card-header">
+        <h2 class="card-title">Guías de Uso</h2>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-code fa-3x mb-3 text-primary"></i>
+                        <h3 class="card-title">Editor de Código</h3>
+                        <p class="card-text">Aprende a utilizar el editor de código integrado para tus prácticas.</p>
+                        <a href="#" class="btn btn-primary">Ver Guía</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-tasks fa-3x mb-3 text-primary"></i>
+                        <h3 class="card-title">Entrega de Prácticas</h3>
+                        <p class="card-text">Guía completa sobre cómo entregar tus prácticas correctamente.</p>
+                        <a href="#" class="btn btn-primary">Ver Guía</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-user-cog fa-3x mb-3 text-primary"></i>
+                        <h3 class="card-title">Configuración de Cuenta</h3>
+                        <p class="card-text">Aprende a personalizar tu cuenta y configurar tus preferencias.</p>
+                        <a href="#" class="btn btn-primary">Ver Guía</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card fade-in mt-4">
+    <div class="card-header">
+        <h2 class="card-title">Contacto de Soporte</h2>
+    </div>
+    <div class="card-body">
+        <p>Si no encuentras respuesta a tu pregunta, puedes contactar al equipo de soporte:</p>
+        <ul>
+            <li><strong>Correo electrónico:</strong> soporte@intellitutor.unam.mx</li>
+            <li><strong>Teléfono:</strong> (55) 5622-1234</li>
+            <li><strong>Horario de atención:</strong> Lunes a Viernes de 9:00 a 18:00 horas</li>
+        </ul>
+        <p>También puedes visitar la oficina de soporte técnico en el edificio de la DGTIC, Ciudad Universitaria.</p>
+    </div>
+</div>
+
+{% block scripts %}
+<script>
+    document.querySelectorAll('.accordion-button').forEach(button => {
+      button.addEventListener('click', () => {
+        const collapse = button.nextElementSibling;
+        const isOpen = collapse.classList.contains('show');
+  
+        // Cierra todos los demás si deseas un acordeón exclusivo:
+        document.querySelectorAll('.accordion-collapse').forEach(item => {
+          item.classList.remove('show');
+        });
+  
+        collapse.classList.toggle('show');
+        button.classList.toggle('collapsed', isOpen);
+      });
+    });
+  </script>
+  
+{% endblock %}
+{% endblock %}

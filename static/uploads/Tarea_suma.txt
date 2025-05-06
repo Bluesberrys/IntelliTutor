@@ -1,0 +1,11 @@
+//Declaramos las variables
+
+let n1, n2;
+
+//Declaramos la variable resultado y realizamos la operacion de suma
+
+let resultado_suma = n1 + n2;
+
+//Imprimimos el resultado
+
+console.log("El resultado de la suma es: " + resultado_suma);

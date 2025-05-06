@@ -1,0 +1,391 @@
+{% extends 'layout.html' %}
+
+{% block title %}Calificaciones del Sistema - IntelliTutor UNAM{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.css">
+<style>
+    .stat-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    
+    .evaluation-score {
+        display: inline-block;
+        padding: 0.35rem 0.65rem;
+        font-weight: 700;
+        border-radius: 50rem;
+        text-align: center;
+    }
+    
+    .score-high {
+        background-color: rgba(40, 167, 69, 0.1);
+        color: #28a745;
+    }
+    
+    .score-medium {
+        background-color: rgba(255, 193, 7, 0.1);
+        color: #ffc107;
+    }
+    
+    .score-low {
+        background-color: rgba(220, 53, 69, 0.1);
+        color: #dc3545;
+    }
+    
+    .grades-container {
+        animation: fadeIn 0.8s ease-out;
+    }
+    
+    .card {
+        animation: slideUp 0.6s ease-out;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .departamento-card {
+        margin-bottom: 2rem;
+        border-radius: 0.5rem;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .departamento-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+    }
+    
+    .departamento-header {
+        padding: 1rem;
+        background-color: var(--azul-unam);
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .departamento-body {
+        padding: 1rem;
+        background-color: white;
+    }
+    
+    .departamento-stats {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .departamento-stat {
+        flex: 1;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        background-color: #f8f9fa;
+        text-align: center;
+    }
+    
+    .departamento-stat-value {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: var(--azul-unam);
+    }
+    
+    .departamento-stat-label {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+    
+    .toggle-details {
+        background: none;
+        border: none;
+        color: var(--azul-unam);
+        cursor: pointer;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .toggle-details:hover {
+        text-decoration: underline;
+    }
+    
+    .departamento-details {
+        display: none;
+        margin-top: 1rem;
+    }
+    
+    .departamento-details.active {
+        display: block;
+        animation: fadeIn 0.5s ease-out;
+    }
+    
+    .grupos-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1rem;
+    }
+    
+    .grupo-item {
+        padding: 1rem;
+        border-radius: 0.5rem;
+        background-color: #f8f9fa;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .grupo-item:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+    }
+    
+    .grupo-nombre {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+    
+    .grupo-info {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+    
+    .grupo-promedio {
+        font-weight: bold;
+        color: var(--azul-unam);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<h1 class="page-title">Calificaciones del Sistema</h1>
+
+<div class="dashboard-grid">
+    <div class="stat-card fade-in">
+        <div class="stat-card-header">
+            <div class="stat-card-title">Promedio General</div>
+            <div class="stat-card-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+        </div>
+        <div class="stat-card-value">{{ promedio_general }}</div>
+        <div class="stat-card-description">Promedio de todos los departamentos</div>
+    </div>
+    
+    <div class="stat-card fade-in">
+        <div class="stat-card-header">
+            <div class="stat-card-title">Departamentos</div>
+            <div class="stat-card-icon">
+                <i class="fas fa-building"></i>
+            </div>
+        </div>
+        <div class="stat-card-value">{{ total_departamentos }}</div>
+        <div class="stat-card-description">Total de departamentos académicos</div>
+    </div>
+    
+    <div class="stat-card fade-in">
+        <div class="stat-card-header">
+            <div class="stat-card-title">Grupos</div>
+            <div class="stat-card-icon">
+                <i class="fas fa-chalkboard-teacher"></i>
+            </div>
+        </div>
+        <div class="stat-card-value">{{ total_grupos }}</div>
+        <div class="stat-card-description">Total de grupos activos</div>
+    </div>
+    
+    <div class="stat-card fade-in">
+        <div class="stat-card-header">
+            <div class="stat-card-title">Estudiantes</div>
+            <div class="stat-card-icon">
+                <i class="fas fa-user-graduate"></i>
+            </div>
+        </div>
+        <div class="stat-card-value">{{ total_estudiantes }}</div>
+        <div class="stat-card-description">Total de estudiantes inscritos</div>
+    </div>
+</div>
+
+<div class="grades-container">
+    <div class="grades-header">
+        <div class="grades-title">Calificaciones por Departamento</div>
+        <div class="grades-semester">
+            <label>Semestre:</label>
+            <select class="grades-semester-select" id="semestreSelect">
+                <option value="all">Todos los semestres</option>
+                {% for semestre in semestres %}
+                <option value="{{ semestre.id }}" {% if semestre.id == semestre_actual %}selected{% endif %}>{{ semestre.nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    
+    <div class="grades-chart">
+        <canvas id="departmentsChart"></canvas>
+    </div>
+</div>
+
+<div class="departamentos-container">
+    <h2 class="section-title">Detalle por Departamento</h2>
+    
+    {% for departamento in departamentos %}
+    <div class="departamento-card fade-in">
+        <div class="departamento-header">
+            <h3>{{ departamento.departamento_nombre }}</h3>
+            <div class="departamento-promedio">
+                <span>Promedio: </span>
+                <span class="evaluation-score {% if departamento.promedio_departamento >= 8 %}score-high{% elif departamento.promedio_departamento >= 6 %}score-medium{% else %}score-low{% endif %}">
+                    {{ departamento.promedio_departamento|round(2) if departamento.promedio_departamento else 'N/A' }}
+                </span>
+            </div>
+        </div>
+        <div class="departamento-body">
+            <div class="departamento-stats">
+                <div class="departamento-stat">
+                    <div class="departamento-stat-value">{{ departamento.total_grupos }}</div>
+                    <div class="departamento-stat-label">Grupos</div>
+                </div>
+                <div class="departamento-stat">
+                    <div class="departamento-stat-value">{{ departamento.total_estudiantes }}</div>
+                    <div class="departamento-stat-label">Estudiantes</div>
+                </div>
+                <div class="departamento-stat">
+                    <div class="departamento-stat-value">
+                        {% if departamento.promedio_departamento %}
+                            {% if departamento.promedio_departamento >= 8 %}
+                                <i class="fas fa-smile text-success"></i>
+                            {% elif departamento.promedio_departamento >= 6 %}
+                                <i class="fas fa-meh text-warning"></i>
+                            {% else %}
+                                <i class="fas fa-frown text-danger"></i>
+                            {% endif %}
+                        {% else %}
+                            <i class="fas fa-question text-secondary"></i>
+                        {% endif %}
+                    </div>
+                    <div class="departamento-stat-label">Rendimiento</div>
+                </div>
+            </div>
+            
+            <button class="toggle-details" onclick="toggleDetails('{{ departamento.departamento_id }}')">
+                <i class="fas fa-chevron-down" id="icon-{{ departamento.departamento_id }}"></i>
+                <span>Ver detalles de grupos</span>
+            </button>
+            
+            <div class="departamento-details" id="details-{{ departamento.departamento_id }}">
+                <div class="grupos-grid">
+                    <!-- Aquí se mostrarían los grupos del departamento -->
+                    <div class="grupo-item">
+                        <div class="grupo-nombre">Grupo A-01 - Cálculo Diferencial</div>
+                        <div class="grupo-info">
+                            <span>30 estudiantes</span>
+                            <span class="grupo-promedio">8.5</span>
+                        </div>
+                    </div>
+                    <div class="grupo-item">
+                        <div class="grupo-nombre">Grupo B-02 - Álgebra Lineal</div>
+                        <div class="grupo-info">
+                            <span>25 estudiantes</span>
+                            <span class="grupo-promedio">7.8</span>
+                        </div>
+                    </div>
+                    <div class="grupo-item">
+                        <div class="grupo-nombre">Grupo A-03 - Programación</div>
+                        <div class="grupo-info">
+                            <span>28 estudiantes</span>
+                            <span class="grupo-promedio">8.2</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="no-data-card">
+        <i class="fas fa-info-circle"></i>
+        <p>No hay departamentos disponibles para mostrar.</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+<script>
+    // Datos para el gráfico
+    const departamentos = {{ departamentos_json|safe }};
+    const promedios = {{ promedios_json|safe }};
+    
+    // Configuración del gráfico
+    const ctx = document.getElementById('departmentsChart').getContext('2d');
+    const departmentsChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: departamentos,
+            datasets: [{
+                label: 'Promedio del departamento',
+                data: promedios,
+                backgroundColor: promedios.map(prom => {
+                    if (prom >= 8) return 'rgba(40, 167, 69, 0.7)';
+                    if (prom >= 6) return 'rgba(255, 193, 7, 0.7)';
+                    return 'rgba(220, 53, 69, 0.7)';
+                }),
+                borderColor: promedios.map(prom => {
+                    if (prom >= 8) return 'rgb(40, 167, 69)';
+                    if (prom >= 6) return 'rgb(255, 193, 7)';
+                    return 'rgb(220, 53, 69)';
+                }),
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 10
+                }
+            },
+            animation: {
+                duration: 1500,
+                easing: 'easeOutQuart'
+            }
+        }
+    });
+    
+    // Filtrar por semestre
+    document.getElementById('semestreSelect').addEventListener('change', function() {
+        const semestreId = this.value;
+        window.location.href = "{{ url_for('calificaciones') }}?semestre_id=" + semestreId;
+    });
+    
+    // Función para mostrar/ocultar detalles de un departamento
+    function toggleDetails(departamentoId) {
+        const details = document.getElementById(`details-${departamentoId}`);
+        const icon = document.getElementById(`icon-${departamentoId}`);
+        
+        if (details.classList.contains('active')) {
+            details.classList.remove('active');
+            icon.classList.remove('fa-chevron-up');
+            icon.classList.add('fa-chevron-down');
+        } else {
+            details.classList.add('active');
+            icon.classList.remove('fa-chevron-down');
+            icon.classList.add('fa-chevron-up');
+        }
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends 'layout.html' %}
+
+{% block title %}Contacto - IntelliTutor UNAM{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='contacto.css') }}">
+{% endblock %}
+{% block content %}
+<h1 class="page-title">Contacto</h1>
+
+<div class="card fade-in">
+    <div class="card-header">
+        <h2 class="card-title">Formulario de Contacto</h2>
+    </div>
+    <div class="card-body">
+        <form action="{{ url_for('contacto') }}" method="POST">
+            <div class="form-group">
+                <label class="form-label">Nombre Completo</label>
+                <input type="text" class="form-control" name="nombre" required {% if current_user.is_authenticated %}value="{{ current_user.nombre }}"{% endif %}>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Correo Electrónico</label>
+                <input type="email" class="form-control" name="email" required {% if current_user.is_authenticated %}value="{{ current_user.email }}"{% endif %}>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Asunto</label>
+                <select class="form-control" name="asunto" required>
+                    <option value="">Selecciona un asunto</option>
+                    <option value="soporte">Soporte Técnico</option>
+                    <option value="sugerencia">Sugerencia</option>
+                    <option value="problema">Reporte de Problema</option>
+                    <option value="informacion">Solicitud de Información</option>
+                    <option value="otro">Otro</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Mensaje</label>
+                <textarea class="form-control" name="mensaje" rows="5" required></textarea>
+            </div>
+            <div style="text-align: right;">
+                <button type="submit" class="btn btn-primary">Enviar Mensaje</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card fade-in mt-4">
+    <div class="card-header">
+        <h2 class="card-title">Información de Contacto</h2>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <h3><i class="fas fa-map-marker-alt"></i> Dirección</h3>
+                <p>
+                    Dirección General de Cómputo y de Tecnologías de Información y Comunicación<br>
+                    Circuito Exterior s/n, Ciudad Universitaria<br>
+                    Coyoacán, 04510, Ciudad de México
+                </p>
+                
+                <h3><i class="fas fa-phone"></i> Teléfono</h3>
+                <p>(55) 5622-1234</p>
+                
+                <h3><i class="fas fa-envelope"></i> Correo Electrónico</h3>
+                <p>contacto@intellitutor.unam.mx</p>
+            </div>
+            <div class="col-md-6">
+                <h3><i class="fas fa-clock"></i> Horario de Atención</h3>
+                <p>
+                    <strong>Lunes a Viernes:</strong> 9:00 - 18:00<br>
+                    <strong>Sábados:</strong> 9:00 - 13:00<br>
+                    <strong>Domingos y días festivos:</strong> Cerrado
+                </p>
+                
+                <h3><i class="fas fa-users"></i> Redes Sociales</h3>
+                <div class="social-links-dark">
+                    <a href="#" class="btn btn-outline-primary me-2"><i class="fab fa-facebook-f"></i> Facebook</a>
+                    <a href="#" class="btn btn-outline-info me-2"><i class="fab fa-twitter"></i> Twitter</a>
+                    <a href="#" class="btn btn-outline-danger"><i class="fab fa-instagram"></i> Instagram</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

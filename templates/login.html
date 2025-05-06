@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Iniciar Sesión</title>
+    <link rel="icon" href="{{ url_for('static', filename='img/Escudo-UNAM-white.svg') }}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Gabarito:wght@400..900&family=Josefin+Slab:wght@100..700&display=swap"
+      rel="stylesheet" />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      
+      html, body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        height: 100%;
+      }
+
+      body, header, #login-container, .form-input, h2, label, input, button, p, a {
+        transition: all 0.5s ease-in-out;
+        font-family: "Gabarito", sans-serif;
+      }
+      
+      body {
+        background-color: #0d135500;
+        transition: background-color 1s, color 1s;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      
+      /* MODO OSCURO */
+      .modo-oscuro {
+        background-color: #121212;
+        color: #f0f0f0;
+      }
+      
+      .modo-oscuro header,
+      .modo-oscuro .card-front,
+      .modo-oscuro .card-back {
+        background-color: #1e1e1e;
+        color: #fff;
+      }
+      
+      .modo-oscuro h2 {
+        color: white;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+      }
+
+      h1 {
+        transition: color 0.5s ease-in-out;
+      }
+
+      .modo-oscuro h1 {
+        color: white !important;
+      }
+
+      .modo-oscuro label {
+        color: rgb(219, 219, 219) !important;
+      }
+      
+      .modo-oscuro a {
+        color: #fff;
+      }
+      
+      .modo-oscuro .form-input {
+        background-color: #333;
+        color: white;
+        border: 1px solid #555;
+      }
+      
+      .modo-oscuro .form-input::placeholder {
+        color: #ccc;
+      }
+      
+      .modo-oscuro .particula {
+        background: rgb(255, 255, 255);
+      }
+      
+      /* ANIMACIÓN DE FONDO */
+      .animacion-claro {
+        background: linear-gradient(75deg,
+          hsl(210deg 100% 29%) 61%,
+          hsl(210deg 100% 22%) 67%,
+          hsl(210deg 99% 24%) 74%,
+          hsl(210deg 99% 27%) 82%,
+          hsl(210deg 99% 29%) 100%);
+        background-size: 400% 400%;
+        animation: gradientClaro 15s ease infinite;
+        transition: background 1s ease;
+      }
+      
+      .animacion-oscuro {
+        background: linear-gradient(75deg,
+          hsl(210deg 100% 26%) 22%,
+          #0d1355 26%,
+          hsl(210deg 100% 22%) 33%,
+          hsl(210deg 100% 20%) 39%,
+          hsl(210deg 100% 18%) 44%,
+          hsl(210deg 100% 16%) 50%,
+          hsl(210deg 100% 14%) 56%);
+        background-size: 400% 400%;
+        animation: gradientOscuro 15s ease infinite;
+        transition: background 1s ease-in-out;
+      }
+      
+      @keyframes gradientClaro {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+      }
+      
+      @keyframes gradientOscuro {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+      }
+      
+      /* PARTÍCULAS */
+      .particula {
+        position: absolute;
+        border-radius: 50%;
+        background: rgb(255, 255, 255);
+        opacity: 0.4;
+        pointer-events: none;
+        z-index: 0;
+      }
+      
+      /* CONTENEDOR PRINCIPAL */
+      #login-container {
+        position: relative;
+        width: 400px;
+        height: 550px;
+        perspective: 1000px;
+        z-index: 10;
+        border-radius: 12px; /* esto redondea el contenedor */
+      }
+
+
+
+      /* TARJETA CON EFECTO FLIP */
+      .auth-card {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        transform-style: preserve-3d;
+        border-radius: 12px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+      }
+
+      .auth-card.flipped {
+        transform: rotateY(180deg);
+      }
+
+      /* CARAS DE LA TARJETA */
+      .card-front, .card-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        border-radius: 12px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        background-color: rgba(255, 255, 255, 0.95);
+        padding: 2rem;
+        overflow-y: scroll;
+        scrollbar-width: thin;
+        scrollbar-color: #888 transparent;
+      }
+
+      /* Scrollbar para navegadores WebKit (Chrome, Edge, Safari) */
+      .card-front::-webkit-scrollbar-track, .card-back::-webkit-scrollbar {
+        width: 10px;
+      }
+
+      .card-front::-webkit-scrollbar-track, .card-back::-webkit-scrollbar-track {
+        background: transparent;
+        border-radius: 12px; /* redondea el track */
+      }
+
+      .card-front::-webkit-scrollbar-track, .card-back::-webkit-scrollbar-thumb {
+        background: #888888;
+        border-radius: 12px; /* redondea la barra */
+      }
+
+      .scroll-contenedor::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+
+      .card-back {
+        transform: rotateY(180deg);
+        border-top: 3px solid #d4af37; /* Color dorado UNAM */
+      }
+
+      .card-front {
+        border-top: 3px solid #192077; /* Color azul UNAM */
+      }
+
+      /* LOGO Y HEADER */
+      .logo {
+        text-align: center;
+        margin-bottom: 1rem;
+        transition: transform 0.5s ease;
+      }
+      
+      .logo img {
+        width: 70px;
+        aspect-ratio: 2/2.5;
+        transition: transform 0.5s ease;
+        filter: drop-shadow(0mm 0mm 0.8px rgb(0, 0, 0));
+      }
+      
+      .logo h1 {
+        margin: 0.5rem 0 0;
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: #192077;
+      }
+      
+      /* TITULOS Y ETIQUETAS */
+      h2 {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        color: #192077;
+        font-size: 1.8rem;
+        position: relative;
+      }
+
+      h2::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(90deg, #192077, #d4af37);
+        border-radius: 2px;
+      }
+      
+      label {
+        display: block;
+        margin-bottom: 0.3rem;
+        font-weight: bold;
+        color: #192077;
+      }
+      
+      /* INPUTS Y BOTONES */
+      .form-group {
+        margin-bottom: 1.2rem;
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .form-input {
+        width: 100%;
+        padding: 0.8rem;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+      }
+
+      .form-input:focus {
+        border-color: #192077;
+        box-shadow: 0 0 0 3px rgba(25, 32, 119, 0.1);
+        outline: none;
+      }
+      
+      #form-btn {
+        width: 100%;
+        padding: 0.8rem;
+        background: #192077;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        margin-top: 0.5rem;
+        position: relative;
+        overflow: hidden;
+      }
+      
+      #form-btn:hover {
+        background: #0f1555;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(25, 32, 119, 0.3);
+      }
+
+      #form-btn::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 5px;
+        height: 5px;
+        background: rgba(255, 255, 255, 0.5);
+        opacity: 0;
+        border-radius: 100%;
+        transform: scale(1, 1) translate(-50%);
+        transform-origin: 50% 50%;
+      }
+
+      #form-btn:focus:not(:active)::after {
+        animation: ripple 1s ease-out;
+      }
+
+      @keyframes ripple {
+        0% {
+          transform: scale(0, 0);
+          opacity: 0.5;
+        }
+        20% {
+          transform: scale(25, 25);
+          opacity: 0.3;
+        }
+        100% {
+          opacity: 0;
+          transform: scale(40, 40);
+        }
+      }
+      
+      /* TEXTO Y ENLACES */
+      p {
+        text-align: center;
+        margin-top: 1rem;
+        font-size: 0.95rem;
+      }
+      
+      a {
+        color: #192077;
+        text-decoration: none;
+        transition: all 0.3s ease;
+      }
+      
+      a:hover {
+        color: #0f1555;
+        text-decoration: underline;
+      }
+      
+      /* BOTÓN MODO OSCURO */
+      #toggle-dark {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        padding: 0.5rem;
+        background-color: #222;
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        transition: all 0.3s ease;
+        z-index: 20;
+      }
+      
+      #toggle-dark:hover {
+        background-color: #444;
+        transform: rotate(45deg);
+      }
+      
+      .modo-oscuro #toggle-dark {
+        background-color: white;
+        color: #222;
+      }
+      
+      .modo-oscuro #toggle-dark:hover {
+        background-color: #ddd;
+      }
+
+      /* BOTONES DE CAMBIO DE FORMULARIO */
+      .form-switcher {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 0.5rem;
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 0.5rem 1rem;
+        border-radius: 0 0 12px 12px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        z-index: 5;
+        backdrop-filter: blur(5px);
+        transition: all 0.3s ease;
+      }
+
+      .form-switcher:hover {
+        padding-bottom: 0.8rem;
+      }
+      
+      .modo-oscuro .form-switcher {
+        background-color: rgba(30, 30, 30, 0.8);
+      }
+      
+      .form-switcher button {
+        padding: 0.5rem 1.2rem;
+        border: none;
+        border-radius: 6px;
+        background-color: #192077;
+        color: white;
+        cursor: pointer;
+        font-family: "Gabarito", sans-serif;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+      
+      .form-switcher button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      /* ANIMACIONES ADICIONALES */
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      .form-group {
+        animation: fadeIn 0.5s ease forwards;
+        opacity: 0;
+      }
+
+      .form-group:nth-child(1) { animation-delay: 0.1s; }
+      .form-group:nth-child(2) { animation-delay: 0.2s; }
+      .form-group:nth-child(3) { animation-delay: 0.3s; }
+      .form-group:nth-child(4) { animation-delay: 0.4s; }
+
+      /* RESPONSIVE */
+      @media (max-width: 600px) {
+        
+        .form-input,
+        #form-btn {
+          font-size: 0.95rem;
+          padding: 0.6rem;
+        }
+      
+        h1 {
+          font-size: 1.3rem !important;
+        }
+      
+        h2 {
+          font-size: 1.3rem !important;
+        }
+      
+        .logo img {
+          width: 60px;
+        }
+      
+        p {
+          font-size: 0.9rem;
+        }
+
+        .form-switcher {
+          padding: 0.4rem 0.8rem;
+        }
+
+        .form-switcher button {
+          padding: 0.4rem 0.8rem;
+          font-size: 0.9rem;
+        }
+      }
+      
+      @media (max-width: 400px) {
+        .card-front, .card-back {
+          padding: 1.5rem;
+        }
+      
+        #toggle-dark {
+          width: 35px;
+          height: 35px;
+          font-size: 1rem;
+        }
+
+        .form-switcher button {
+          padding: 0.3rem 0.6rem;
+          font-size: 0.8rem;
+        }
+      }
+      /* Notification styles */
+
+      .modo-oscuro .notification {
+        background-color: #121212;
+      }
+
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 20px;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 2000;
+      animation: slideIn 0.3s ease-out forwards;
+    }
+
+    .notification.success {
+      border-left: 4px solid #28a745;
+    }
+
+    .notification.error {
+      border-left: 4px solid #dc3545;
+    }
+
+    .notification i {
+      font-size: 1.5rem;
+    }
+
+    .notification.success i {
+      color: #28a745;
+    }
+
+    .notification.error i {
+      color: #dc3545;
+    }
+
+    .notification p {
+      margin: 0;
+      font-weight: 500;
+    }
+
+    .notification.fade-out {
+      animation: slideOut 0.3s ease-in forwards;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideOut {
+      from {
+        transform: translateX(0);
+        opacity: 1;
+      }
+      to {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+    }
+    </style>
+  </head>
+  <body id="login-body" class="animacion-claro">
+    <div class="fondo fondo-claro visible" id="fondoClaro"></div>
+    <div class="fondo fondo-oscuro" id="fondoOscuro"></div>
+    <main class="animacion" id="login">
+      <button id="toggle-dark">🌙</button>
+      
+      <div id="login-container">
+        <div class="auth-card" id="auth-card">
+          <!-- FRENTE DE LA TARJETA (LOGIN) -->
+          <div class="card-front">
+            <div class="logo">
+              <a href="/">
+                <img src="{{ url_for('static', filename='img/Escudo-UNAM-white.svg') }}" alt="Logo UNAM" />
+                <h1 class="alt-font">IntelliTutor UNAM</h1>
+              </a>
+            </div>
+
+            <h2>Iniciar Sesión</h2>
+            <form action="{{ url_for('login') }}" method="POST">
+              <div class="form-group">
+                <label for="numero_cuenta">Número de Cuenta:</label>
+                <input type="text" id="numero_cuenta" name="numero_cuenta" class="form-input" required />
+              </div>
+              <div class="form-group">
+                <label for="password">Contraseña:</label>
+                <input type="password" id="password" name="password" class="form-input" required />
+              </div>
+              <button type="submit" id="form-btn" class="alt-font"  onclick="playClickSound()">Iniciar Sesión</button>
+            </form>
+          </div>
+
+          <!-- REVERSO DE LA TARJETA (REGISTRO) -->
+          <div class="card-back">
+            <div class="logo">
+              <a href="/">
+                <img src="{{ url_for('static', filename='img/Escudo-UNAM-white.svg') }}" alt="Logo UNAM" />
+                <h1 class="alt-font">IntelliTutor UNAM</h1>
+              </a>
+            </div>
+
+            <h2>Registro</h2>
+            <form id="form-registro" method="POST">
+              <div class="form-group">
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" name="nombre" class="form-input" required />
+              </div>
+              <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" class="form-input" required />
+              </div>
+              <div class="form-group">
+                <label for="password_reg">Contraseña:</label>
+                <input type="password" id="password_reg" name="password" class="form-input" required />
+              </div>
+              <div class="form-group">
+                <label for="rol">Rol Solicitado:</label>
+                <select id="rol" name="rol" class="form-input" required>
+                  <option value="estudiante">Estudiante</option>
+                  <option value="profesor">Profesor</option>
+                  <option value="administrador">Administrador</option>
+                </select>
+              </div>
+              <button type="submit" id="form-btn" class="alt-font">Registrarse</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- BOTONES PARA CAMBIAR ENTRE FORMULARIOS -->
+        <div class="form-switcher">
+          <button id="btn-login" onclick="playClickSound()">Iniciar sesión</button>
+          <button id="btn-register" onclick="playClickSound()">Registrarse</button>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      const sonido = new Audio('/static/music/login.mp3'); // Ajusta la ruta según tu estructura
+
+function playClickSound() {
+  sonido.currentTime = 0; // Reinicia por si se hace clic rápido
+  sonido.play();
+}
+      // Partículas y modo oscuro
+      const total = 40;
+      const particulas = [];
+      const mouse = { x: 0, y: 0 };
+
+      document.addEventListener("mousemove", (e) => {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+      });
+
+      for (let i = 0; i < total; i++) {
+        const p = document.createElement("div");
+        p.classList.add("particula");
+        const size = Math.random() * 4 + 2;
+        const x = Math.random() * window.innerWidth;
+        const y = Math.random() * window.innerHeight;
+        const dx = (Math.random() - 0.5) * 0.5;
+        const dy = (Math.random() - 0.5) * 0.5;
+
+        Object.assign(p.style, {
+          width: `${size}px`,
+          height: `${size}px`,
+          left: `${x}px`,
+          top: `${y}px`
+        });
+
+        document.body.appendChild(p);
+        particulas.push({ el: p, x, y, dx, dy, size });
+      }
+
+      function moverParticulas() {
+        for (let p of particulas) {
+          let distX = p.x - mouse.x;
+          let distY = p.y - mouse.y;
+          let dist = Math.sqrt(distX * distX + distY * distY);
+
+          if (dist < 100) {
+            const fuerza = 1 - dist / 100;
+            p.dx += (distX / dist) * fuerza * 0.5;
+            p.dy += (distY / dist) * fuerza * 0.5;
+          }
+
+          p.x += p.dx;
+          p.y += p.dy;
+
+          if (p.x < 0 || p.x > window.innerWidth - p.size) p.dx *= -1;
+          if (p.y < 0 || p.y > window.innerHeight - p.size) p.dy *= -1;
+
+          p.el.style.left = `${p.x}px`;
+          p.el.style.top = `${p.y}px`;
+        }
+
+        requestAnimationFrame(moverParticulas);
+      }
+
+      moverParticulas();
+
+      (function(){
+  const fn = atob("ZHNob3dN"); 
+  const Engz = atob("REVTQVJST0xMQURPIFBPUiBMRU9ORUwgQUxNQU5aQSBNRURJTkFbQ1JFRElUT1M6IERFWUxBTiBMVUlTIEdBQlJJRUwgTklFVE8gRklHVUVST0EgWSBGUk9JTEFOIEFHVUlMQVIgR0FNRVJPXQ==");
+
+  const combinacion = [17, 16, 76]; 
+  const teclas = new Set();
+  let temporizador = null;
+
+  window[fn] = function(m){
+    if(document.getElementById("_xcr")) return;
+
+    const caja = document.createElement("div");
+    caja.id = "_xcr";
+    caja.textContent = m;
+
+    Object.assign(caja.style, {
+      position: "fixed",
+      bottom: "20px",
+      left: "50%",
+      transform: "translateX(-50%)",
+      background: "rgba(0,0,0,0.75)",
+      color: "#fff",
+      padding: "10px 20px",
+      borderRadius: "10px",
+      fontFamily: "monospace",
+      fontSize: "14px",
+      opacity: 0,
+      zIndex: 9999,
+      transition: "all 0.5s ease",
+      pointerEvents: "none",
+      backdropFilter: "blur(4px)",
+      whiteSpace: "pre-wrap",
+      textAlign: "center"
+    });
+
+    document.body.appendChild(caja);
+    requestAnimationFrame(() => {
+      caja.style.opacity = 1;
+    });
+
+    setTimeout(() => {
+      caja.style.opacity = 0;
+      setTimeout(() => caja.remove(), 1000);
+    }, 5000);
+  };
+
+  // Control de teclas y temporizador
+  document.addEventListener("keydown", (e) => {
+    teclas.add(e.keyCode);
+    if (combinacion.every(c => teclas.has(c)) && !temporizador) {
+      temporizador = setTimeout(() => {
+        window[fn](Engz);
+      }, 4500); 
+    }
+  });
+
+  document.addEventListener("keyup", (e) => {
+    teclas.delete(e.keyCode);
+    clearTimeout(temporizador);
+    temporizador = null;
+  });
+})();
+
+      // Toggle modo oscuro
+      const toggleButton = document.getElementById("toggle-dark");
+      const body = document.getElementById("login-body");
+
+      toggleButton.addEventListener("click", () => {
+        document.body.classList.toggle("modo-oscuro");
+        if (document.body.classList.contains("modo-oscuro")) {
+          body.classList.remove("animacion-claro");
+          body.classList.add("animacion-oscuro");
+          toggleButton.textContent = "☀️";
+        } else {
+          body.classList.remove("animacion-oscuro");
+          body.classList.add("animacion-claro");
+          toggleButton.textContent = "🌙";
+        }
+      });
+
+      // Flip card para cambiar entre formularios
+      const authCard = document.getElementById("auth-card");
+      const btnLogin = document.getElementById("btn-login");
+      const btnRegister = document.getElementById("btn-register");
+
+      // Inicialmente ocultar el botón de login ya que estamos en la vista de login
+      btnLogin.style.display = "none";
+
+      btnLogin.addEventListener("click", () => {
+        authCard.classList.remove("flipped");
+        btnLogin.style.display = "none";
+        btnRegister.style.display = "block";
+      });
+
+      btnRegister.addEventListener("click", () => {
+        authCard.classList.add("flipped");
+        btnRegister.style.display = "none";
+        btnLogin.style.display = "block";
+      });
+
+      // Enviar formulario de registro
+      document.getElementById("form-registro").addEventListener("submit", function (event) {
+        event.preventDefault();
+        const nombre = document.getElementById("nombre").value;
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password_reg").value;
+        const rol = document.getElementById("rol").value;
+
+        fetch("/registro", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ nombre, email, password, rol })
+        })
+        .then(response => response.json())
+        .then(data => {
+          showNotification('Solicitud enviada correctamente', 'success');
+          if (data.message === "Solicitud enviada correctamente") {
+            document.getElementById("form-registro").reset();
+            btnLogin.click(); // Volver al login
+          }
+        })
+        .catch(error => showNotification('Error al enviar la solicitud', 'error'));
+      });
+      // Function to show notification
+function showNotification(message, type = 'success') {
+      const notification = document.createElement('div');
+      notification.classList.add('notification', type);
+
+      let iconClass = 'fas fa-check-circle';
+      if (type === 'error') {
+        iconClass = 'fas fa-exclamation-circle';
+      }
+
+      notification.innerHTML = `
+        <i class="${iconClass}"></i>
+        <p>${message}</p>
+      `;
+
+      document.body.appendChild(notification);
+
+      // Fade out after 3 seconds
+      setTimeout(() => {
+        notification.classList.add('fade-out');
+        // Remove from DOM after animation
+        setTimeout(() => {
+          document.body.removeChild(notification);
+        }, 300);
+      }, 3000);
+    }
+    </script>
+  </body>
+</html>

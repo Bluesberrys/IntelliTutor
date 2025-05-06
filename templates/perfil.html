@@ -1,0 +1,1183 @@
+{% extends 'layout.html' %}
+{% block title %}Mi Perfil - IntelliTutor UNAM{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Estilos para el perfil mejorado */
+    .profile-header {
+        position: relative;
+        overflow: hidden;
+        border-radius: 15px;
+        margin-bottom: 2rem;
+    }
+    
+    .profile-header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+    
+.profile-info-left {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex: 1;
+  min-width: 300px;
+}
+
+.profile-avatar {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: visible; /* 👈 importante para que el marco se vea fuera si lo necesitas */
+  flex-shrink: 0;
+}
+    
+    /* Estilos para los diferentes marcos */
+    .marco-basico {
+        border: 1rem solid #d59f0f;
+        box-shadow:
+            0 0 15px #f7bf25,
+            0 0 30px #89b709,
+            0 0 45px #a37b0c,
+            0 0 60px #fffd74,
+            inset 0 0 10px #f4f725;
+        border-radius: 100px;
+        text-shadow: 0 0 5px #e2f725, 0 0 10px #b78909;
+    }
+    
+    .marco-segundo-semestre {
+        border: 1rem solid #0a73c9;
+        box-shadow:
+            0 0 15px #25cdf7,
+            0 0 30px #0066ff,
+            0 0 45px #8753ff,
+            0 0 60px #43eeee,
+            inset 0 0 10px #255df7;
+        border-radius: 100px;
+        text-shadow: 0 0 5px #4c25f7, 0 0 10px #7209b7;
+    }
+    
+    .marco-tercer-semestre {
+        border: 1rem solid #c90a0a;
+        box-shadow:
+            0 0 15px #f72585,
+            0 0 30px #7209b7,
+            0 0 45px #3a0ca3,
+            0 0 60px #4361ee,
+            inset 0 0 10px #f72585;
+        border-radius: 100px;
+        text-shadow: 0 0 5px #f72585, 0 0 10px #7209b7;
+        z-index: 10000;
+    }
+    
+    .marco-cuarto-semestre {
+        border: 1rem solid #7209b7;
+        box-shadow: 0 0 15px rgba(114, 9, 183, 0.5);
+    }
+    
+    .marco-quinto-semestre {
+        border: 1rem solid #3a0ca3;
+        box-shadow: 0 0 15px rgba(58, 12, 163, 0.5);
+    }
+    
+    .marco-sexto-semestre {
+        border: 1rem solid #4361ee;
+        box-shadow: 0 0 15px rgba(67, 97, 238, 0.5);
+    }
+    
+    .marco-septimo-semestre {
+        border: 1rem solid #4895ef;
+        box-shadow: 0 0 15px rgba(72, 149, 239, 0.5);
+    }
+    
+    .marco-octavo-semestre {
+        border: 1rem solid #4cc9f0;
+        box-shadow: 0 0 15px rgba(76, 201, 240, 0.5);
+    }
+    
+    .marco-noveno-semestre {
+        border: 1rem solid #98f5e1;
+        box-shadow: 0 0 15px rgba(152, 245, 225, 0.5);
+    }
+    
+    .marco-excelencia {
+        border: 1rem solid #ffd700;
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.7);
+        animation: glow 2s infinite alternate;
+    }
+    
+    .marco-responsable {
+        border: 1rem solid #00b4d8;
+        box-shadow: 0 0 15px rgba(0, 180, 216, 0.5);
+    }
+    
+    .marco-numero-uno {
+        border: 1rem solid #ff0054;
+        box-shadow: 0 0 20px rgba(255, 0, 84, 0.7);
+        animation: glow 2s infinite alternate;
+    }
+    
+    @keyframes glow {
+        from {
+            box-shadow: 0 0 10px rgba(165, 140, 0, 0.5);
+        }
+        to {
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.9);
+        }
+    }
+    
+    .profile-avatar i {
+        font-size: 4rem;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.2);
+    }
+    
+/* Marco exterior encima de la imagen */
+.profile-frame {
+  position: absolute;
+  top: -6px;
+  left: -6px;
+  width: calc(100% + 12px);
+  height: calc(100% + 12px);
+  border-radius: 50%;
+  border: 3px solid white; /* Puedes cambiar a colores de clase dinámica */
+  z-index: 3;
+  pointer-events: none;
+}
+
+
+.profile-avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  position: relative;
+  z-index: 2;
+}
+
+.profile-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.profile-name {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: white;
+  margin: 0;
+}
+    
+    /* Rol o carrera */
+    .profile-role {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+    
+    /* Contenedor de stats */
+.profile-stats-right {
+  flex: 1;
+  min-width: 250px;
+}
+
+.profile-stats {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.profile-stat {
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 1rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  text-align: center;
+  min-width: 100px;
+  flex: 1;
+  transition: all 0.3s ease;
+}
+
+.profile-stat:hover {
+  transform: translateY(-5px);
+}
+
+.profile-stat-value {
+  color: white;
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+.profile-stat-label {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.85rem;
+}
+    
+    .profile-content {
+        background-color: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+    
+    .profile-section {
+        padding: 2rem;
+        border-bottom: 1px solid #e9ecef;
+    }
+    
+    .profile-section:last-child {
+        border-bottom: none;
+    }
+    
+    .profile-section-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        color: var(--text-color);
+        display: flex;
+        align-items: center;
+        border-left: 4px solid var(--accent-primary);
+    }
+    
+    .profile-section-title i {
+        margin-right: 0.75rem;
+        color: var(--gold-unam);
+    }
+    
+    .profile-form {
+        display: grid;
+        gap: 1.5rem;
+    }
+    
+    .profile-form-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+    }
+    
+    .form-group {
+        margin-bottom: 0;
+    }
+    
+    .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: #495057;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid #ced4da;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+    
+    .form-control:focus {
+        outline: none;
+        border-color: #003d79;
+        box-shadow: 0 0 0 3px rgba(0, 61, 121, 0.1);
+    }
+    
+    .form-control[readonly] {
+        background-color: #f8f9fa;
+        cursor: not-allowed;
+    }
+    
+    /* Marcos disponibles */
+    .marcos-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
+    
+    .marco-item {
+        position: relative;
+        border-radius: 10px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: box-shadow 0.3s ease, transform 0.3s ease, border 80ms;
+    }
+    
+    .marco-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .marco-item.selected {
+        border: 0.5px solid #d59f0f;
+    }
+    
+    .marco-preview {
+        width: 100%;
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var(----dark-light);
+        position: relative;
+    }
+    
+    .marco-preview-inner {
+        width: 80%;
+        height: 80%;
+        border-radius: 50%;
+        background-color: var(----dark-light);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .marco-frame {
+        position: absolute;
+        top: -5px;
+        left: -5px;
+        right: -5px;
+        bottom: -5px;
+        border-radius: 50%;
+        z-index: 2;
+    }
+    
+    .marco-name {
+        padding: 0.5rem;
+        text-align: center;
+        font-size: 0.9rem;
+        font-weight: 500;
+        background-color: var(----dark-light);
+        border-top: 1px solid #e9ecef;
+    }
+    
+    .marco-radio {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+    }
+    
+    .marco-radio:checked + .marco-preview::after {
+        content: "\f00c";
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900;
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        width: 20px;
+        height: 20px;
+        background-color: #28a745;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.7rem;
+    }
+    
+    /* Promedios por clase */
+    .promedios-container {
+        margin-top: 1.5rem;
+    }
+    
+    .promedio-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid #e9ecef;
+    }
+    
+    .promedio-item:last-child {
+        border-bottom: none;
+    }
+    
+    .promedio-clase {
+        font-weight: 500;
+    }
+    
+    .promedio-valor {
+        font-weight: 600;
+        color: #003d79;
+    }
+    
+    /* Información de ediciones */
+    .ediciones-info {
+        margin-top: 1rem;
+        padding: 0.75rem 1rem;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+    
+    .ediciones-restantes {
+        font-weight: 600;
+        color: var(--accent-primary);
+    }
+    
+    /* Botones */
+    .btn-container {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
+    
+    .btn {
+        padding: 0.75rem 1.5rem;
+        margin: 1rem 0;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        border: none;
+    }
+    
+    .btn-primary {
+        background-color: var(--accent-primary);
+        color: white;
+    }
+    
+    .btn-primary:hover {
+        background-color: var(--accent-primary);
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 40, 85, 0.3);
+    }
+    
+    .btn-secondary {
+        background-color: #6c757d;
+        color: white;
+    }
+    
+    .btn-secondary:hover {
+        background-color: #5a6268;
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(90, 98, 104, 0.3);
+    }
+    
+    .btn-outline {
+        background-color: transparent;
+        border: 2px solid var(--accent-primary);
+        color: var(--text-color);
+    }
+    
+    .btn-outline:hover {
+        background-color: var(--accent-primary);
+        color: white;
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 61, 121, 0.2);
+    }
+    
+    /* Estilos para el perfil de profesor */
+    .stats-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+    }
+    
+    .stat-box {
+        background-color: var(--card-bg);
+        border-radius: 10px;
+        padding: 1.5rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        border: 1px solid #e9ecef;
+    }
+    
+    .stat-box:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .stat-icon {
+        font-size: 2rem;
+        color: var(--text-color);
+        margin-bottom: 1rem;
+    }
+    
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--accent-primary);
+        filter: brightness(1.5);
+        margin-bottom: 0.5rem;
+    }
+    
+    .stat-label {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+    
+    /* Estilos para acciones rápidas */
+    .quick-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
+    
+    .action-btn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem;
+        border-radius: 10px;
+        text-decoration: none;
+        color: #495057;
+        transition: all 0.3s ease;
+        border: 1px solid #e9ecef;
+        text-align: center;
+    }
+    
+    .action-btn i {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        color: var(--text-color);
+    }
+
+    .action-btn span {
+        color: var(--text-color);
+    }
+
+
+    .action-btn:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        background-color: var(--accent-primary);
+    }
+    
+    /* Estilos para el perfil de administrador */
+    .perfil-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+    }
+    
+    .perfil-card {
+        background-color: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .perfil-card-header {
+        background-color: #003d79;
+        color: white;
+        padding: 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .perfil-card-header h2 {
+        margin: 0;
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+    }
+    
+    .perfil-card-header h2 i {
+        margin-right: 0.75rem;
+    }
+    
+    .perfil-card-body {
+        padding: 1.5rem;
+    }
+    
+    .activity-list {
+        margin-top: 1rem;
+    }
+    
+    .activity-item {
+        display: flex;
+        align-items: flex-start;
+        padding: 1rem 0;
+        border-bottom: 1px solid #e9ecef;
+    }
+    
+    .activity-item:last-child {
+        border-bottom: none;
+    }
+    
+    .activity-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: #003d79;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+    }
+    
+    .activity-content {
+        flex: 1;
+    }
+    
+    .activity-title {
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+    }
+    
+    .activity-details {
+        color: #6c757d;
+        margin-bottom: 0.25rem;
+    }
+    
+    .activity-time {
+        font-size: 0.8rem;
+        color: #adb5bd;
+    }
+    
+    /* Estilos para los estilos de aprendizaje */
+    .estilos-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 1rem;
+    }
+    
+    .estilo-tag {
+        background-color: #e9ecef;
+        color: #495057;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .profile-stats {
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .profile-form-row {
+            grid-template-columns: 1fr;
+        }
+        
+        .marcos-container {
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        }
+        
+        .perfil-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .stats-container, .quick-actions {
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-header">
+    <div class="profile-header-content">
+      
+      <div class="profile-info-left">
+        <div class="profile-avatar">
+          {% if current_user.rol == 'estudiante' and usuario.marco_id %}
+          <div class="profile-frame 
+            {% for marco in marcos_disponibles %}
+              {% if marco.seleccionado %}{{ marco.clase_css }}{% endif %}
+            {% endfor %}">
+          </div>
+          {% endif %}
+          {% if usuario.foto_url %}
+          <img src="{{ url_for('static', filename=usuario.foto_url) }}" alt="{{ usuario.nombre }}" class="avatar">
+          {% else %}
+          <i class="fas fa-{% if current_user.rol == 'estudiante' %}user{% elif current_user.rol == 'profesor' %}user-tie{% else %}user-shield{% endif %}"></i>
+          {% endif %}
+        </div>
+  
+        <div class="profile-text">
+          <h1 class="profile-name">{{ usuario.nombre }}</h1>
+          <div class="profile-role">
+            {% if current_user.rol == 'estudiante' %}
+              {{ usuario.facultad|default('') }} {% if usuario.facultad and usuario.carrera %}-{% endif %} {{ usuario.carrera|default('') }}
+            {% elif current_user.rol == 'profesor' %}
+              {{ usuario.departamento|default('') }} {% if usuario.departamento and usuario.especialidad %}-{% endif %} {{ usuario.especialidad|default('Docente') }}
+            {% else %}
+              {{ usuario.departamento|default('') }} {% if usuario.departamento and usuario.cargo %}-{% endif %} {{ usuario.cargo|default('Administrador') }}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+        
+      <div class="profile-stats-right">
+        <div class="profile-stats">
+            {% if current_user.rol == 'estudiante' %}
+                <div class="profile-stat">
+                    <div class="profile-stat-value">{{ promedio|default('0.0') }}</div>
+                    <div class="profile-stat-label">Promedio</div>
+                </div>
+                <div class="profile-stat">
+                    <div class="profile-stat-value">{{ total_practicas|default('0') }}</div>
+                    <div class="profile-stat-label">Prácticas</div>
+                </div>
+                <div class="profile-stat">
+                    <div class="profile-stat-value">{{ semestre|default('1') }}</div>
+                    <div class="profile-stat-label">Semestre</div>
+                </div>
+            {% elif current_user.rol == 'profesor' %}
+                <div class="profile-stat">
+                    <div class="profile-stat-value">{{ total_estudiantes|default('0') }}</div>
+                    <div class="profile-stat-label">Estudiantes</div>
+                </div>
+                <div class="profile-stat">
+                    <div class="profile-stat-value">{{ total_grupos|default('0') }}</div>
+                    <div class="profile-stat-label">Grupos</div>
+                </div>
+                <div class="profile-stat">
+                    <div class="profile-stat-value">{{ total_practicas|default('0') }}</div>
+                    <div class="profile-stat-label">Prácticas</div>
+                </div>
+            {% else %}
+                {% if usuarios_por_rol %}
+                    {% for rol in usuarios_por_rol %}
+                    <div class="profile-stat">
+                        <div class="profile-stat-value">{{ rol.total }}</div>
+                        <div class="profile-stat-label">{{ rol.rol|capitalize }}s</div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="profile-stat">
+                        <div class="profile-stat-value">0</div>
+                        <div class="profile-stat-label">Estudiantes</div>
+                    </div>
+                    <div class="profile-stat">
+                        <div class="profile-stat-value">0</div>
+                        <div class="profile-stat-label">Profesores</div>
+                    </div>
+                {% endif %}
+                <div class="profile-stat">
+                    <div class="profile-stat-value">{{ total_grupos|default('0') }}</div>
+                    <div class="profile-stat-label">Grupos</div>
+                </div>
+            {% endif %}
+        </div>
+      </div>
+    </div>
+</div>
+
+<div class="profile-content">
+    <form action="{{ url_for('perfil') }}" method="POST" enctype="multipart/form-data">
+        <div class="profile-section">
+            <h2 class="profile-section-title"><i class="fas fa-user-circle"></i> Información Personal</h2>
+            
+            {% if current_user.rol == 'estudiante' %}
+            <div class="ediciones-info">
+                <p>Tienes <span class="ediciones-restantes">{{ ediciones_restantes|default('3') }}</span> ediciones de perfil disponibles este semestre.</p>
+            </div>
+            {% endif %}
+            
+            <div class="profile-form">
+                <div class="profile-form-row">
+                    <div class="form-group">
+                        <label class="form-label">Nombre Completo</label>
+                        <input type="text" class="form-control" name="nombre" value="{{ usuario.nombre|default('') }}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">
+                            {% if current_user.rol == 'estudiante' %}
+                                Número de Cuenta
+                            {% else %}
+                                Número de Empleado
+                            {% endif %}
+                        </label>
+                        <input type="text" class="form-control" name="numero_cuenta" value="{{ usuario.numero_cuenta|default('') }}" readonly>
+                    </div>
+                </div>
+                <div class="profile-form-row">
+                    <div class="form-group">
+                        <label class="form-label">Correo Electrónico</label>
+                        <input type="email" class="form-control" name="email" value="{{ usuario.email|default('') }}">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Teléfono</label>
+                        <input type="tel" class="form-control" name="telefono" value="{{ usuario.telefono|default('') }}">
+                    </div>
+                </div>
+                
+                {% if current_user.rol == 'profesor' %}
+                <div class="profile-form-row">
+                    <div class="form-group">
+                        <label class="form-label">Departamento</label>
+                        <input type="text" class="form-control" name="departamento" value="{{ usuario.departamento|default('') }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Especialidad</label>
+                        <input type="text" class="form-control" name="especialidad" value="{{ usuario.especialidad|default('') }}" required>
+                    </div>
+                </div>
+                <div class="profile-form-row">
+                    <div class="form-group">
+                        <label class="form-label">Grado académico</label>
+                        <select id="grado_academico" name="grado_academico" class="form-control" required>
+                            <option value="Licenciatura" {% if usuario.grado_academico == 'Licenciatura' %}selected{% endif %}>Licenciatura</option>
+                            <option value="Maestría" {% if usuario.grado_academico == 'Maestría' %}selected{% endif %}>Maestría</option>
+                            <option value="Doctorado" {% if usuario.grado_academico == 'Doctorado' %}selected{% endif %}>Doctorado</option>
+                            <option value="Posdoctorado" {% if usuario.grado_academico == 'Posdoctorado' %}selected{% endif %}>Posdoctorado</option>
+                        </select>
+                    </div>
+                </div>
+                {% endif %}
+                
+                {% if current_user.rol == 'administrador' %}
+                <div class="profile-form-row">
+                    <div class="form-group">
+                        <label class="form-label">Departamento</label>
+                        <input type="text" class="form-control" name="departamento" value="{{ usuario.departamento|default('') }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Cargo</label>
+                        <input type="text" class="form-control" name="cargo" value="{{ usuario.cargo|default('') }}" required>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        {% if current_user.rol == 'estudiante' %}
+        <div class="profile-section">
+            <h2 class="profile-section-title"><i class="fas fa-graduation-cap"></i> Información Académica</h2>
+            <div class="profile-form">
+                <div class="profile-form-row">
+                    <div class="form-group">
+                        <label class="form-label">Facultad</label>
+                        <input type="text" class="form-control" name="facultad" value="{{ usuario.facultad|default('') }}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Carrera</label>
+                        <input type="text" class="form-control" name="carrera" value="{{ usuario.carrera|default('') }}" readonly>
+                    </div>
+                </div>
+                <div class="profile-form-row">
+                    <div class="form-group">
+                        <label class="form-label">Semestre</label>
+                        <input type="text" class="form-control" name="semestre" value="{{ semestre|default('1') }}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Promedio General</label>
+                        <input type="text" class="form-control" name="promedio" value="{{ promedio|default('0.0') }}" readonly>
+                    </div>
+                </div>
+                
+                {% if promedios_por_clase %}
+                <div class="promedios-container">
+                    <h3>Promedios por Clase</h3>
+                    {% for promedio_clase in promedios_por_clase %}
+                    <div class="promedio-item">
+                        <div class="promedio-clase">{{ promedio_clase.clase }}</div>
+                        <div class="promedio-valor">{{ promedio_clase.promedio|round(2) }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                
+                <div class="estilos-aprendizaje">
+                    <h3>Mis Estilos de Aprendizaje</h3>
+                    <div class="estilos-tags">
+                        {% if usuario.estilos_aprendizaje %}
+                            {% for estilo in usuario.estilos_aprendizaje.split(',') %}
+                            <span class="estilo-tag">{{ estilo }}</span>
+                            {% endfor %}
+                        {% else %}
+                            <p class="no-estilos">No has definido tus estilos de aprendizaje.</p>
+                        {% endif %}
+                    </div>
+                    <a href="{{ url_for('actualizar_estilos') }}" class="btn btn-outline">
+                        <i class="fas fa-brain"></i> Actualizar Estilos de Aprendizaje
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        
+        {% if current_user.rol == 'profesor' %}
+        <div class="profile-section">
+            <h2 class="profile-section-title"><i class="fas fa-chart-bar"></i> Estadísticas Docentes</h2>
+            <div class="stats-container">
+                <div class="stat-box">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-value">{{ total_estudiantes|default('0') }}</div>
+                    <div class="stat-label">Estudiantes</div>
+                </div>
+                
+                <div class="stat-box">
+                    <div class="stat-icon">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <div class="stat-value">{{ total_grupos|default('0') }}</div>
+                    <div class="stat-label">Grupos Activos</div>
+                </div>
+                
+                <div class="stat-box">
+                    <div class="stat-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="stat-value">{{ total_practicas|default('0') }}</div>
+                    <div class="stat-label">Prácticas Creadas</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="profile-section">
+            <h2 class="profile-section-title"><i class="fas fa-bolt"></i> Acciones Rápidas</h2>
+            <div class="quick-actions">
+                <a href="{{ url_for('aulas') }}" class="action-btn">
+                    <i class="fas fa-chalkboard"></i>
+                    <span>Gestionar Aulas</span>
+                </a>
+                
+                <a href="{{ url_for('practicas') }}" class="action-btn">
+                    <i class="fas fa-tasks"></i>
+                    <span>Crear Práctica</span>
+                </a>
+                
+                <a href="{{ url_for('evaluacion') }}" class="action-btn">
+                    <i class="fas fa-clipboard-check"></i>
+                    <span>Evaluar Entregas</span>
+                </a>
+                
+                <a href="{{ url_for('horario') }}" class="action-btn">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Ver Horario</span>
+                </a>
+                
+                <a href="{{ url_for('calificaciones') }}" class="action-btn">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Ver Calificaciones</span>
+                </a>
+                
+                <a href="{{ url_for('reportes') if 'reportes' in url_for.__globals__ else '#' }}" class="action-btn">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Generar Reportes</span>
+                </a>
+            </div>
+        </div>
+        {% endif %}
+        
+        {% if current_user.rol == 'administrador' %}
+        <div class="profile-section">
+            <h2 class="profile-section-title"><i class="fas fa-cogs"></i> Acciones Administrativas</h2>
+            <div class="quick-actions">
+                <a href="{{ url_for('admin_usuarios') }}" class="action-btn">
+                    <i class="fas fa-users-cog"></i>
+                    <span>Gestionar Usuarios</span>
+                </a>
+                
+                <a href="{{ url_for('materias') if 'materias' in url_for.__globals__ else '#' }}" class="action-btn">
+                    <i class="fas fa-book"></i>
+                    <span>Gestionar Materias</span>
+                </a>
+                
+                <a href="{{ url_for('grupos') if 'grupos' in url_for.__globals__ else '#' }}" class="action-btn">
+                    <i class="fas fa-user-friends"></i>
+                    <span>Gestionar Grupos</span>
+                </a>
+                
+                <a href="{{ url_for('semestres') if 'semestres' in url_for.__globals__ else '#' }}" class="action-btn">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Gestionar Semestres</span>
+                </a>
+                
+                <a href="{{ url_for('reportes_admin') if 'reportes_admin' in url_for.__globals__ else '#' }}" class="action-btn">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Reportes Avanzados</span>
+                </a>
+                
+                <a href="{{ url_for('configuracion.configuracion') }}" class="action-btn">
+                    <i class="fas fa-sliders-h"></i>
+                    <span>Configuración</span>
+                </a>
+            </div>
+        </div>
+        
+        <div class="profile-section">
+            <h2 class="profile-section-title"><i class="fas fa-history"></i> Actividad Reciente</h2>
+            <div class="activity-list">
+                {% if actividades_recientes %}
+                    {% for actividad in actividades_recientes %}
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-{{ actividad.icono }}"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">{{ actividad.titulo }}</div>
+                            <div class="activity-details">{{ actividad.detalles }}</div>
+                            <div class="activity-time">{{ actividad.tiempo }}</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-info-circle"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">No hay actividades recientes</div>
+                            <div class="activity-details">Las actividades recientes aparecerán aquí</div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+        
+        <div class="profile-section">
+            <h2 class="profile-section-title"><i class="fas fa-camera"></i> Fotografía de Perfil</h2>
+            <div class="profile-form">
+                <div class="form-group">
+                    <label class="form-label">Actualizar Fotografía</label>
+                    <input type="file" class="form-control" name="foto" accept="image/*">
+                </div>
+            </div>
+        </div>
+        
+        {% if current_user.rol == 'estudiante' and marcos_disponibles %}
+        <div class="profile-section">
+            <h2 class="profile-section-title"><i class="fas fa-award"></i> Marcos de Perfil</h2>
+            <p>Selecciona un marco para tu foto de perfil. Desbloquea más marcos completando logros.</p>
+            
+            <div class="marcos-container">
+                {% for marco in marcos_disponibles %}
+                <div class="marco-item {% if marco.seleccionado %}selected{% endif %}" ondblclick="seleccionarMarco({{ marco.id }})">
+                    <input type="radio" id="marco-{{ marco.id }}" name="marco_id" value="{{ marco.id }}" class="marco-radio" {% if marco.seleccionado %}checked{% endif %}>
+                    <label for="marco-{{ marco.id }}" class="marco-preview">
+                        <div class="marco-preview-inner">
+                            <div class="marco-frame {{ marco.clase_css }}"></div>
+                        </div>
+                    </label>
+                    <div class="marco-name">{{ marco.nombre }}</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        
+        <div class="profile-section">
+            <div class="btn-container">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Actualizar Perfil
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Animación para los elementos del perfil
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animar estadísticas
+        const stats = document.querySelectorAll('.profile-stat');
+        stats.forEach((stat, index) => {
+            stat.style.opacity = '0';
+            stat.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                stat.style.transition = 'all 0.5s ease';
+                stat.style.opacity = '1';
+                stat.style.transform = 'translateY(0)';
+            }, 300 + (index * 100));
+        });
+        
+        // Animar avatar
+        const avatar = document.querySelector('.profile-avatar');
+        if (avatar) {
+            avatar.style.opacity = '0';
+            avatar.style.transform = 'scale(0.8)';
+            
+            setTimeout(() => {
+                avatar.style.transition = 'all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                avatar.style.opacity = '1';
+                avatar.style.transform = 'scale(1)';
+            }, 200);
+        }
+        
+        // Animar marcos de perfil
+        const marcos = document.querySelectorAll('.marco-item');
+        marcos.forEach((marco, index) => {
+            marco.style.opacity = '0';
+            marco.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                marco.style.transition = 'all 0.5s ease';
+                marco.style.opacity = '1';
+                marco.style.transform = 'translateY(0)';
+            }, 500 + (index * 50));
+        });
+    });
+    
+    // Función para seleccionar marco con doble clic
+    function seleccionarMarco(marcoId) {
+        // Actualizar la selección visual
+        document.querySelectorAll('.marco-item').forEach(item => {
+            item.classList.remove('selected');
+        });
+        
+        const marcoSeleccionado = document.querySelector(`.marco-item input[value="${marcoId}"]`).closest('.marco-item');
+        marcoSeleccionado.classList.add('selected');
+        
+        // Marcar el radio button
+        document.querySelector(`#marco-${marcoId}`).checked = true;
+        
+        // Actualizar el marco en el perfil
+        const marcoClase = marcoSeleccionado.querySelector('.marco-frame').className.split(' ')[1];
+        const profileFrame = document.querySelector('.profile-frame');
+        
+        if (profileFrame) {
+            // Eliminar todas las clases de marco
+            profileFrame.className = 'profile-frame';
+            // Añadir la clase del marco seleccionado
+            profileFrame.classList.add(marcoClase);
+        }
+        
+        // Actualizar en el servidor mediante AJAX
+        fetch('/actualizar_marco', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ marco_id: marcoId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Actualizar también en la barra de navegación si existe
+                const navAvatar = document.querySelector('#userAvatar .profile-frame');
+                if (navAvatar) {
+                    navAvatar.className = 'profile-frame';
+                    navAvatar.classList.add(marcoClase);
+                }
+            }
+        })
+        .catch(error => console.error('Error al actualizar marco:', error));
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,266 @@
+{% extends 'layout.html' %}
+
+{% block title %}Estadísticas de IA - IntelliTutor UNAM{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.css">
+<style>
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .stat-card {
+        background-color: #fff;
+        border-radius: 0.5rem;
+        padding: 1.5rem;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+    }
+    
+    .stat-value {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #003366;
+        margin: 0.5rem 0;
+    }
+    
+    .stat-label {
+        font-size: 1rem;
+        color: #6c757d;
+    }
+    
+    .chart-container {
+        height: 400px;
+        margin-bottom: 2rem;
+    }
+    
+    .chart-card {
+        background-color: #fff;
+        border-radius: 0.5rem;
+        padding: 1.5rem;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        margin-bottom: 2rem;
+    }
+    
+    .chart-title {
+        font-size: 1.25rem;
+        margin-bottom: 1rem;
+        color: #343a40;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="page-title">Estadísticas del Sistema de Evaluación con IA</h1>
+    
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-label">Total de Evaluaciones</div>
+            <div class="stat-value">{{ stats_generales.total_evaluaciones }}</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-label">Calificación Promedio</div>
+            <div class="stat-value">{{ "%.2f"|format(stats_generales.promedio_calificacion) }}</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-label">Calificación Mínima</div>
+            <div class="stat-value">{{ "%.2f"|format(stats_generales.min_calificacion) }}</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-label">Calificación Máxima</div>
+            <div class="stat-value">{{ "%.2f"|format(stats_generales.max_calificacion) }}</div>
+        </div>
+    </div>
+    
+    <div class="chart-card">
+        <h2 class="chart-title">Distribución de Calificaciones</h2>
+        <div class="chart-container">
+            <canvas id="calificacionesChart"></canvas>
+        </div>
+    </div>
+    
+    <div class="chart-card">
+        <h2 class="chart-title">Distribución de Estilos de Aprendizaje</h2>
+        <div class="chart-container">
+            <canvas id="estilosChart"></canvas>
+        </div>
+    </div>
+    
+    <div class="chart-card">
+        <h2 class="chart-title">Evolución de Calificaciones</h2>
+        <div class="chart-container">
+            <canvas id="evolucionChart"></canvas>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+<script>
+    // Datos para los gráficos
+    const distribucionCalificaciones = {
+        labels: [{% for item in distribucion_calificaciones %}'{{ item.rango }}'{% if not loop.last %}, {% endif %}{% endfor %}],
+        data: [{% for item in distribucion_calificaciones %}{{ item.cantidad }}{% if not loop.last %}, {% endif %}{% endfor %}]
+    };
+    
+    const distribucionEstilos = {
+        labels: [{% for item in distribucion_estilos %}'{{ item.nombre }}'{% if not loop.last %}, {% endif %}{% endfor %}],
+        data: [{% for item in distribucion_estilos %}{{ item.cantidad }}{% if not loop.last %}, {% endif %}{% endfor %}]
+    };
+    
+    const evolucionCalificaciones = {
+        labels: [{% for item in evolucion_calificaciones %}'{{ item.fecha }}'{% if not loop.last %}, {% endif %}{% endfor %}],
+        data: [{% for item in evolucion_calificaciones %}{{ item.promedio }}{% if not loop.last %}, {% endif %}{% endfor %}]
+    };
+    
+    // Colores para los gráficos
+    const backgroundColors = [
+        'rgba(54, 162, 235, 0.7)',
+        'rgba(255, 99, 132, 0.7)',
+        'rgba(75, 192, 192, 0.7)',
+        'rgba(255, 206, 86, 0.7)',
+        'rgba(153, 102, 255, 0.7)',
+        'rgba(255, 159, 64, 0.7)',
+        'rgba(199, 199, 199, 0.7)'
+    ];
+    
+    // Gráfico de distribución de calificaciones
+    const ctxCalificaciones = document.getElementById('calificacionesChart').getContext('2d');
+    new Chart(ctxCalificaciones, {
+        type: 'bar',
+        data: {
+            labels: distribucionCalificaciones.labels,
+            datasets: [{
+                label: 'Número de Evaluaciones',
+                data: distribucionCalificaciones.data,
+                backgroundColor: backgroundColors,
+                borderColor: backgroundColors.map(color => color.replace('0.7', '1')),
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Cantidad'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Rango de Calificación'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                },
+                title: {
+                    display: true,
+                    text: 'Distribución de Calificaciones',
+                    font: {
+                        size: 16
+                    }
+                }
+            }
+        }
+    });
+    
+    // Gráfico de distribución de estilos de aprendizaje
+    const ctxEstilos = document.getElementById('estilosChart').getContext('2d');
+    new Chart(ctxEstilos, {
+        type: 'pie',
+        data: {
+            labels: distribucionEstilos.labels,
+            datasets: [{
+                data: distribucionEstilos.data,
+                backgroundColor: backgroundColors,
+                borderColor: backgroundColors.map(color => color.replace('0.7', '1')),
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'right'
+                },
+                title: {
+                    display: true,
+                    text: 'Distribución de Estilos de Aprendizaje',
+                    font: {
+                        size: 16
+                    }
+                }
+            }
+        }
+    });
+    
+    // Gráfico de evolución de calificaciones
+    const ctxEvolucion = document.getElementById('evolucionChart').getContext('2d');
+    new Chart(ctxEvolucion, {
+        type: 'line',
+        data: {
+            labels: evolucionCalificaciones.labels,
+            datasets: [{
+                label: 'Calificación Promedio',
+                data: evolucionCalificaciones.data,
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    min: 0,
+                    max: 10,
+                    title: {
+                        display: true,
+                        text: 'Calificación Promedio'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Fecha'
+                    }
+                }
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Evolución de Calificaciones a lo Largo del Tiempo',
+                    font: {
+                        size: 16
+                    }
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

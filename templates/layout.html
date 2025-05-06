@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../static/img/Escudo-UNAM-white.svg">
+    <title>{% block title %}IntelliTutor UNAM{% endblock %}</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wgh
+    t@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/dracula.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='estudiante.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='custom.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='notification.css') }}">
+    {% if request.path == url_for('evaluacion') %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='evaluacion.css') }}">
+    {% endif %}
+    {% if request.path == url_for('practicas') %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='practicas.css') }}">
+    {% endif %}
+    {% if request.path == url_for('aulas') %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='aulas.css') }}">
+    {% endif %}
+    {% if request.path == url_for('horario') %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='horario.css') }}">
+    {% endif %}
+    {% block extra_css %}{% endblock %}
+    <style>
+      :root {
+          --accent-color: {{ configuracion.color_acento}};
+      }
+      * {
+        transition: all 0.3s ease;
+      }
+  </style>
+    <script>
+      (function() {
+          try {
+              // Obtener configuraciones desde localStorage
+              const tema = localStorage.getItem('tema') || 'light';
+              const color = localStorage.getItem('color_acento') || '#003d79';
+              const fuente = localStorage.getItem('tamano_fuente') || '14';
+
+              // Aplicar configuraciones básicas directamente al HTML
+              document.documentElement.setAttribute('data-tema', tema);
+              document.documentElement.style.setProperty('--color-acento', color);
+              document.documentElement.style.setProperty('--font-size-base', fuente + 'px');
+          } catch (e) {
+              console.warn('No se pudo aplicar configuración inmediata:', e);
+          }
+      })();
+
+  </script>
+</head>
+<body data-theme="{{ config_usuario.get('tema', 'light') }}">
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <img src="{{ url_for('static', filename='img/Escudo-UNAM-white.svg') }}" alt="Logo UNAM" />
+                <h1>IntelliTutor UNAM</h1>
+            </div>
+            
+            <nav class="nav-menu" id="navMenu">
+                {% if current_user.is_authenticated %}
+
+                {% if current_user.rol == 'administrador' %}
+                <a href="{{ url_for('inicio') }}" class="btn alt-font">Inicio</a>
+                <a href="{{ url_for('practicas') }}" class="btn     alt-font">Prácticas</a>
+                <a href="{{ url_for('evaluacion') }}" class="btn    alt-font">Evaluación</a>
+                <a href="{{ url_for('admin_usuarios') }}" class="btn    alt-font">Usuarios</a>
+                <a href="{{ url_for('gestionar_solicitudes') }}" class="btn     alt-font">Solicitudes</a>
+                {% elif current_user.rol == 'profesor' %}
+                <a href="{{ url_for('inicio') }}" class="btn alt-font">Inicio</a>
+                <a href="{{ url_for('practicas') }}" class="btn alt-font">Prácticas</a>
+                <a href="{{ url_for('evaluacion') }}" class="btn alt-font">Evaluación</a>
+                {% else %}
+                <a href="{{ url_for('inicio') }}" class="nav-link">Inicio</a>
+                <a href="{{ url_for('vista_estudiante', estudiante_id=current_user.id) }}" class="nav-link">Mis Prácticas</a>
+                {% endif %}
+                {% endif %}
+            </nav>
+            
+            <div class="user-menu">
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                
+                {% if current_user.is_authenticated %}
+                <div class="user-avatar " id="userAvatar">
+                    {% if usuario.foto_url %}
+                    <img src="{{ url_for('static', filename=usuario.foto_url) }}" alt="Foto de Perfil" class="avatar">
+                    {% else %}
+                    <i class="fas fa-user"></i>
+                    {% endif %}
+                </div>
+                <div class="user-dropdown" id="userDropdown">
+                    <div class="user-dropdown-header">
+                        <div class="user-dropdown-name">{{ current_user.nombre }}</div>
+                        <div class="user-dropdown-email">{{ current_user.email }}</div>
+                    </div>
+                    <a href="{{ url_for('perfil') }}" class="user-dropdown-item">
+                        <i class="fas fa-user-circle"></i> Mi Perfil
+                    </a>
+                    <a href="{{ url_for('configuracion.configuracion') }}" class="user-dropdown-item">
+                        <i class="fas fa-cog"></i> Configuración
+                    </a>
+                    {% if current_user.rol == 'estudiante' or current_user.rol == 'profesor' %}
+                    <a href="{{ url_for('horario') }}" class="user-dropdown-item">
+                        <i class="fas fa-calendar-alt"></i> Mi Horario
+                    </a>
+                    <a href="{{ url_for('calificaciones') }}" class="user-dropdown-item">
+                        <i class="fas fa-chart-bar"></i> Mis Calificaciones
+                    </a>
+                    {% endif %}
+                    <div class="user-dropdown-divider"></div>
+                    <a href="{{ url_for('logout') }}" class="user-dropdown-item">
+                        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                    </a>
+                </div>
+                {% else %}
+                <a href="{{ url_for('login') }}" class="btn">Iniciar sesión</a>
+                {% endif %}
+            </div>
+            
+            <div class="burger-menu" id="burgerMenu">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="{{ url_for('static', filename='img/Escudo-UNAM-white.svg') }}" alt="Logo UNAM" />
+                <h1>IntelliTutor UNAM</h1>
+            </div>
+            
+            <div class="footer-links">
+                <a href="{{ url_for('index') }}" class="footer-link">Inicio</a>
+                <a href="{{ url_for('ayuda') }}" class="footer-link">Ayuda</a>
+                <a href="{{ url_for('contacto') }}" class="footer-link">Contacto</a>
+                <a href="{{ url_for('privacidad') }}" class="footer-link">Políticas de Privacidad</a>
+                {% if current_user.is_authenticated and current_user.rol == 'estudiante' %}
+                <a href="{{ url_for('actualizar_estilos') }}" class="footer-link">Actualizar Estilos de Aprendizaje</a>
+                {% endif %}
+            </div>
+            
+            <div class="social-links">
+                <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+            </div>
+            
+            <div class="copyright">
+                &copy; {{ año_actual }} Universidad Nacional Autónoma de México. Todos los derechos reservados.
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Modal del editor de código -->
+<div id="codeEditorModal" class="code-editor-modal">
+    <div class="code-editor-container">
+      <div class="code-editor-header">
+        <div class="code-editor-title" id="codeEditorTitle">Editor de Código</div>
+        <button id="codeEditorClose" class="code-editor-close">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="code-editor-body">
+        <div class="code-editor-main">
+          <div class="code-editor-toolbar">
+            <button class="code-editor-btn code-editor-btn-run" onclick="executeCode(document.querySelector('form[data-editor=true]').getAttribute('data-practica-id'))">
+              <i class="fas fa-play"></i> Ejecutar
+            </button>
+            <button class="code-editor-btn code-editor-btn-language active" data-language="javascript">
+              <i class="fab fa-js"></i> JavaScript
+            </button>
+            <button class="code-editor-btn code-editor-btn-language" data-language="python">
+              <i class="fab fa-python"></i> Python
+            </button>
+            <button class="code-editor-btn code-editor-btn-language" data-language="java">
+              <i class="fab fa-java"></i> Java
+            </button>
+            <button class="code-editor-btn code-editor-btn-language" data-language="cpp">
+              <i class="fas fa-code"></i> C++
+            </button>
+          </div>
+          <div class="code-editor-wrapper">
+            <textarea id="codeEditor"></textarea>
+          </div>
+          <div id="codeEditorOutput" class="code-editor-output" style="display: none;"></div>
+        </div>
+        
+        <button id="sidebarToggle" class="sidebar-toggle">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        
+        <div id="codeEditorSidebar" class="code-editor-sidebar">
+          <div class="sidebar-header">
+            <span>Terminal</span>
+            <button class="sidebar-close">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <div class="terminal-container">
+            <div id="terminal-output"></div>
+          </div>
+        </div>
+      </div>
+      <div class="code-editor-footer">
+        <button id="codeEditorSubmit" class="btn btn-primary">
+          <i class="fas fa-paper-plane"></i> Entregar
+        </button>
+      </div>
+    </div>
+  </div>
+
+    <!-- Modal para mostrar evaluaciones -->
+    <div class="modal-overlay" id="evaluacionesModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Evaluaciones de la Práctica</h2>
+                <button class="modal-close" onclick="closeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="evaluaciones-grid" id="evaluacionesGrid">
+                    <!-- Las evaluaciones se cargarán dinámicamente aquí -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification-container"></div>
+
+    <script src="{{ url_for('static', filename='js/modal.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/notification.js') }}"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        // Inicializar CodeMirror si no existe
+        window.codeEditors = window.codeEditors || {};
+      
+        // Configuración global de tema y estilo
+        const tema = "{{ config_usuario.get('tema', 'light') }}";
+        document.body.setAttribute('data-theme', tema);
+      
+        const colorAccento = "{{ config_usuario.get('color_acento', '') }}";
+        if (colorAccento) {
+          document.documentElement.style.setProperty('--accent-primary', colorAccento);
+          document.documentElement.style.setProperty('--accent-secondary', colorAccento);
+        }
+      
+        const tamanoFuente = "{{ config_usuario.get('tamano_fuente', '14') }}";
+        document.documentElement.style.setProperty('--font-size-base', `${tamanoFuente}px`);
+      
+        // Botón de cerrar editor
+        const codeEditorClose = document.getElementById("codeEditorClose");
+        const codeEditorModal = document.getElementById("codeEditorModal");
+        if (codeEditorClose && codeEditorModal) {
+          codeEditorClose.addEventListener("click", () => {
+            const currentForm = document.querySelector('form[data-editor="true"]');
+            if (currentForm) {
+              const practicaId = currentForm.getAttribute("data-practica-id");
+              const codeEditor = window.codeEditors[practicaId];
+              if (codeEditor) {
+                let input = currentForm.querySelector('input[name="contenido"]');
+                if (!input) {
+                  input = document.createElement("input");
+                  input.type = "hidden";
+                  input.name = "contenido";
+                  currentForm.appendChild(input);
+                }
+                input.value = codeEditor.getValue();
+              }
+            }
+            codeEditorModal.classList.remove("active");
+          });
+        }
+      });
+      
+      // Abrir editor de código
+      window.openCodeEditor = (practicaId, title, form) => {
+        const modal = document.getElementById("codeEditorModal");
+        const titleEl = document.getElementById("codeEditorTitle");
+        const outputEl = document.getElementById("codeEditorOutput");
+        const submitBtn = document.getElementById("codeEditorSubmit");
+        const editorElement = document.getElementById("codeEditor");
+      
+        if (!modal || !titleEl || !editorElement) return;
+      
+        titleEl.textContent = title || "Editor de Código";
+        if (outputEl) {
+          outputEl.innerHTML = "";
+          outputEl.style.display = "none";
+        }
+      
+        if (form) {
+          form.setAttribute("data-editor", "true");
+          form.setAttribute("data-practica-id", practicaId);
+        }
+      
+        modal.classList.add("active");
+      
+        let editor = window.codeEditors[practicaId];
+      
+        if (!editor && typeof CodeMirror !== "undefined") {
+          const config = {
+            mode: getLanguageMode("{{ config_usuario.get('editor_lenguaje_default', 'javascript') }}"),
+            theme: "{{ config_usuario.get('editor_tema', 'dracula') }}",
+            lineNumbers: {{ 'true' if config_usuario.get('editor_line_numbers', True) else 'false' }},
+            lineWrapping: {{ 'true' if config_usuario.get('editor_wrap_lines', True) else 'false' }},
+            styleActiveLine: {{ 'true' if config_usuario.get('editor_highlight_active_line', True) else 'false' }},
+            autoCloseBrackets: {{ 'true' if config_usuario.get('editor_autocompletado', True) else 'false' }},
+            matchBrackets: true,
+            autoCloseTags: true,
+            matchTags: true,
+            foldGutter: true,
+            gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+            tabSize: 4,
+            indentUnit: 4,
+            smartIndent: true,
+            indentWithTabs: false
+          };
+      
+          try {
+            editor = CodeMirror.fromTextArea(editorElement, config);
+            editor.getWrapperElement().style.fontSize = "{{ config_usuario.get('editor_tamano_fuente', '14') }}px";
+            window.codeEditors[practicaId] = editor;
+      
+            const saved = localStorage.getItem(`code_${practicaId}`);
+            if (saved) editor.setValue(saved);
+      
+            editor.on("change", () => {
+              localStorage.setItem(`code_${practicaId}`, editor.getValue());
+            });
+          } catch (e) {
+            console.error("CodeMirror init error:", e);
+            return;
+          }
+        }
+      
+        if (editor) {
+          setTimeout(() => {
+            editor.refresh();
+            editor.focus();
+          }, 10);
+        }
+      
+        if (submitBtn) {
+          submitBtn.onclick = (event) => {
+            const code = editor.getValue();
+      
+            if (outputEl) {
+              outputEl.style.display = "block";
+              outputEl.innerHTML = "<div class='code-output-success'>Compilando código...</div>";
+            }
+      
+            setTimeout(() => {
+              let hasError = false;
+              if (editor.getOption("mode") === "javascript") {
+                try {
+                  new Function(code);
+                } catch (err) {
+                  hasError = true;
+                  if (outputEl) {
+                    outputEl.innerHTML = `<div class='code-output-error'>Error de compilación: ${err.message}</div>`;
+                    showNotification("Error de compilación", "error");
+                  }
+                }
+              }
+      
+              if (!hasError) {
+                if (outputEl) {
+                  outputEl.innerHTML = "<div class='code-output-success'>Compilación exitosa. Listo para entregar.</div>";
+                  showNotification("Compilación exitosa", "success");
+                }
+      
+                const currentForm = document.querySelector('form[data-editor="true"]');
+                if (currentForm) {
+                  let input = currentForm.querySelector('input[name="contenido"]');
+                  if (!input) {
+                    input = document.createElement("input");
+                    input.type = "hidden";
+                    input.name = "contenido";
+                    currentForm.appendChild(input);
+                  }
+                  input.value = code;
+      
+                  if (event.target.id === "codeEditorSubmit") {
+                    modal.classList.remove("active");
+                    currentForm.submit();
+                  }
+                }
+              }
+            }, 500);
+          };
+        }
+      };
+      
+      // Modo CodeMirror por lenguaje
+      function getLanguageMode(lang) {
+        switch (lang) {
+          case "javascript": return "javascript";
+          case "python": return "python";
+          case "java": return "text/x-java";
+          case "cpp": return "text/x-c++src";
+          default: return "javascript";
+        }
+      }
+      </script>
+      
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

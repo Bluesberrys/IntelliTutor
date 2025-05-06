@@ -1,0 +1,504 @@
+{% extends 'layout.html' %}
+
+{% block title %}Portal Estudiantil - IntelliTutor UNAM{% endblock %}
+
+{% block content %}
+
+<main>
+    <div class="aulas-container">
+        <div class="aulas-header">
+            <h1>Aulas Virtuales</h1>
+            <p>Gestiona tus grupos y estudiantes en un entorno virtual de aprendizaje diseñado para facilitar la enseñanza y el seguimiento académico.</p>
+        </div>
+
+        <div class="aulas-search">
+            <input type="text" placeholder="Buscar por nombre de grupo o estudiante..." id="searchAulas">
+            <i class="fas fa-search"></i>
+        </div>
+
+        <div class="aulas-filters">
+            <button class="aulas-filter-btn active"><i class="fas fa-th-large"></i> Todos</button>
+            <button class="aulas-filter-btn"><i class="fas fa-user-graduate"></i> Matutino</button>
+            <button class="aulas-filter-btn"><i class="fas fa-moon"></i> Vespertino</button>
+            <button class="aulas-filter-btn"><i class="fas fa-sort-amount-up"></i> Más estudiantes</button>
+            <button class="aulas-filter-btn"><i class="fas fa-sort-amount-down"></i> Menos estudiantes</button>
+        </div>
+
+        {% if grupos and grupos|length > 0 %}
+        <div class="aulas-grid" id="aulasGrid">
+            {% for grupo_id, grupo in grupos.items() %}
+            <div class="aula-card-container" data-index="{{ loop.index0 }}">
+                <div class="aula-card" id="card-{{ grupo_id }}">
+                    <!-- Frente de la tarjeta -->
+                    <div class="aula-card-front">
+                        <div class="aula-card-header">
+                            <h2>{{ grupo.nombre }}</h2>
+                            <p>{{ grupo.descripcion }}</p>
+                            <i class="fas fa-chalkboard-teacher aula-card-icon"></i>
+                        </div>
+                        
+                        <div class="aula-card-body">
+                            <div class="aula-container">
+                                <div class="aula-dates">
+                                    <div class="aula-date-item">
+                                        <i class="fas fa-calendar-alt"></i>
+                                        <span><strong>Inicio:</strong> {{ grupo.fecha_inicio.strftime('%d/%m/%Y') if grupo.fecha_inicio else 'No definido' }}</span>
+                                    </div>
+                                    <div class="aula-date-item">
+                                        <i class="fas fa-calendar-check"></i>
+                                        <span><strong>Fin:</strong> {{ grupo.fecha_fin.strftime('%d/%m/%Y') if grupo.fecha_fin else 'No definido' }}</span>
+                                    </div>
+                                </div>
+                            
+                                <div class="aula-progress">
+                                    <div class="aula-progress-bar" style="width: {{ (grupo.estudiantes|length / 30) * 100 }}%"></div>
+                                </div>
+                            </div>                                                     
+                        </div>
+
+                        <div class="aula-card-footer">
+                            <div class="aula-stats">
+                                <div><i class="fas fa-users"></i> {{ grupo.estudiantes|length if grupo.estudiantes else 0 }} Estudiantes</div>
+                                <div><i class="fas fa-book"></i> {{ grupo.total_practicas }} Prácticas</div>
+                            </div>
+                            <div class="aula-card-actions">
+                                <button class="edit" title="Editar grupo" onclick="flipCard('{{ grupo_id }}', 'edit')"><i class="fas fa-edit"></i></button>
+                                <button title="Ver detalles" onclick="flipCard('{{ grupo_id }}', 'details')"><i class="fas fa-eye"></i></button>
+                                <button title="Gestionar estudiantes" onclick="flipCard('{{ grupo_id }}', 'students')"><i class="fas fa-user-plus"></i></button>
+                                <button title="Criterios de evaluación" onclick="flipCard('{{ grupo_id }}', 'criteria')"><i class="fas fa-chart-pie"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Reverso de la tarjeta - Editar Grupo -->
+                    <div class="aula-card-back edit-back" id="edit-{{ grupo_id }}">
+                        <div class="back-header">
+                            <h2>Editar Grupo</h2>
+                            <button class="back-btn" onclick="flipCardBack('{{ grupo_id }}')"><i class="fas fa-arrow-left"></i></button>
+                        </div>
+                        <div class="back-content">
+                            <form class="edit-form" id="edit-form-{{ grupo_id }}" action="{{ url_for('aulas', grupo_id=grupo_id) }}" method="POST">
+                                <input type="hidden" name="editar_grupo_id" value="{{ grupo_id }}">
+
+                                <div class="form-group">
+                                    <label for="descripcion-{{ grupo_id }}">Descripción:</label>
+                                    <textarea id="descripcion-{{ grupo_id }}" name="descripcion" required>{{ grupo.descripcion }}</textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="turno-{{ grupo_id }}">Turno:</label>
+                                    <select id="turno-{{ grupo_id }}" name="turno" required>
+                                        <option value="matutino" {% if 'A-' in grupo.nombre %}selected{% endif %}>Matutino</option>
+                                        <option value="vespertino" {% if 'B-' in grupo.nombre %}selected{% endif %}>Vespertino</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="semestre-{{ grupo_id }}">Semestre:</label>
+                                    <select id="semestre-{{ grupo_id }}" name="semestre_id" class="form-input" required>
+                                        {% for semestre in semestres %}
+                                        <option value="{{ semestre.id }}" {% if grupo.semestre_id == semestre.id %}selected{% endif %}>{{ semestre.nombre }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="fecha_inicio-{{ grupo_id }}">Fecha de inicio:</label>
+                                    <input type="date" id="fecha_inicio-{{ grupo_id }}" name="fecha_inicio" value="{{ grupo.fecha_inicio.strftime('%Y-%m-%d') if grupo.fecha_inicio else '' }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="fecha_fin-{{ grupo_id }}">Fecha de fin:</label>
+                                    <input type="date" id="fecha_fin-{{ grupo_id }}" name="fecha_fin" value="{{ grupo.fecha_fin.strftime('%Y-%m-%d') if grupo.fecha_fin else '' }}" required>
+                                </div>
+                                <button type="submit" class="submit-btn">Actualizar Grupo</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Reverso de la tarjeta - Ver Detalles -->
+                    <div class="aula-card-back details-back" id="details-{{ grupo_id }}">
+                        <div class="back-header">
+                            <h2>Detalles del Grupo</h2>
+                            <button class="back-btn" onclick="flipCardBack('{{ grupo_id }}')"><i class="fas fa-arrow-left"></i></button>
+                        </div>
+                        <div class="back-content">
+                            <div class="details-section">
+                                <h3>Información General</h3>
+                                <p><strong>Nombre:</strong> {{ grupo.nombre }}</p>
+                                <p><strong>Descripción:</strong> {{ grupo.descripcion }}</p>
+                                <p><strong>Turno:</strong> {% if 'A-' in grupo.nombre %}Matutino{% else %}Vespertino{% endif %}</p>
+                                <p><strong>Fecha de inicio:</strong> {{ grupo.fecha_inicio.strftime('%d/%m/%Y') if grupo.fecha_inicio else 'No definido' }}</p>
+                                <p><strong>Fecha de fin:</strong> {{ grupo.fecha_fin.strftime('%d/%m/%Y') if grupo.fecha_fin else 'No definido' }}</p>
+                            </div>
+                            <div class="details-section">
+                                <h3>Estudiantes Inscritos</h3>
+                                {% if grupo.estudiantes and grupo.estudiantes|length > 0 %}
+                                <ul class="details-list">
+                                    {% for estudiante in grupo.estudiantes %}
+                                    <li><i class="fas fa-user-graduate"></i> {{ estudiante }}</li>
+                                    {% endfor %}
+                                </ul>
+                                {% else %}
+                                <p class="empty-list">No hay estudiantes inscritos en este grupo.</p>
+                                {% endif %}
+                            </div>
+                            <div class="details-section">
+                                <h3>Prácticas Activas</h3>
+                                {% if grupo.practicas and grupo.practicas|length > 0 %}
+                                <ul class="details-list">
+                                    {% for practica in grupo.practicas %}
+                                    <li>
+                                        <i class="fas {% if practica.tipo_asignacion == 'examen' %}fa-file-alt{% elif practica.tipo_asignacion == 'proyecto' %}fa-project-diagram{% else %}fa-book{% endif %}"></i> 
+                                        {{ practica.titulo }} 
+                                        <span class="badge badge-{{ practica.tipo_asignacion }}">{{ practica.tipo_asignacion }}</span>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                                {% else %}
+                                <p class="empty-list">No hay prácticas activas para este grupo.</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Reverso de la tarjeta - Gestionar Estudiantes -->
+                    <div class="aula-card-back students-back" id="students-{{ grupo_id }}">
+                        <div class="back-header">
+                            <h2>Gestionar Estudiantes</h2>
+                            <button class="back-btn" onclick="flipCardBack('{{ grupo_id }}')"><i class="fas fa-arrow-left"></i></button>
+                        </div>
+                        <div class="back-content">
+                            <div class="student-management">
+                                <!-- Buscador de estudiantes -->
+                                <div class="student-search">
+                                    <input type="text" id="search-student-{{ grupo_id }}" placeholder="Buscar estudiante por nombre o número de cuenta...">
+                                    <i class="fas fa-search"></i>
+                                    <div class="student-search-results" id="search-results-{{ grupo_id }}" style="display: none;"></div>
+                                </div>
+                                
+                                <h3>Agregar Estudiante</h3>
+                                <form class="add-student-form" id="add-student-form-{{ grupo_id }}">
+                                    <select name="usuario_id" id="estudiante-select-{{ grupo_id }}" required>
+                                        <option value="">Seleccionar estudiante</option>
+                                        <!-- Se llenará dinámicamente con JavaScript -->
+                                    </select>
+                                    <button type="button" onclick="agregarEstudiante('{{ grupo_id }}')">Agregar</button>
+                                </form>
+                                
+                                <h3>Estudiantes Inscritos</h3>
+                                <table class="student-table" id="student-table-{{ grupo_id }}">
+                                    <thead>
+                                        <tr>
+                                            <th>Nombre</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% if grupo.estudiantes and grupo.estudiantes|length > 0 %}
+                                            {% for estudiante in grupo.estudiantes_data %}
+                                            <tr data-usuario-id="{{ estudiante.id }}">
+                                                <td>{{ estudiante.nombre }}</td>
+                                                <td>
+                                                    <button onclick="eliminarEstudiante('{{ grupo.id }}', '{{ estudiante.id }}', this)">Eliminar</button>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        {% else %}
+                                            <tr>
+                                                <td colspan="2" class="empty-list">No hay estudiantes inscritos</td>
+                                            </tr>
+                                        {% endif %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Reverso de la tarjeta - Criterios de Evaluación -->
+                    <div class="aula-card-back criteria-back" id="criteria-{{ grupo_id }}">
+                        <div class="back-header">
+                            <h2>Criterios de Evaluación</h2>
+                            <button class="back-btn" onclick="flipCardBack('{{ grupo_id }}')"><i class="fas fa-arrow-left"></i></button>
+                        </div>
+                        <div class="back-content">
+                            <form class="criteria-form" id="criteria-form-{{ grupo_id }}" action="{{ url_for('aulas', grupo_id=grupo_id) }}" method="POST">
+                                <input type="hidden" name="editar_grupo_id" value="{{ grupo_id }}">
+                                
+                                <div class="criteria-section">
+                                    <h3>Distribución de Calificación</h3>
+                                    <p class="criteria-note">Define el porcentaje que cada tipo de actividad aporta a la calificación final. La suma debe ser 100%.</p>
+                                    
+                                    <div class="form-group">
+                                        <label for="practicas-{{ grupo_id }}">Prácticas (%):</label>
+                                        <input type="number" id="practicas-{{ grupo_id }}" name="practicas_porcentaje" min="0" max="100" value="{{ grupo.criterios.practicas_porcentaje if grupo.criterios else 40 }}" required>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="examenes-{{ grupo_id }}">Exámenes (%):</label>
+                                        <input type="number" id="examenes-{{ grupo_id }}" name="examenes_porcentaje" min="0" max="100" value="{{ grupo.criterios.examenes_porcentaje if grupo.criterios else 30 }}" required>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="proyectos-{{ grupo_id }}">Proyectos (%):</label>
+                                        <input type="number" id="proyectos-{{ grupo_id }}" name="proyectos_porcentaje" min="0" max="100" value="{{ grupo.criterios.proyectos_porcentaje if grupo.criterios else 20 }}" required>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="asistencia-{{ grupo_id }}">Asistencia (%):</label>
+                                        <input type="number" id="asistencia-{{ grupo_id }}" name="asistencia_porcentaje" min="0" max="100" value="{{ grupo.criterios.asistencia_porcentaje if grupo.criterios else 10 }}" required>
+                                    </div>
+                                    
+                                    <div class="total-percentage">
+                                        <span>Total: <strong id="total-percentage-{{ grupo_id }}">100</strong>%</span>
+                                    </div>
+                                </div>
+                                
+                                <button type="submit" class="submit-btn">Guardar Criterios</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            
+            <!-- Tarjeta para crear nueva clase -->
+            <div class="create-class-card-container" data-index="{{ grupos|length }}">
+                <div class="create-class-card" id="create-card">
+                    <div class="create-class-front" onclick="flipCreateCard()">
+                        <i class="fas fa-plus"></i>
+                        <h2>Crear Clase</h2>
+                    </div>
+                    <div class="create-class-back">
+                        <h2>Crear Grupo</h2>
+                        <form class="create-form" id="create-form" action="{{ url_for('aulas') }}" method="POST">
+                            <div class="form-group">
+                                <label for="materia_id">Materia:</label>
+                                <select id="materia_id" name="materia_id" class="form-input" required>
+                                    {% for materia in materias %}
+                                    <option value="{{ materia.id }}">{{ materia.nombre }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="semestre_id">Semestre:</label>
+                                <select id="semestre_id" name="semestre_id" class="form-input" required>
+                                    {% for semestre in semestres %}
+                                    <option value="{{ semestre.id }}">{{ semestre.nombre }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="turno">Turno:</label>
+                                <select id="turno" name="turno" required>
+                                    <option value="matutino">Matutino</option>
+                                    <option value="vespertino">Vespertino</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="grupo_id">Grupo:</label>
+                                <select id="grupo_id" name="grupo_numero" class="form-input" required>
+                                    <option value="">Seleccione un grupo</option>
+                                    <!-- Los grupos se llenarán aquí mediante JavaScript -->
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="descripcion">Descripción:</label>
+                                <textarea id="descripcion" name="descripcion" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="fecha_inicio">Fecha de inicio:</label>
+                                <input type="date" id="fecha_inicio" name="fecha_inicio" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="fecha_fin">Fecha de fin:</label>
+                                <input type="date" id="fecha_fin" name="fecha_fin" required>
+                            </div>
+                            
+                            <div class="criteria-section">
+                                <h3>Criterios de Evaluación</h3>
+                                <p class="criteria-note">Define el porcentaje que cada tipo de actividad aporta a la calificación final. La suma debe ser 100%.</p>
+                                
+                                <div class="form-group">
+                                    <label for="practicas_porcentaje">Prácticas (%):</label>
+                                    <input type="number" id="practicas_porcentaje" name="practicas_porcentaje" min="0" max="100" value="40" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="examenes_porcentaje">Exámenes (%):</label>
+                                    <input type="number" id="examenes_porcentaje" name="examenes_porcentaje" min="0" max="100" value="30" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="proyectos_porcentaje">Proyectos (%):</label>
+                                    <input type="number" id="proyectos_porcentaje" name="proyectos_porcentaje" min="0" max="100" value="20" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="asistencia_porcentaje">Asistencia (%):</label>
+                                    <input type="number" id="asistencia_porcentaje" name="asistencia_porcentaje" min="0" max="100" value="10" required>
+                                </div>
+                                
+                                <div class="total-percentage">
+                                    <span>Total: <strong id="total-percentage-new">100</strong>%</span>
+                                </div>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button type="button" class="back-btn" onclick="flipCreateCardBack()">
+                                    <i class="fas fa-arrow-left"></i> Cancelar
+                                </button>
+                            </div>
+                            <button type="submit" id="form-btn" class="submit-btn">Crear Grupo</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="aula-empty">
+    <div class="empty-state">
+        <i class="fas fa-chalkboard-teacher empty-icon"></i>
+        <h2>No hay aulas creadas</h2>
+        <p>Comienza creando tu primera aula virtual para gestionar tus grupos y estudiantes.</p>
+    </div>
+    
+    <!-- Tarjeta para crear nueva clase -->
+    <div class="create-class-card-container show" data-index="0">
+        <div class="create-class-card" id="create-card">
+            <div class="create-class-front" onclick="flipCreateCard()">
+                <i class="fas fa-plus"></i>
+                <h2>Crear Clase</h2>
+            </div>
+            <div class="create-class-back">
+                <h2>Crear Grupo</h2>
+                <form class="create-form" id="create-form" action="{{ url_for('aulas') }}" method="POST">
+                    <div class="form-group">
+                        <label for="materia_id">Materia:</label>
+                        <select id="materia_id" name="materia_id" class="form-input" required>
+                            {% for materia in materias %}
+                            <option value="{{ materia.id }}">{{ materia.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="semestre_id">Semestre:</label>
+                        <select id="semestre_id" name="semestre_id" class="form-input" required>
+                            {% for semestre in semestres %}
+                            <option value="{{ semestre.id }}">{{ semestre.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="turno">Turno:</label>
+                        <select id="turno" name="turno" required>
+                            <option value="matutino">Matutino</option>
+                            <option value="vespertino">Vespertino</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="grupo_id">Grupo:</label>
+                        <select id="grupo_id" name="grupo_numero" class="form-input" required>
+                            <option value="">Seleccione un grupo</option>
+                            <!-- Los grupos se llenarán aquí mediante JavaScript -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="descripcion">Descripción (máx. 300 caracteres):</label>
+                        <textarea id="descripcion" name="descripcion" maxlength="300" required></textarea>
+                        <small class="char-counter"><span id="char-count">0</span>/300 caracteres</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="fecha_inicio">Fecha de inicio:</label>
+                        <input type="date" id="fecha_inicio" name="fecha_inicio" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fecha_fin">Fecha de fin:</label>
+                        <input type="date" id="fecha_fin" name="fecha_fin" required>
+                    </div>
+                    
+                    <div class="criteria-section">
+                        <h3>Criterios de Evaluación</h3>
+                        <p class="criteria-note">Define el porcentaje que cada tipo de actividad aporta a la calificación final. La suma debe ser 100%.</p>
+                        
+                        <div class="form-group">
+                            <label for="practicas_porcentaje">Prácticas (%):</label>
+                            <input type="number" id="practicas_porcentaje" name="practicas_porcentaje" min="0" max="100" value="40" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="examenes_porcentaje">Exámenes (%):</label>
+                            <input type="number" id="examenes_porcentaje" name="examenes_porcentaje" min="0" max="100" value="30" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="proyectos_porcentaje">Proyectos (%):</label>
+                            <input type="number" id="proyectos_porcentaje" name="proyectos_porcentaje" min="0" max="100" value="20" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="asistencia_porcentaje">Asistencia (%):</label>
+                            <input type="number" id="asistencia_porcentaje" name="asistencia_porcentaje" min="0" max="100" value="10" required>
+                        </div>
+                        
+                        <div class="total-percentage">
+                            <span>Total: <strong id="total-percentage-new">100</strong>%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="back-btn" onclick="flipCreateCardBack()">
+                            <i class="fas fa-arrow-left"></i> Cancelar
+                        </button>
+                    </div>
+                    <button type="submit" id="form-btn" class="submit-btn">Crear Grupo</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+        {% endif %}
+    </div>
+</main>
+
+<script src="{{ url_for('static', filename='js/aulas.js') }}"></script>
+
+{% block scripts %}
+<script>
+// Script para calcular el total de porcentajes en los criterios de evaluación
+document.addEventListener('DOMContentLoaded', function() {
+    // Para cada formulario de criterios existente
+    document.querySelectorAll('[id^="criteria-form-"]').forEach(form => {
+        const inputs = form.querySelectorAll('input[type="number"]');
+        const totalElement = form.querySelector('[id^="total-percentage-"]');
+        
+        // Actualizar el total cuando cambie cualquier input
+        inputs.forEach(input => {
+            input.addEventListener('input', function() {
+                let total = 0;
+                inputs.forEach(inp => {
+                    total += parseInt(inp.value) || 0;
+                });
+                totalElement.textContent = total;
+                totalElement.style.color = total === 100 ? 'green' : 'red';
+            });
+        });
+    });
+    
+    // Para el formulario de creación
+    const createForm = document.getElementById('create-form');
+    if (createForm) {
+        const inputs = createForm.querySelectorAll('input[name$="_porcentaje"]');
+        const totalElement = document.getElementById('total-percentage-new');
+        
+        inputs.forEach(input => {
+            input.addEventListener('input', function() {
+                let total = 0;
+                inputs.forEach(inp => {
+                    total += parseInt(inp.value) || 0;
+                });
+                totalElement.textContent = total;
+                totalElement.style.color = total === 100 ? 'green' : 'red';
+            });
+        });
+    }
+});
+</script>
+{% endblock %}
+{% endblock %}

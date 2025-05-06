@@ -318,6 +318,50 @@ class GeneradorPracticasDB:
             self.connection = None
             self.cursor = None
 
+    def generar_comentarios_y_calificacion(self, titulo: str, contenido: str) -> Dict[str, Any]:
+        """Genera calificación y comentarios para una entrega."""
+        entrada = f"{titulo} | {contenido}"
+        seq = torch.tensor(self.tokenizer.encode(entrada, max_length=self.max_length)).unsqueeze(0)
+        seq = seq.to(self.device)
+
+        self.model.eval()
+        with torch.no_grad():
+            pred = self.model(seq).cpu().numpy()[0]
+
+        # Calcular calificación como promedio ponderado
+        calificacion = np.dot(pred, np.arange(len(pred))) / len(pred)
+
+        # Generar comentarios basados en las palabras más probables
+        indices = np.argsort(pred)[-5:]  # Top 5 palabras más probables
+        comentarios = " ".join([self.tokenizer.index_word[idx] for idx in reversed(indices) if idx in self.tokenizer.index_word])
+
+        return {
+            "calificacion": round(calificacion, 2),
+            "comentarios": comentarios
+        }
+
+    def generar_comentarios_y_calificacion(self, titulo: str, contenido: str) -> Dict[str, Any]:
+        """Genera calificación y comentarios para una entrega."""
+        entrada = f"{titulo} | {contenido}"
+        seq = torch.tensor(self.tokenizer.encode(entrada, max_length=self.max_length)).unsqueeze(0)
+        seq = seq.to(self.device)
+
+        self.model.eval()
+        with torch.no_grad():
+            pred = self.model(seq).cpu().numpy()[0]
+
+        # Calcular calificación como promedio ponderado
+        calificacion = np.dot(pred, np.arange(len(pred))) / len(pred)
+
+        # Generar comentarios basados en las palabras más probables
+        indices = np.argsort(pred)[-5:]  # Top 5 palabras más probables
+        comentarios = " ".join([self.tokenizer.index_word[idx] for idx in reversed(indices) if idx in self.tokenizer.index_word])
+
+        return {
+            "calificacion": round(calificacion, 2),
+            "comentarios": comentarios
+        }
+
     def login_usuario(self, email: str, password: str) -> Optional[Dict]:
         """Autenticar usuario"""
         if not self.connection:

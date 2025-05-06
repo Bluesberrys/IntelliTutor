@@ -1,0 +1,244 @@
+{% extends 'layout.html' %}
+{% block title %}Inicio - IntelliTutor UNAM{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='inicio.css') }}">
+
+{% endblock %}
+
+{% block content %}
+
+{% if rol == 'administrador' %}
+<!-- Dashboard de Administrador -->
+<div id="admin-dashboard">
+    <div class="hero">
+        <div class="info_inicio">
+            <h1 class="alt-font">Bienvenido Administrador</h1>
+            <p>
+                Administra y gestiona las prácticas, evaluaciones y usuarios de IntelliTutor UNAM.
+            </p>
+        </div>
+    </div>
+
+    <div class="dashboard-grid">
+        <div class="card fade-in">
+            <img src="{{ url_for('static', filename='img/programador.avif') }}" alt="Gestión de usuarios" class="card-img">
+            <div class="card-body text-center">
+                <i class="fas fa-users fa-3x mb-3 text-primary"></i>
+                <h3 class="card-title">Gestión de usuarios</h3>
+                <p class="card-text">Gestión y manejo de información de usuarios.</p>
+                <a class="btn btn-primary" href="{{ url_for('admin_usuarios') }}">Usuarios</a>
+            </div>
+        </div>
+
+        <div class="card fade-in">
+            <img src="{{ url_for('static', filename='img/practicas.jpeg') }}" alt="Gestión de prácticas" class="card-img">
+            <div class="card-body text-center">
+                <i class="fas fa-tasks fa-3x mb-3 text-primary"></i>
+                <h3 class="card-title">Gestión de prácticas</h3>
+                <p class="card-text">Generación y modificación de prácticas.</p>
+                <a class="btn btn-primary" href="{{ url_for('practicas') }}">Prácticas</a>
+            </div>
+        </div>
+
+        <div class="card fade-in">
+            <img src="{{ url_for('static', filename='img/evaluacion.webp') }}" alt="Evaluación de prácticas" class="card-img">
+            <div class="card-body text-center">
+                <i class="fas fa-chart-bar fa-3x mb-3 text-primary"></i>
+                <h3 class="card-title">Evaluación de prácticas</h3>
+                <p class="card-text">Resultado de evaluación de las prácticas entregadas por el estudiante.</p>
+                <a class="btn btn-primary" href="{{ url_for('evaluacion') }}">Evaluación</a>
+            </div>
+        </div>
+
+        <div class="card fade-in">
+            <img src="{{ url_for('static', filename='img/ayuda.jpg') }}" alt="Evaluación de solicitudes" class="card-img">
+            <div class="card-body text-center">
+                <i class="fas fa-clipboard-list fa-3x mb-3 text-primary"></i>
+                <h3 class="card-title">Evaluación de solicitudes</h3>
+                <p class="card-text">Evalua las peticiones de los usuarios.</p>
+                <a class="btn btn-primary" href="{{ url_for('gestionar_solicitudes') }}">Solicitudes</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% elif current_user.rol == 'profesor' %}
+<!-- Dashboard de Profesor -->
+<div id="profesor-dashboard">
+    <div class="hero">
+        <div class="info_inicio">
+            <h1 class="alt-font">Bienvenido, Profesor</h1>
+            <p>Accede a tus prácticas, evaluaciones y más en IntelliTutor UNAM.</p>
+        </div>
+    </div>
+
+    <div id="container-cards">
+        <h2 class="section-title">Secciones</h2>
+
+        <div class="dashboard-grid">
+            <div class="card fade-in">
+                <img src="{{ url_for('static', filename='img/practicas.jpeg') }}" alt="Gestión de prácticas" class="card-img">
+                <div class="card-body text-center">
+                    <i class="fas fa-tasks fa-3x mb-3 text-primary"></i>
+                    <h3 class="card-title">Gestión de prácticas</h3>
+                    <p class="card-text">Generación y modificación de prácticas.</p>
+                    <a class="btn btn-primary" href="{{ url_for('practicas') }}">Prácticas</a>
+                </div>
+            </div>
+
+            <div class="card fade-in">
+                <img src="{{ url_for('static', filename='img/evaluacion.webp') }}" alt="Prácticas Académicas" class="card-img">
+                <div class="card-body text-center">
+                    <i class="fas fa-chart-bar fa-3x mb-3 text-primary"></i>
+                    <h3 class="card-title">Prácticas Académicas</h3>
+                    <p class="card-text">Resultado de evaluación de las prácticas entregadas por el estudiante.</p>
+                    <a class="btn btn-primary" href="{{ url_for('evaluacion') }}">Evaluación</a>
+                </div>
+            </div>
+
+            <div class="card fade-in">
+                <img src="{{ url_for('static', filename='img/aulas.jpg') }}" alt="Aulas Virtuales" class="card-img">
+                <div class="card-body text-center">
+                    <i class="fas fa-chalkboard-teacher fa-3x mb-3 text-primary"></i>
+                    <h3 class="card-title">Aulas Virtuales</h3>
+                    <p class="card-text">Información sobre las aulas y sus prácticas.</p>
+                    <a class="btn btn-primary" href="{{ url_for('aulas') }}">Aulas</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% else %}
+<!-- Dashboard de Estudiante -->
+
+<div id="notification-data" 
+     data-practicas-pendientes='{{ practicas_pendientes | tojson | safe }}' 
+     data-practicas-por-caducar='{{ practicas_por_caducar | tojson | safe }}'
+     data-practicas-atrasadas='{{ practicas_atrasadas | tojson | safe }}'>
+</div>
+
+
+<div id="estudiante-dashboard">
+    <div class="hero">
+        <div class="info_inicio">
+            <h1 class="alt-font">Bienvenido Estudiante</h1>
+            <p>
+                Explora tus prácticas, evaluaciones y recursos educativos en IntelliTutor UNAM.
+            </p>
+        </div>
+    </div>
+
+    <div id="container-cards">
+        <h2 class="section-title">Secciones</h2>
+
+        <div class="dashboard-grid">
+            <div class="card fade-in">
+                <img src="{{ url_for('static', filename='img/practicas.jpeg') }}" alt="Portal de Estudiante" class="card-img">
+                <div class="card-body text-center">
+                    <i class="fas fa-tasks fa-3x mb-3 text-primary"></i>
+                    <h3 class="card-title">Portal de Estudiante</h3>
+                    <p class="card-text">Accede y realiza tus prácticas asignadas.</p>
+                    <a class="btn btn-primary" href="{{ url_for('vista_estudiante', estudiante_id=estudiante_id) }}">Ir a Prácticas</a>
+                </div>
+            </div>
+
+            <!-- <div class="card fade-in">
+                <img src="{{ url_for('static', filename='img/evaluacion.webp') }}" alt="Evaluaciones Calificadas" class="card-img">
+                <div class="card-body text-center">
+                    <i class="fas fa-chart-bar fa-3x mb-3 text-primary"></i>
+                    <h3 class="card-title">Evaluaciones Calificadas</h3>
+                    <p class="card-text">Consulta los resultados de tus evaluaciones.</p>
+                    <a class="btn btn-primary" href="{{ url_for('estudiante_evaluacion', estudiante_id=estudiante_id) }}">Ir a Evaluaciones</a>
+                </div>
+            </div> -->
+
+            <div class="card fade-in">
+                <img src="{{ url_for('static', filename='img/ayuda.jpg') }}" alt="Ayuda" class="card-img">
+                <div class="card-body text-center">
+                    <i class="fas fa-question-circle fa-3x mb-3 text-primary"></i>
+                    <h3 class="card-title">Ayuda</h3>
+                    <p class="card-text">Información adicional sobre IntelliTutor UNAM.</p>
+                    <a class="btn btn-primary" href="{{ url_for('ayuda') }}">Más información</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Al cargar el DOM, extraemos los datos desde los atributos 'data-*' y procesamos las notificaciones
+document.addEventListener('DOMContentLoaded', function() {
+    // Si ya se mostraron las notificaciones en esta sesión, salir
+    if (sessionStorage.getItem('notificacionesMostradas') === 'true') return;
+
+    // Obtener los datos desde el HTML
+    const dataEl = document.getElementById('notification-data');
+    const practicasPendientes = JSON.parse(dataEl.dataset.practicasPendientes);
+    const practicasPorCaducar = JSON.parse(dataEl.dataset.practicasPorCaducar);
+    const practicasAtrasadas = JSON.parse(dataEl.dataset.practicasAtrasadas);
+
+    // Cola de notificaciones
+    const notificaciones = [];
+
+    notificaciones.push({
+        mensaje: 'Bienvenido a IntelliTutor UNAM',
+        tipo: 'success',
+        duracion: 3600
+    });
+
+    if (practicasPendientes.length > 0) {
+        notificaciones.push({
+            mensaje: `Tienes ${practicasPendientes.length} actividades sin entregar.`,
+            tipo: 'warning',
+            duracion: 3600
+        });
+    }
+
+    if (practicasPorCaducar.length > 0) {
+        const mensaje = practicasPorCaducar.length === 1
+            ? `Una actividad está por caducar: ${practicasPorCaducar[0].titulo}`
+            : `${practicasPorCaducar.length} actividades están por caducar.`;
+        notificaciones.push({
+            mensaje: mensaje,
+            tipo: 'error',
+            duracion: 3600
+        });
+    }
+
+    if (practicasAtrasadas.length > 0) {
+        notificaciones.push({
+            mensaje: `Tienes ${practicasAtrasadas.length} prácticas atrasadas.`,
+            tipo: 'danger',
+            duracion: 3600
+        });
+    }
+
+    // Función para mostrar notificaciones en orden
+    function mostrarNotificacionesEnOrden(lista, index = 0) {
+        if (index >= lista.length) return;
+
+        const actual = lista[index];
+        showNotification(actual.mensaje, actual.tipo, actual.duracion);
+
+        setTimeout(() => {
+            mostrarNotificacionesEnOrden(lista, index + 1);
+        }, actual.duracion + 500);
+    }
+
+    // Iniciar la secuencia
+    if (typeof showNotification === 'function') {
+        mostrarNotificacionesEnOrden(notificaciones);
+    }
+
+    // Marcar como mostradas para no volver a mostrar en esta sesión
+    sessionStorage.setItem('notificacionesMostradas', 'true');
+});
+
+</script>
+{% endblock %}

@@ -1,0 +1,2344 @@
+import numpy as np
+import re
+import torch
+import torch.nn as nn
+from torch.utils.data import Dataset, DataLoader
+import torch.optim as optim
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+from nltk.corpus import stopwords
+import json
+import os
+import pickle
+import nltk
+from transformers import AutoTokenizer, AutoModel
+import logging
+import random
+from collections import defaultdict
+from typing import Dict, List, Tuple, Optional, Union, Any
+import mysql.connector
+from mysql.connector import Error
+
+# Configurar logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+
+# Descargar recursos de NLTK necesarios
+try:
+    nltk.data.find('corpora/stopwords')
+    nltk.data.find('tokenizers/punkt')
+    nltk.data.find('corpora/wordnet')
+except LookupError:
+    nltk.download('stopwords')
+    nltk.download('punkt')
+    nltk.download('wordnet')
+
+class TextDataset(Dataset):
+    def __init__(self, entradas, salidas, tokenizer):
+        self.entradas = entradas
+        self.salidas = salidas
+        self.tokenizer = tokenizer
+
+    def __len__(self):
+        return len(self.entradas)
+
+    def __getitem__(self, idx):
+        # Vectorize the input text
+        entrada = self.tokenizer.transform([self.entradas[idx]]).toarray()[0]
+        
+        # Ensure consistent vector size
+        if len(entrada) < 5000:
+            entrada = np.pad(entrada, (0, 5000 - len(entrada)), 'constant')
+        elif len(entrada) > 5000:
+            entrada = entrada[:5000]
+
+        salida = float(self.salidas[idx])
+        return torch.tensor(entrada, dtype=torch.float32), torch.tensor(salida, dtype=torch.float32)
+
+class ContenidoEvaluator(nn.Module):
+    """Modelo mejorado para evaluar diferentes tipos de contenido"""
+    def __init__(self, input_dim=5000, hidden_dim=512, output_dim=1):
+        super(ContenidoEvaluator, self).__init__()
+        # Arquitectura más profunda y compleja
+        self.fc1 = nn.Linear(input_dim, hidden_dim)
+        self.bn1 = nn.BatchNorm1d(hidden_dim)
+        self.dropout1 = nn.Dropout(0.3)
+        
+        self.fc2 = nn.Linear(hidden_dim, hidden_dim)
+        self.bn2 = nn.BatchNorm1d(hidden_dim)
+        self.dropout2 = nn.Dropout(0.3)
+        
+        self.fc3 = nn.Linear(hidden_dim, hidden_dim // 2)
+        self.bn3 = nn.BatchNorm1d(hidden_dim // 2)
+        self.dropout3 = nn.Dropout(0.3)
+        
+        self.fc4 = nn.Linear(hidden_dim // 2, hidden_dim // 4)
+        self.bn4 = nn.BatchNorm1d(hidden_dim // 4)
+        self.dropout4 = nn.Dropout(0.2)
+        
+        # Múltiples cabezas para diferentes criterios de evaluación
+        self.head_relevancia = nn.Linear(hidden_dim // 4, 1)
+        self.head_profundidad = nn.Linear(hidden_dim // 4, 1)
+        self.head_claridad = nn.Linear(hidden_dim // 4, 1)
+        self.head_originalidad = nn.Linear(hidden_dim // 4, 1)
+        self.head_global = nn.Linear(hidden_dim // 4, 1)
+        
+        self.relu = nn.ReLU()
+        self.sigmoid = nn.Sigmoid()
+
+    def forward(self, x):
+        x = self.fc1(x)
+        x = self.bn1(x)
+        x = self.relu(x)
+        x = self.dropout1(x)
+        
+        x = self.fc2(x)
+        x = self.bn2(x)
+        x = self.relu(x)
+        x = self.dropout2(x)
+        
+        x = self.fc3(x)
+        x = self.bn3(x)
+        x = self.relu(x)
+        x = self.dropout3(x)
+        
+        x = self.fc4(x)
+        x = self.bn4(x)
+        x = self.relu(x)
+        x = self.dropout4(x)
+        
+        # Salidas para cada criterio (escaladas a 0-10)
+        relevancia = self.sigmoid(self.head_relevancia(x)) * 10
+        profundidad = self.sigmoid(self.head_profundidad(x)) * 10
+        claridad = self.sigmoid(self.head_claridad(x)) * 10
+        originalidad = self.sigmoid(self.head_originalidad(x)) * 10
+        
+        # Calificación global
+        global_score = self.sigmoid(self.head_global(x)) * 10
+        
+        return {
+            'relevancia': relevancia,
+            'profundidad': profundidad,
+            'claridad': claridad,
+            'originalidad': originalidad,
+            'global': global_score
+        }
+
+class CodigoEvaluator(nn.Module):
+    """Modelo especializado para evaluar código de programación"""
+    def __init__(self, input_dim=5000, hidden_dim=512, output_dim=1):
+        super(CodigoEvaluator, self).__init__()
+        self.fc1 = nn.Linear(input_dim, hidden_dim)
+        self.bn1 = nn.BatchNorm1d(hidden_dim)
+        self.dropout1 = nn.Dropout(0.3)
+        
+        self.fc2 = nn.Linear(hidden_dim, hidden_dim)
+        self.bn2 = nn.BatchNorm1d(hidden_dim)
+        self.dropout2 = nn.Dropout(0.3)
+        
+        self.fc3 = nn.Linear(hidden_dim, hidden_dim // 2)
+        self.bn3 = nn.BatchNorm1d(hidden_dim // 2)
+        self.dropout3 = nn.Dropout(0.3)
+        
+        # Cabezas específicas para evaluación de código
+        self.head_funcionalidad = nn.Linear(hidden_dim // 2, 1)
+        self.head_eficiencia = nn.Linear(hidden_dim // 2, 1)
+        self.head_estilo = nn.Linear(hidden_dim // 2, 1)
+        self.head_documentacion = nn.Linear(hidden_dim // 2, 1)
+        self.head_global = nn.Linear(hidden_dim // 2, 1)
+        
+        self.relu = nn.ReLU()
+        self.sigmoid = nn.Sigmoid()
+
+    def forward(self, x):
+        x = self.fc1(x)
+        x = self.bn1(x)
+        x = self.relu(x)
+        x = self.dropout1(x)
+        
+        x = self.fc2(x)
+        x = self.bn2(x)
+        x = self.relu(x)
+        x = self.dropout2(x)
+        
+        x = self.fc3(x)
+        x = self.bn3(x)
+        x = self.relu(x)
+        x = self.dropout3(x)
+        
+        # Salidas para cada criterio (escaladas a 0-10)
+        funcionalidad = self.sigmoid(self.head_funcionalidad(x)) * 10
+        eficiencia = self.sigmoid(self.head_eficiencia(x)) * 10
+        estilo = self.sigmoid(self.head_estilo(x)) * 10
+        documentacion = self.sigmoid(self.head_documentacion(x)) * 10
+        
+        # Calificación global
+        global_score = self.sigmoid(self.head_global(x)) * 10
+        
+        return {
+            'funcionalidad': funcionalidad,
+            'eficiencia': eficiencia,
+            'estilo': estilo,
+            'documentacion': documentacion,
+            'global': global_score
+        }
+
+class DummyModel:
+    """Modelo dummy que siempre devuelve un valor predeterminado."""
+    def __init__(self):
+        self.logger = logging.getLogger(__name__)
+        self.logger.info("Inicializando modelo dummy")
+    
+    def eval(self):
+        """Método para compatibilidad con PyTorch."""
+        return self
+    
+    def __call__(self, *args, **kwargs):
+        """Devuelve un valor predeterminado."""
+        return torch.tensor([[0.75]], dtype=torch.float32)  # Valor de dificultad media
+    
+    def to(self, device):
+        """Método para compatibilidad con PyTorch."""
+        return self
+
+class ModeloEvaluacionInteligente:
+    """
+    Modelo integrado para evaluación inteligente de contenido.
+    Detecta automáticamente el tipo de contenido y aplica el evaluador adecuado.
+    """
+    def __init__(self, db_config=None, use_transformer=True):
+        """
+        Inicializa el modelo de evaluación inteligente.
+        
+        Args:
+            db_config: Configuración para la conexión a la base de datos
+            use_transformer: Si es True, utiliza modelos de transformers para análisis semántico profundo
+        """
+        # Configurar stopwords en español
+        self.spanish_stopwords = stopwords.words('spanish')
+        
+        # Vectorizador TF-IDF mejorado
+        self.vectorizer = TfidfVectorizer(
+            stop_words=self.spanish_stopwords,
+            max_features=5000,
+            ngram_range=(1, 3),  # Incluye trigramas para capturar frases más complejas
+            min_df=2,            # Ignora términos que aparecen en menos de 2 documentos
+            max_df=0.95          # Ignora términos que aparecen en más de 95% de los documentos
+        )
+        
+        # Configurar dispositivo para PyTorch
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        logger.info(f"Usando dispositivo: {self.device}")
+        
+        # Inicializar modelos especializados
+        try:
+            # Crear modelos
+            self.modelo_contenido = ContenidoEvaluator(input_dim=5000, hidden_dim=512)
+            self.modelo_codigo = CodigoEvaluator(input_dim=5000, hidden_dim=512)
+            
+            # Mover modelos al dispositivo
+            self.modelo_contenido = self.modelo_contenido.to(self.device)
+            self.modelo_codigo = self.modelo_codigo.to(self.device)
+            
+            # Optimizadores
+            self.optimizer_contenido = optim.Adam(self.modelo_contenido.parameters(), lr=0.001, weight_decay=1e-5)
+            self.optimizer_codigo = optim.Adam(self.modelo_codigo.parameters(), lr=0.001, weight_decay=1e-5)
+            
+            # Función de pérdida
+            self.criterion = nn.MSELoss()
+            
+        except Exception as e:
+            logger.error(f"Error al inicializar modelos: {e}")
+            self.modelo_contenido = DummyModel()
+            self.modelo_codigo = DummyModel()
+        
+        # Modelo de transformers para análisis semántico profundo
+        self.use_transformer = use_transformer
+        if use_transformer:
+            try:
+                # Cargar modelo de sentence-transformers para español
+                self.transformer_tokenizer = AutoTokenizer.from_pretrained("hiiamsid/sentence_similarity_spanish_es")
+                self.transformer_model = AutoModel.from_pretrained("hiiamsid/sentence_similarity_spanish_es").to(self.device)
+                logger.info("Modelo de transformers cargado correctamente")
+            except Exception as e:
+                logger.warning(f"No se pudo cargar el modelo de transformers: {e}")
+                self.use_transformer = False
+        
+        # Base de conocimiento ampliada para generación de prácticas
+        self.base_conocimiento = [
+            "Resolver ecuaciones diferenciales de primer orden utilizando métodos numéricos.",
+            "Análisis de datos utilizando técnicas estadísticas descriptivas e inferenciales.",
+            "Implementación de algoritmos de ordenamiento y búsqueda para estructuras de datos.",
+            "Desarrollo de aplicaciones web con frameworks modernos.",
+            "Diseño de bases de datos relacionales y consultas SQL optimizadas.",
+            "Análisis de complejidad algorítmica y optimización de código.",
+            "Implementación de patrones de diseño en programación orientada a objetos.",
+            "Desarrollo de APIs RESTful y servicios web.",
+            "Análisis de series temporales y modelos predictivos.",
+            "Implementación de sistemas de recomendación basados en filtrado colaborativo."
+        ]
+
+        # Entrenar el vectorizador con la base de conocimiento
+        self.tfidf_matrix = self.vectorizer.fit_transform(self.base_conocimiento)
+        
+        # Cargar plantillas de retroalimentación
+        self.cargar_plantillas_retroalimentacion()
+        
+        # Cargar recursos educativos por estilo de aprendizaje
+        self.cargar_recursos_educativos()
+        
+        # Intentar cargar modelos pre-entrenados
+        self.cargar_modelos()
+        
+        # Diccionario para almacenar métricas de evaluación
+        self.metricas_evaluacion = {
+            'claridad': self._evaluar_claridad,
+            'profundidad': self._evaluar_profundidad,
+            'estructura': self._evaluar_estructura,
+            'originalidad': self._evaluar_originalidad,
+            'relevancia': self._calcular_relevancia
+        }
+        
+        # Inicializar contador de evaluaciones para seguimiento
+        self.contador_evaluaciones = 0
+        
+        # Configuración de la base de datos
+        self.db_config = db_config
+        self.connection = None
+        if db_config:
+            try:
+                self.connection = mysql.connector.connect(**db_config)
+                self.cursor = self.connection.cursor(dictionary=True)
+                logger.info("Conexión a la base de datos establecida correctamente")
+            except Error as e:
+                logger.error(f"Error al conectar a la base de datos: {e}")
+
+    def cargar_plantillas_retroalimentacion(self):
+        """Carga plantillas de retroalimentación más detalladas y variadas"""
+        self.feedback_templates = {
+            'excellent': [
+                "Excelente trabajo. Has demostrado un dominio completo del tema, con un análisis profundo y bien estructurado.",
+                "Trabajo sobresaliente. Cumples con todos los requisitos y vas más allá, demostrando comprensión avanzada de los conceptos.",
+                "Felicitaciones por un trabajo excepcional. Tu análisis demuestra comprensión profunda y capacidad para conectar conceptos complejos.",
+                "Trabajo de calidad superior. Muestras dominio del tema y capacidad para aplicar los conceptos en situaciones diversas.",
+                "Excelente desempeño. Tu trabajo refleja un nivel de comprensión y análisis que supera las expectativas del curso."
+            ],
+            'very_good': [
+                "Muy buen trabajo. Demuestras una sólida comprensión del tema con un análisis bien desarrollado.",
+                "Trabajo de alta calidad. Has abordado todos los aspectos importantes del tema con claridad y precisión.",
+                "Muy buen desempeño. Tu trabajo muestra dominio de los conceptos clave y buena capacidad de análisis.",
+                "Trabajo muy completo. Has logrado integrar los conceptos de manera coherente y bien fundamentada.",
+                "Muy buen análisis. Tu trabajo demuestra comprensión profunda y capacidad para aplicar los conceptos adecuadamente."
+            ],
+            'good': [
+                "Buen trabajo. Cumples con la mayoría de los requisitos y demuestras comprensión del tema.",
+                "Trabajo sólido con varios aspectos destacables. Has abordado los puntos principales del tema.",
+                "Has demostrado buena comprensión del tema con algunas áreas para mejorar.",
+                "Trabajo bien desarrollado. Muestras dominio de los conceptos básicos y cierta capacidad de análisis.",
+                "Buen desempeño general. Tu trabajo cumple con los objetivos principales de la actividad."
+            ],
+            'average': [
+                "Trabajo aceptable. Cumples con los requisitos básicos, pero hay espacio para profundizar.",
+                "Has demostrado comprensión básica del tema. Tu trabajo cumple con lo mínimo esperado.",
+                "El trabajo cumple con los requisitos esenciales, aunque podría beneficiarse de un análisis más profundo.",
+                "Trabajo adecuado. Abordas los conceptos fundamentales, pero podrías desarrollarlos con mayor detalle.",
+                "Desempeño satisfactorio. Tu trabajo muestra comprensión de los conceptos básicos del tema."
+            ],
+            'needs_improvement': [
+                "El trabajo necesita mejoras significativas. Revisa cuidadosamente los requisitos de la actividad.",
+                "Hay áreas importantes que requieren más atención y desarrollo en tu trabajo.",
+                "Es necesario profundizar más en el tema y mejorar la estructura de tu trabajo.",
+                "Tu trabajo muestra cierta comprensión del tema, pero necesita mayor desarrollo y claridad.",
+                "Se requiere un análisis más detallado y mejor fundamentado para alcanzar los objetivos de la actividad."
+            ],
+            'poor': [
+                "El trabajo no cumple con los requisitos mínimos. Es necesario revisar los conceptos fundamentales.",
+                "Es necesario revisar completamente el trabajo y asegurarte de abordar los aspectos clave del tema.",
+                "Recomiendo volver a estudiar los conceptos básicos del tema y rehacer el trabajo.",
+                "Tu trabajo muestra dificultades importantes en la comprensión de los conceptos fundamentales.",
+                "Es necesario un replanteamiento completo del trabajo para cumplir con los objetivos de la actividad."
+            ],
+            'irrelevant': [
+                "El trabajo entregado no tiene relación con el tema solicitado. Es fundamental abordar el tema específico de la actividad.",
+                "Tu entrega no aborda el tema requerido. Revisa cuidadosamente el título y objetivo de la actividad.",
+                "El contenido no corresponde con lo solicitado. Es necesario enfocarse específicamente en el tema de la actividad.",
+                "Tu trabajo se desvía completamente del tema solicitado. Revisa las instrucciones y objetivos de la actividad.",
+                "La entrega no aborda el tema requerido. Es esencial centrarse en el objetivo específico de la actividad."
+            ]
+        }
+        
+        # Plantillas específicas para código
+        self.code_feedback_templates = {
+            'excellent': [
+                "Excelente implementación. Tu código es eficiente, bien estructurado y sigue las mejores prácticas de programación.",
+                "Código sobresaliente. Demuestra un dominio completo de los conceptos de programación y una implementación óptima.",
+                "Implementación excepcional. Tu código es claro, eficiente y resuelve el problema de manera elegante.",
+                "Código de alta calidad. Muestra un excelente manejo de las estructuras de datos y algoritmos apropiados.",
+                "Implementación superior. Tu código es robusto, eficiente y fácil de mantener."
+            ],
+            'very_good': [
+                "Muy buen código. Implementación eficiente y bien estructurada con buena documentación.",
+                "Implementación de alta calidad. Tu código resuelve correctamente el problema con un buen diseño.",
+                "Muy buen trabajo. Tu código es claro, funcional y sigue buenas prácticas de programación.",
+                "Código bien implementado. Muestra buen dominio de los conceptos y técnicas de programación.",
+                "Implementación sólida. Tu código es eficiente y está bien organizado."
+            ],
+            'good': [
+                "Buen código. Funciona correctamente y tiene una estructura adecuada.",
+                "Implementación correcta. Tu código resuelve el problema aunque podría optimizarse en algunos aspectos.",
+                "Buen trabajo. Tu código funciona según lo esperado con algunos aspectos a mejorar.",
+                "Código funcional. Implementa la solución requerida con una estructura aceptable.",
+                "Implementación adecuada. Tu código cumple con los requisitos básicos del problema."
+            ],
+            'average': [
+                "Código aceptable. Funciona pero podría mejorar en eficiencia y estructura.",
+                "Implementación básica. Tu código resuelve el problema pero necesita optimización.",
+                "Código funcional con limitaciones. Cumple con lo mínimo pero requiere mejoras importantes.",
+                "Implementación sencilla. Resuelve el problema de forma básica sin optimizaciones.",
+                "Código adecuado. Funciona para casos simples pero podría fallar en escenarios complejos."
+            ],
+            'needs_improvement': [
+                "El código necesita mejoras significativas. Revisa la lógica y estructura de tu implementación.",
+                "Hay problemas importantes en tu código. Es necesario corregir errores y mejorar la eficiencia.",
+                "Tu implementación requiere revisión. El código tiene errores o no sigue buenas prácticas.",
+                "Es necesario mejorar la calidad del código. Revisa la lógica, estructura y documentación.",
+                "Tu código necesita trabajo adicional. Hay problemas de funcionalidad y diseño que deben corregirse."
+            ],
+            'poor': [
+                "El código no cumple con los requisitos mínimos. Es necesario replantearlo completamente.",
+                "Implementación incorrecta. Tu código tiene errores graves que impiden su funcionamiento.",
+                "Es necesario revisar los conceptos fundamentales de programación y rehacer el código.",
+                "Tu implementación muestra dificultades importantes en la comprensión de los conceptos básicos.",
+                "El código no funciona correctamente. Es necesario un replanteamiento completo de la solución."
+            ]
+        }
+        
+        # Plantillas específicas para diferentes tipos de errores
+        self.error_templates = {
+            'conceptual': [
+                "Hay un error conceptual importante en tu explicación de {concepto}. {explicacion_correcta}",
+                "Tu comprensión de {concepto} parece incompleta. {explicacion_correcta}",
+                "Existe una confusión conceptual en tu análisis de {concepto}. {explicacion_correcta}"
+            ],
+            'metodologico': [
+                "El enfoque metodológico utilizado no es el más adecuado para este problema. {sugerencia}",
+                "Hay un error en la metodología aplicada para resolver {problema}. {correccion}",
+                "La secuencia de pasos que has seguido para {tarea} no es óptima. {alternativa}"
+            ],
+            'argumentativo': [
+                "Tu argumento sobre {tema} carece de evidencia suficiente. {sugerencia}",
+                "La conclusión sobre {tema} no se deriva lógicamente de las premisas presentadas. {correccion}",
+                "Hay una falacia en tu razonamiento sobre {tema}. {explicacion}"
+            ],
+            'estructural': [
+                "La estructura de tu trabajo dificulta la comprensión del contenido. {sugerencia}",
+                "La organización de las ideas no sigue una secuencia lógica. {recomendacion}",
+                "Falta cohesión entre las diferentes secciones de tu trabajo. {consejo}"
+            ],
+            'tecnico': [
+                "Hay un error técnico en tu implementación de {tecnica}. {solucion}",
+                "La sintaxis utilizada en {seccion} no es correcta. {correccion}",
+                "Existe un problema en la implementación de {algoritmo}. {alternativa}"
+            ],
+        }
+        
+        # Plantillas para errores específicos de código
+        self.code_error_templates = {
+            'sintaxis': [
+                "Hay un error de sintaxis en la línea {linea}. {correccion}",
+                "La sintaxis utilizada en {seccion} no es correcta. {sugerencia}",
+                "Existe un error de sintaxis que impide la ejecución del código. {solucion}"
+            ],
+            'logica': [
+                "Hay un error lógico en tu implementación de {algoritmo}. {explicacion}",
+                "La lógica utilizada en {funcion} no produce el resultado esperado. {correccion}",
+                "Existe un problema lógico que causa un comportamiento incorrecto. {solucion}"
+            ],
+            'eficiencia': [
+                "Tu implementación de {algoritmo} podría ser más eficiente. {sugerencia}",
+                "La complejidad temporal de tu solución es subóptima. {alternativa}",
+                "Existe una forma más eficiente de implementar {funcionalidad}. {mejora}"
+            ],
+            'estilo': [
+                "El estilo de codificación no sigue las convenciones estándar. {sugerencia}",
+                "La estructura y organización del código podría mejorar. {recomendacion}",
+                "El código carece de comentarios adecuados y documentación. {consejo}"
+            ],
+            'seguridad': [
+                "Hay un problema de seguridad en tu implementación de {funcionalidad}. {riesgo}",
+                "Tu código es vulnerable a {tipo_ataque}. {solucion}",
+                "Es necesario implementar validaciones para prevenir {vulnerabilidad}. {mejora}"
+            ]
+        }
+        
+        # Plantillas para aspectos positivos específicos
+        self.strength_templates = {
+            'analisis': [
+                "Tu análisis de {tema} es particularmente sólido y bien fundamentado.",
+                "Demuestras excelente capacidad analítica al abordar {tema}.",
+                "La profundidad de tu análisis sobre {tema} es destacable."
+            ],
+            'sintesis': [
+                "Tu capacidad para sintetizar información compleja sobre {tema} es notable.",
+                "Has logrado condensar efectivamente los aspectos clave de {tema}.",
+                "Tu síntesis de {tema} demuestra comprensión profunda del material."
+            ],
+            'aplicacion': [
+                "La aplicación práctica de los conceptos teóricos es un punto fuerte de tu trabajo.",
+                "Demuestras habilidad para aplicar {concepto} en contextos reales.",
+                "Tu capacidad para llevar la teoría a la práctica en {tema} es destacable."
+            ],
+            'creatividad': [
+                "El enfoque creativo que has dado a {tema} enriquece significativamente tu trabajo.",
+                "Tu perspectiva original sobre {tema} aporta valor adicional al análisis.",
+                "La creatividad demostrada en tu abordaje de {tema} es digna de mención."
+            ],
+            'investigacion': [
+                "La calidad de tu investigación sobre {tema} es evidente en todo el trabajo.",
+                "Has realizado una investigación exhaustiva que fortalece tus argumentos sobre {tema}.",
+                "El respaldo bibliográfico de tu trabajo sobre {tema} es excelente."
+            ]
+        }
+        
+        # Plantillas para aspectos positivos específicos de código
+        self.code_strength_templates = {
+            'algoritmo': [
+                "Tu implementación del algoritmo {nombre} es particularmente eficiente.",
+                "Demuestras excelente comprensión de los algoritmos utilizados.",
+                "La selección y aplicación de algoritmos es un punto fuerte de tu código."
+            ],
+            'estructura': [
+                "La estructura y organización de tu código es clara y facilita su comprensión.",
+                "Has logrado una excelente modularización y separación de responsabilidades.",
+                "La arquitectura de tu solución demuestra un buen diseño de software."
+            ],
+            'documentacion': [
+                "La documentación de tu código es completa y facilita su comprensión.",
+                "Los comentarios son claros, precisos y ayudan a entender la lógica implementada.",
+                "La documentación de las funciones y clases es detallada y útil."
+            ],
+            'manejo_errores': [
+                "El manejo de errores y excepciones en tu código es robusto y completo.",
+                "Has implementado validaciones adecuadas para prevenir comportamientos inesperados.",
+                "Tu código maneja correctamente los casos límite y situaciones excepcionales."
+            ],
+            'optimizacion': [
+                "La optimización de recursos (memoria, tiempo) en tu código es destacable.",
+                "Has aplicado técnicas efectivas para mejorar el rendimiento de tu solución.",
+                "Tu código muestra atención a la eficiencia y optimización."
+            ]
+        }
+
+    def cargar_recursos_educativos(self):
+        """Carga recursos educativos categorizados por estilo de aprendizaje"""
+        self.recursos_educativos = {
+            'visual': {
+                'programacion': [
+                    {"titulo": "Mapas conceptuales de estructuras de datos", "url": "https://www.mindmeister.com/es/map/2010460525"},
+                    {"titulo": "Visualización de algoritmos", "url": "https://visualgo.net/en"},
+                    {"titulo": "Diagramas de flujo interactivos", "url": "https://app.diagrams.net/"},
+                    {"titulo": "Videos sobre patrones de diseño", "url": "https://www.youtube.com/playlist?list=PLrhzvIcii6GNjpARdnO4ueTUAVR9eMBpc"},
+                    {"titulo": "Infografías sobre arquitectura de software", "url": "https://www.pinterest.com/search/pins/?q=software%20architecture%20infographic"}
+                ],
+                'matematicas': [
+                    {"titulo": "Visualizaciones de conceptos matemáticos", "url": "https://www.geogebra.org/"},
+                    {"titulo": "Mapas mentales de cálculo", "url": "https://www.mindmeister.com/es/map/2010460525"},
+                    {"titulo": "Videos de explicaciones visuales", "url": "https://www.3blue1brown.com/"},
+                    {"titulo": "Gráficos interactivos de funciones", "url": "https://www.desmos.com/calculator"},
+                    {"titulo": "Infografías de teoremas clave", "url": "https://www.mathsisfun.com/"}
+                ],
+                'ciencias': [
+                    {"titulo": "Simulaciones de física", "url": "https://phet.colorado.edu/es/simulations/category/physics"},
+                    {"titulo": "Animaciones de biología celular", "url": "https://learn.genetics.utah.edu/"},
+                    {"titulo": "Mapas conceptuales de ecología", "url": "https://www.mindmeister.com/es/map/2010460525"},
+                    {"titulo": "Videos de experimentos científicos", "url": "https://www.youtube.com/c/Veritasium"}
+                ]
+            },
+            'auditivo': {
+                'programacion': [
+                    {"titulo": "Podcast sobre desarrollo de software", "url": "https://www.codingblocks.net/"},
+                    {"titulo": "Audiolibros de patrones de diseño", "url": "https://www.audible.com/pd/Design-Patterns-Audiobook/B07GBLFC2Y"},
+                    {"titulo": "Conferencias grabadas sobre programación", "url": "https://www.youtube.com/c/GOTO-"},
+                    {"titulo": "Entrevistas con desarrolladores", "url": "https://www.se-radio.net/"},
+                    {"titulo": "Discusiones sobre arquitectura de software", "url": "https://www.youtube.com/c/InfoQ"}
+                ],
+                'matematicas': [
+                    {"titulo": "Podcast de matemáticas", "url": "https://www.bbc.co.uk/programmes/p01gyd7j/episodes/downloads"},
+                    {"titulo": "Explicaciones verbales de conceptos", "url": "https://www.khanacademy.org/math"},
+                    {"titulo": "Audiolibros de historia matemática", "url": "https://www.audible.com/pd/Infinite-Powers-Audiobook/1980036322"},
+                    {"titulo": "Conferencias grabadas de matemáticos", "url": "https://www.youtube.com/c/numberphile"},
+                    {"titulo": "Discusiones sobre teoremas y pruebas", "url": "https://www.youtube.com/c/MathologerChannel"}
+                ],
+                'ciencias': [
+                    {"titulo": "Podcast de ciencia", "url": "https://www.scientificamerican.com/podcast/science-talk/"},
+                    {"titulo": "Audiolibros de divulgación científica", "url": "https://www.audible.com/pd/A-Short-History-of-Nearly-Everything-Audiobook/B002V0KFPW"},
+                    {"titulo": "Conferencias grabadas de científicos", "url": "https://www.ted.com/topics/science"},
+                    {"titulo": "Entrevistas con expertos en ciencia", "url": "https://www.npr.org/podcasts/583350334/science-friday"},
+                    {"titulo": "Discusiones sobre avances científicos", "url": "https://www.bbc.co.uk/programmes/b036f7w2/episodes/downloads"}
+                ]
+            },
+            'kinestesico': {
+                'programacion': [
+                    {"titulo": "Ejercicios prácticos de programación", "url": "https://www.hackerrank.com/"},
+                    {"titulo": "Proyectos guiados paso a paso", "url": "https://www.freecodecamp.org/"},
+                    {"titulo": "Simuladores de código interactivos", "url": "https://codesandbox.io/"},
+                    {"titulo": "Talleres prácticos de desarrollo", "url": "https://www.codecademy.com/"},
+                    {"titulo": "Desafíos de programación competitiva", "url": "https://leetcode.com/"}
+                ],
+                'matematicas': [
+                    {"titulo": "Ejercicios interactivos de matemáticas", "url": "https://www.khanacademy.org/math/exercises"},
+                    {"titulo": "Manipulativos virtuales", "url": "https://www.mathplayground.com/"},
+                    {"titulo": "Proyectos prácticos de matemáticas aplicadas", "url": "https://www.mathsisfun.com/games/"},
+                    {"titulo": "Simulaciones interactivas", "url": "https://www.geogebra.org/"},
+                    {"titulo": "Juegos matemáticos", "url": "https://www.coolmathgames.com/"}
+                ],
+                'ciencias': [
+                    {"titulo": "Experimentos caseros guiados", "url": "https://www.sciencebuddies.org/"},
+                    {"titulo": "Laboratorios virtuales", "url": "https://phet.colorado.edu/es/simulations/category/chemistry"},
+                    {"titulo": "Proyectos de ciencia aplicada", "url": "https://www.instructables.com/Science-Projects/"},
+                    {"titulo": "Actividades prácticas de campo", "url": "https://www.nationalgeographic.org/education/"},
+                    {"titulo": "Simulaciones interactivas de fenómenos", "url": "https://www.exploratorium.edu/explore"}
+                ]
+            },
+            'lectura_escritura': {
+                'programacion': [
+                    {"titulo": "Libros de referencia de programación", "url": "https://www.oreilly.com/"},
+                    {"titulo": "Documentación técnica detallada", "url": "https://devdocs.io/"},
+                    {"titulo": "Artículos sobre buenas prácticas", "url": "https://martinfowler.com/"},
+                    {"titulo": "Tutoriales escritos paso a paso", "url": "https://www.w3schools.com/"},
+                    {"titulo": "Blogs de desarrollo de software", "url": "https://dev.to/"}
+                ],
+                'matematicas': [
+                    {"titulo": "Libros de texto de matemáticas", "url": "https://openstax.org/subjects/math"},
+                    {"titulo": "Artículos académicos", "url": "https://arxiv.org/archive/math"},
+                    {"titulo": "Guías de estudio detalladas", "url": "https://www.mathsisfun.com/"},
+                    {"titulo": "Problemas resueltos con explicaciones", "url": "https://www.purplemath.com/"},
+                    {"titulo": "Notas de clase estructuradas", "url": "https://ocw.mit.edu/courses/mathematics/"}
+                ],
+                'ciencias': [
+                    {"titulo": "Libros de texto de ciencias", "url": "https://openstax.org/subjects/science"},
+                    {"titulo": "Artículos científicos accesibles", "url": "https://www.sciencedaily.com/"},
+                    {"titulo": "Guías de laboratorio detalladas", "url": "https://www.flinnsci.com/"},
+                    {"titulo": "Enciclopedias científicas", "url": "https://www.britannica.com/science"},
+                    {"titulo": "Revistas de divulgación científica", "url": "https://www.scientificamerican.com/"}
+                ]
+            }
+        }
+
+    def detectar_tipo_contenido(self, contenido: str) -> str:
+        """
+        Detecta automáticamente el tipo de contenido para aplicar el evaluador adecuado.
+        
+        Args:
+            contenido: Texto a analizar
+            
+        Returns:
+            Tipo de contenido: 'codigo', 'texto', 'matematico', etc.
+        """
+        # Indicadores de código
+        indicadores_codigo = [
+            'def ', 'class ', 'function', 'import ', 'from ', 'return ', 'if ', 'else:', 'for ', 'while ',
+            '{', '}', ';', 'public ', 'private ', 'protected ', 'static ', 'void ', 'int ', 'float ',
+            'string ', 'bool ', 'var ', 'const ', 'let ', 'console.log', 'print(', 'System.out', 'cout <<',
+            'SELECT ', 'FROM ', 'WHERE ', 'INSERT INTO', 'UPDATE ', 'DELETE FROM', 'CREATE TABLE'
+        ]
+        
+        # Indicadores de contenido matemático
+        indicadores_matematico = [
+            '\\begin{equation}', '\\end{equation}', '\\frac', '\\sum', '\\int', '\\prod', '\\lim',
+            '\\alpha', '\\beta', '\\gamma', '\\delta', '\\theta', '\\lambda', '\\pi', '\\sigma',
+            '\\sqrt', '\\partial', '\\nabla', '\\infty', '\\approx', '\\neq', '\\geq', '\\leq',
+            '\\in', '\\subset', '\\cup', '\\cap', '\\emptyset', '\\mathbb', '\\mathcal', '\\mathrm'
+        ]
+        
+        # Contar indicadores
+        contador_codigo = sum(1 for ind in indicadores_codigo if ind in contenido)
+        contador_matematico = sum(1 for ind in indicadores_matematico if ind in contenido)
+        
+        # Calcular porcentajes (normalizado por la cantidad de indicadores)
+        porcentaje_codigo = contador_codigo / len(indicadores_codigo)
+        porcentaje_matematico = contador_matematico / len(indicadores_matematico)
+        
+        # Determinar tipo de contenido
+        if porcentaje_codigo > 0.1:  # Si más del 10% de los indicadores de código están presentes
+            return 'codigo'
+        elif porcentaje_matematico > 0.1:  # Si más del 10% de los indicadores matemáticos están presentes
+            return 'matematico'
+        else:
+            return 'texto'
+
+    def analizar_contenido(self, contenido_archivo, titulo_actividad="", objetivo_actividad="", estilo_aprendizaje=None):
+        """
+        Analiza el contenido del archivo y devuelve una calificación y comentarios detallados.
+        Incorpora análisis semántico profundo, evaluación multidimensional y personalización por estilo de aprendizaje.
+        
+        Args:
+            contenido_archivo: Texto del contenido entregado
+            titulo_actividad: Título de la actividad
+            objetivo_actividad: Objetivo de la actividad
+            estilo_aprendizaje: Estilo(s) de aprendizaje del estudiante (separados por comas)
+            
+        Returns:
+            Diccionario con calificación, comentarios, sugerencias, relevancia y recursos recomendados
+        """
+        # Incrementar contador de evaluaciones
+        self.contador_evaluaciones += 1
+        logger.info(f"Iniciando análisis de contenido #{self.contador_evaluaciones}")
+        
+        # Validar que el contenido no esté vacío
+        if not contenido_archivo or not contenido_archivo.strip():
+            logger.warning("Contenido vacío detectado")
+            return {
+                "calificacion": 0.0,
+                "comentarios": "El archivo está vacío o no contiene texto válido.",
+                "sugerencias": "Es necesario entregar un trabajo con contenido para poder evaluarlo.",
+                "relevancia": 0.0,
+                "recursos_recomendados": []
+            }
+        
+        # Detectar tipo de contenido
+        tipo_contenido = self.detectar_tipo_contenido(contenido_archivo)
+        logger.info(f"Tipo de contenido detectado: {tipo_contenido}")
+        
+        # Preprocesar el contenido
+        contenido_procesado = self._preprocess_text(contenido_archivo)
+        logger.info(f"Contenido preprocesado: {len(contenido_procesado)} caracteres")
+        
+        # Análisis de relevancia
+        relevancia = self._calcular_relevancia(contenido_procesado, titulo_actividad, objetivo_actividad)
+        logger.info(f"Relevancia calculada: {relevancia:.4f}")
+        
+        # Si la relevancia es extremadamente baja, asignar calificación cero
+        if relevancia < 0.2:
+            logger.warning(f"Contenido irrelevante detectado (relevancia: {relevancia:.4f})")
+            return self._generar_respuesta_irrelevante(estilo_aprendizaje, titulo_actividad, objetivo_actividad)
+        
+        # Análisis multidimensional según tipo de contenido
+        if tipo_contenido == 'codigo':
+            metricas = self._analizar_metricas_codigo(contenido_procesado, titulo_actividad, objetivo_actividad)
+        else:
+            metricas = self._analizar_metricas(contenido_procesado, titulo_actividad, objetivo_actividad)
+        
+        logger.info(f"Métricas calculadas: {metricas}")
+        
+        # Vectorizar el contenido para el modelo de evaluación
+        try:
+            contenido_vectorizado = self.vectorizer.transform([contenido_procesado]).toarray()[0]
+            
+            # Asegurar dimensiones consistentes
+            if len(contenido_vectorizado) < 5000:
+                contenido_vectorizado = np.pad(contenido_vectorizado, (0, 5000 - len(contenido_vectorizado)), 'constant')
+            elif len(contenido_vectorizado) > 5000:
+                contenido_vectorizado = contenido_vectorizado[:5000]
+                
+            # Convertir a tensor
+            contenido_tensor = torch.tensor(contenido_vectorizado, dtype=torch.float32).unsqueeze(0).to(self.device)
+            
+            # Generar predicción base según tipo de contenido
+            if tipo_contenido == 'codigo':
+                self.modelo_codigo.eval()
+                with torch.no_grad():
+                    outputs = self.modelo_codigo(contenido_tensor)
+                    pred_base = outputs['global'].cpu().numpy()[0][0]
+                    logger.info(f"Predicción base del modelo de código: {pred_base}")
+            else:
+                self.modelo_contenido.eval()
+                with torch.no_grad():
+                    outputs = self.modelo_contenido(contenido_tensor)
+                    pred_base = outputs['global'].cpu().numpy()[0][0]
+                    logger.info(f"Predicción base del modelo de contenido: {pred_base}")
+        except Exception as e:
+            logger.error(f"Error en la vectorización o predicción: {e}")
+            # Usar un enfoque alternativo basado en métricas si falla la predicción
+            pred_base = self._calcular_calificacion_alternativa(metricas)
+            logger.info(f"Usando calificación alternativa: {pred_base}")
+        
+        # Ajustar calificación según métricas y relevancia
+        if tipo_contenido == 'codigo':
+            calificacion_ajustada = self._ajustar_calificacion_codigo(
+                pred_base, 
+                relevancia, 
+                metricas['funcionalidad'], 
+                metricas['eficiencia'], 
+                metricas['estilo'],
+                metricas['documentacion']
+            )
+        else:
+            calificacion_ajustada = self._ajustar_calificacion(
+                pred_base, 
+                relevancia, 
+                metricas['claridad'], 
+                metricas['profundidad'], 
+                metricas['estructura']
+            )
+        
+        # Limitar a rango 0-10
+        calificacion_final = min(10.0, max(0.0, calificacion_ajustada))
+        logger.info(f"Calificación final: {calificacion_final:.2f}")
+        
+        # Identificar fortalezas y debilidades según tipo de contenido
+        if tipo_contenido == 'codigo':
+            fortalezas, debilidades = self._identificar_fortalezas_debilidades_codigo(
+                contenido_procesado, 
+                metricas, 
+                calificacion_final
+            )
+        else:
+            fortalezas, debilidades = self._identificar_fortalezas_debilidades(
+                contenido_procesado, 
+                metricas, 
+                calificacion_final
+            )
+        
+        logger.info(f"Fortalezas identificadas: {len(fortalezas)}")
+        logger.info(f"Debilidades identificadas: {len(debilidades)}")
+        
+        # Generar comentarios detallados según tipo de contenido
+        if tipo_contenido == 'codigo':
+            comentarios = self._generar_comentarios_detallados_codigo(
+                calificacion_final, 
+                contenido_procesado, 
+                titulo_actividad, 
+                objetivo_actividad, 
+                fortalezas, 
+                debilidades,
+                estilo_aprendizaje
+            )
+        else:
+            comentarios = self._generar_comentarios_detallados(
+                calificacion_final, 
+                contenido_procesado, 
+                titulo_actividad, 
+                objetivo_actividad, 
+                fortalezas, 
+                debilidades,
+                estilo_aprendizaje
+            )
+        
+        # Generar sugerencias de mejora según tipo de contenido
+        if tipo_contenido == 'codigo':
+            sugerencias = self._generar_sugerencias_mejora_codigo(
+                calificacion_final, 
+                contenido_procesado, 
+                titulo_actividad, 
+                objetivo_actividad, 
+                debilidades,
+                estilo_aprendizaje
+            )
+        else:
+            sugerencias = self._generar_sugerencias_mejora(
+                calificacion_final, 
+                contenido_procesado, 
+                titulo_actividad, 
+                objetivo_actividad, 
+                debilidades,
+                estilo_aprendizaje
+            )
+        
+        # Recomendar recursos educativos según estilo de aprendizaje
+        recursos_recomendados = self._recomendar_recursos(
+            estilo_aprendizaje, 
+            titulo_actividad, 
+            objetivo_actividad, 
+            calificacion_final
+        )
+        
+        # Construir respuesta completa
+        respuesta = {
+            "calificacion": float(round(calificacion_final, 1)),  # Asegurar que sea float
+            "comentarios": comentarios,
+            "sugerencias": sugerencias,
+            "relevancia": float(round(relevancia * 100, 1)),  # Como porcentaje
+            "tipo_contenido": tipo_contenido,
+            "metricas": self._formatear_metricas(metricas, tipo_contenido),
+            "fortalezas": fortalezas[:3],  # Limitar a 3 fortalezas principales
+            "debilidades": debilidades[:3],  # Limitar a 3 debilidades principales
+            "recursos_recomendados": recursos_recomendados
+        }
+        
+        logger.info(f"Análisis de contenido #{self.contador_evaluaciones} completado")
+        return respuesta
+
+    def _formatear_metricas(self, metricas, tipo_contenido):
+        """Formatea las métricas según el tipo de contenido para la respuesta."""
+        if tipo_contenido == 'codigo':
+            return {
+                "funcionalidad": round(metricas['funcionalidad'] * 10, 1),
+                "eficiencia": round(metricas['eficiencia'] * 10, 1),
+                "estilo": round(metricas['estilo'] * 10, 1),
+                "documentacion": round(metricas['documentacion'] * 10, 1)
+            }
+        else:
+            return {
+                "claridad": round(metricas['claridad'] * 10, 1),
+                "profundidad": round(metricas['profundidad'] * 10, 1),
+                "estructura": round(metricas['estructura'] * 10, 1),
+                "originalidad": round(metricas['originalidad'] * 10, 1)
+            }
+
+    def _preprocess_text(self, text):
+        """
+        Preprocesa el texto para análisis, preservando más información semántica.
+        """
+        if not text:
+            return ""
+            
+        # Convertir a minúsculas
+        text = text.lower()
+        
+        # Eliminar caracteres especiales pero mantener puntuación importante
+        text = re.sub(r'[^\w\s.,;:¿?¡!()"-]', '', text)
+        
+        # Eliminar espacios extra
+        text = re.sub(r'\s+', ' ', text).strip()
+        
+        return text
+
+    def _calcular_relevancia(self, contenido, titulo, objetivo):
+        """
+        Calcula la relevancia semántica entre el contenido y los requisitos.
+        Utiliza modelos de transformers si están disponibles para un análisis más preciso.
+        """
+        if not titulo and not objetivo:
+            return 1.0  # Si no hay título/objetivo, asumir relevancia completa
+            
+        # Combinar título y objetivo
+        requisitos = f"{titulo} {objetivo}"
+        
+        # Usar modelo de transformers si está disponible
+        if self.use_transformer:
+            try:
+                # Tokenizar textos
+                tokens_requisitos = self.transformer_tokenizer(requisitos, padding=True, truncation=True, return_tensors="pt").to(self.device)
+                tokens_contenido = self.transformer_tokenizer(contenido[:512], padding=True, truncation=True, return_tensors="pt").to(self.device)
+                
+                # Obtener embeddings
+                with torch.no_grad():
+                    embedding_requisitos = self.transformer_model(**tokens_requisitos).last_hidden_state.mean(dim=1)
+                    embedding_contenido = self.transformer_model(**tokens_contenido).last_hidden_state.mean(dim=1)
+                
+                # Normalizar embeddings
+                embedding_requisitos = torch.nn.functional.normalize(embedding_requisitos, p=2, dim=1)
+                embedding_contenido = torch.nn.functional.normalize(embedding_contenido, p=2, dim=1)
+                
+                # Calcular similitud del coseno
+                similarity = torch.matmul(embedding_requisitos, embedding_contenido.transpose(0, 1)).item()
+                
+                return max(0.0, min(1.0, similarity))  # Asegurar rango 0-1
+            except Exception as e:
+                logger.warning(f"Error al calcular relevancia con transformers: {e}")
+                # Fallback a método TF-IDF
+        
+        # Método TF-IDF (fallback)
+        try:
+            # Vectorizar ambos textos
+            vec_requisitos = self.vectorizer.transform([requisitos])
+            vec_contenido = self.vectorizer.transform([contenido])
+            
+            # Calcular similitud del coseno
+            similarity = cosine_similarity(vec_requisitos, vec_contenido)[0][0]
+            
+            return max(0.0, min(1.0, similarity))  # Asegurar rango 0-1
+        except Exception as e:
+            logger.error(f"Error al calcular relevancia con TF-IDF: {e}")
+            
+            # Método de respaldo simple basado en palabras clave
+            palabras_clave = set(requisitos.split())
+            palabras_contenido = set(contenido.split())
+            palabras_comunes = palabras_clave.intersection(palabras_contenido)
+            
+            if len(palabras_clave) > 0:
+                return len(palabras_comunes) / len(palabras_clave)
+            return 0.5  # Valor por defecto
+
+    def _analizar_metricas(self, contenido, titulo, objetivo):
+        """
+        Realiza un análisis multidimensional del contenido, evaluando diferentes métricas de calidad.
+        """
+        metricas = {}
+        
+        # Evaluar claridad
+        metricas['claridad'] = self._evaluar_claridad(contenido)
+        
+        # Evaluar profundidad
+        metricas['profundidad'] = self._evaluar_profundidad(contenido, titulo, objetivo)
+        
+        # Evaluar estructura
+        metricas['estructura'] = self._evaluar_estructura(contenido)
+        
+        # Evaluar originalidad
+        metricas['originalidad'] = self._evaluar_originalidad(contenido)
+        
+        return metricas
+
+    def _analizar_metricas_codigo(self, contenido, titulo, objetivo):
+        """
+        Realiza un análisis multidimensional del código, evaluando diferentes métricas de calidad.
+        """
+        metricas = {}
+        
+        # Evaluar funcionalidad
+        metricas['funcionalidad'] = self._evaluar_funcionalidad(contenido)
+        
+        # Evaluar eficiencia
+        metricas['eficiencia'] = self._evaluar_eficiencia(contenido)
+        
+        # Evaluar estilo
+        metricas['estilo'] = self._evaluar_estilo_codigo(contenido)
+        
+        # Evaluar documentación
+        metricas['documentacion'] = self._evaluar_documentacion(contenido)
+        
+        return metricas
+
+    def _evaluar_claridad(self, contenido):
+        """
+        Evalúa la claridad del contenido basándose en longitud de oraciones, 
+        complejidad léxica y uso de conectores.
+        """
+        # Tokenizar en oraciones
+        try:
+            oraciones = nltk.sent_tokenize(contenido)
+            
+            # Calcular longitud promedio de oraciones (penalizar oraciones muy largas o muy cortas)
+            longitudes = [len(oracion.split()) for oracion in oraciones]
+            longitud_promedio = np.mean(longitudes) if longitudes else 0
+            
+            # Penalizar oraciones muy largas (más de 30 palabras) o muy cortas (menos de 3 palabras)
+            factor_longitud = 1.0
+            if longitud_promedio > 30:
+                factor_longitud = 30 / longitud_promedio
+            elif longitud_promedio < 5:
+                factor_longitud = longitud_promedio / 5
+                
+            # Verificar uso de conectores lógicos
+            conectores = ['por lo tanto', 'sin embargo', 'además', 'por otro lado', 'en consecuencia', 
+                         'por ejemplo', 'es decir', 'en primer lugar', 'finalmente', 'en resumen']
+            
+            contador_conectores = sum(1 for conector in conectores if conector in contenido.lower())
+            factor_conectores = min(1.0, contador_conectores / 5)  # Normalizar a máximo 1.0
+            
+            # Calcular variedad léxica (ratio de palabras únicas)
+            palabras = contenido.split()
+            palabras_unicas = set(palabras)
+            variedad_lexica = len(palabras_unicas) / len(palabras) if palabras else 0
+            
+            # Combinar factores
+            claridad = (factor_longitud * 0.4 + factor_conectores * 0.3 + variedad_lexica * 0.3)
+            
+            return min(1.0, max(0.1, claridad))  # Asegurar rango 0.1-1.0
+            
+        except Exception as e:
+            logger.error(f"Error al evaluar claridad: {e}")
+            return 0.5  # Valor por defecto
+
+    def _evaluar_funcionalidad(self, codigo):
+        """
+        Evalúa la funcionalidad del código basándose en patrones de buenas prácticas,
+        manejo de errores y completitud.
+        """
+        try:
+            # Verificar presencia de manejo de errores
+            patrones_manejo_errores = [
+                'try', 'except', 'catch', 'throw', 'throws', 'finally', 'error', 'exception',
+                'if', 'else', 'validate', 'check', 'assert'
+            ]
+            
+            contador_manejo_errores = sum(1 for patron in patrones_manejo_errores if patron in codigo.lower())
+            factor_manejo_errores = min(1.0, contador_manejo_errores / 5)  # Normalizar a máximo 1.0
+            
+            # Verificar completitud (presencia de funciones/métodos principales)
+            lineas = codigo.split('\n')
+            lineas_no_vacias = [l for l in lineas if l.strip()]
+            
+            # Contar definiciones de funciones/métodos
+            patrones_funciones = [
+                'def ', 'function ', 'public ', 'private ', 'protected ', 'class ', 'interface ',
+                'void ', 'int ', 'float ', 'double ', 'string ', 'boolean ', 'return '
+            ]
+            
+            contador_funciones = 0
+            for linea in lineas_no_vacias:
+                if any(patron in linea for patron in patrones_funciones):
+                    contador_funciones += 1
+            
+            factor_completitud = min(1.0, contador_funciones / 5)  # Normalizar a máximo 1.0
+            
+            # Verificar presencia de pruebas o validaciones
+            patrones_pruebas = [
+                'test', 'assert', 'expect', 'should', 'check', 'validate', 'verification',
+                'if', 'condition', 'compare'
+            ]
+            
+            contador_pruebas = sum(1 for patron in patrones_pruebas if patron in codigo.lower())
+            factor_pruebas = min(1.0, contador_pruebas / 5)  # Normalizar a máximo 1.0
+            
+            # Combinar factores
+            funcionalidad = (factor_manejo_errores * 0.4 + factor_completitud * 0.4 + factor_pruebas * 0.2)
+            
+            return min(1.0, max(0.1, funcionalidad))  # Asegurar rango 0.1-1.0
+            
+        except Exception as e:
+            logger.error(f"Error al evaluar funcionalidad: {e}")
+            return 0.5  # Valor por defecto
+
+    def _evaluar_eficiencia(self, codigo):
+        """
+        Evalúa la eficiencia del código basándose en patrones de optimización,
+        complejidad algorítmica y uso de recursos.
+        """
+        try:
+            # Detectar patrones de ineficiencia
+            pat_ineficientes = [
+                'for.*for', 'while.*while', 'for.*while', 'while.*for',  # Bucles anidados
+                '\\.\\w+\\(.*\\.\\w+\\(',  # Llamadas a métodos encadenadas
+                'new .*\\[\\].*for',  # Creación de arrays en bucles
+                'sleep', 'wait', 'delay',  # Esperas
+                'select \\* from'  # Consultas SQL no optimizadas
+            ]
+            
+            contador_ineficiencias = 0
+            for patron in pat_ineficientes:
+                if re.search(patron, codigo.lower()):
+                    contador_ineficiencias += 1
+            
+            factor_eficiencia = max(0.1, 1.0 - (contador_ineficiencias * 0.1))
+            
+            # Detectar patrones de optimización
+            pat_optimizacion = [
+                'cache', 'buffer', 'pool', 'lazy', 'memoize', 'optimize',
+                'complexity', 'performance', 'efficient', 'fast', 'quick',
+                'index', 'hash', 'map', 'set', 'dictionary'
+            ]
+            
+            contador_optimizaciones = sum(1 for patron in pat_optimizacion if patron in codigo.lower())
+            factor_optimizacion = min(1.0, contador_optimizaciones / 5)  # Normalizar a máximo 1.0
+            
+            # Evaluar complejidad (longitud de código vs. funcionalidad)
+            lineas = codigo.split('\n')
+            lineas_codigo = [l for l in lineas if l.strip() and not l.strip().startswith(('#', '//', '/*', '*', '*/')) and not l.strip().startswith('"""')]
+            
+            # Contar funciones/métodos
+            patrones_funciones = ['def ', 'function ', 'public ', 'private ', 'protected ', 'void ', 'int ', 'float ', 'string ']
+            contador_funciones = 0
+            for linea in lineas_codigo:
+                if any(patron in linea for patron in patrones_funciones):
+                    contador_funciones += 1
+            
+            # Si hay funciones, calcular ratio líneas/función
+            if contador_funciones > 0:
+                ratio_lineas_funcion = len(lineas_codigo) / contador_funciones
+                # Penalizar funciones muy largas (más de 30 líneas)
+                factor_complejidad = 1.0 if ratio_lineas_funcion <= 30 else 30 / ratio_lineas_funcion
+            else:
+                factor_complejidad = 0.5  # Valor por defecto
+            
+            # Combinar factores
+            eficiencia = (factor_eficiencia * 0.4 + factor_optimizacion * 0.3 + factor_complejidad * 0.3)
+            
+            return min(1.0, max(0.1, eficiencia))  # Asegurar rango 0.1-1.0
+            
+        except Exception as e:
+            logger.error(f"Error al evaluar eficiencia: {e}")
+            return 0.5  # Valor por defecto
+
+    def _evaluar_estilo_codigo(self, codigo):
+        """
+        Evalúa el estilo del código basándose en convenciones, legibilidad y organización.
+        """
+        try:
+            # Verificar indentación consistente
+            lineas = codigo.split('\n')
+            indentaciones = []
+            for linea in lineas:
+                if linea.strip():  # Ignorar líneas vacías
+                    # Contar espacios al inicio
+                    espacios_inicio = len(linea) - len(linea.lstrip())
+                    indentaciones.append(espacios_inicio)
+            
+            # Calcular consistencia de indentación
+            if indentaciones:
+                indentacion_comun = max(set(indentaciones), key=indentaciones.count)
+                indentaciones_consistentes = sum(1 for i in indentaciones if i % indentacion_comun == 0)
+                factor_indentacion = indentaciones_consistentes / len(indentaciones)
+            else:
+                factor_indentacion = 0.5  # Valor por defecto
+            
+            # Verificar convenciones de nomenclatura
+            patrones_nomenclatura = {
+                'snake_case': r'\b[a-z][a-z0-9_]*\b',
+                'camelCase': r'\b[a-z][a-zA-Z0-9]*\b',
+                'PascalCase': r'\b[A-Z][a-zA-Z0-9]*\b',
+                'UPPER_CASE': r'\b[A-Z][A-Z0-9_]*\b'
+            }
+            
+            # Contar ocurrencias de cada estilo
+            conteo_estilos = {}
+            for estilo, patron in patrones_nomenclatura.items():
+                conteo_estilos[estilo] = len(re.findall(patron, codigo))
+            
+            # Determinar estilo predominante
+            estilo_predominante = max(conteo_estilos, key=conteo_estilos.get)
+            total_identificadores = sum(conteo_estilos.values())
+            
+            # Calcular consistencia de estilo
+            if total_identificadores > 0:
+                factor_nomenclatura = conteo_estilos[estilo_predominante] / total_identificadores
+            else:
+                factor_nomenclatura = 0.5  # Valor por defecto
+            
+            # Verificar espaciado y formato
+            patrones_formato = [
+                r'\)\s*{',  # Espacio entre ) y {
+                r'=\s',     # Espacio después de =
+                r'\s=',     # Espacio antes de =
+                r',\s',     # Espacio después de ,
+                r';\s*\n'   # ; seguido de nueva línea
+            ]
+            
+            contador_formato = 0
+            for patron in patrones_formato:
+                if re.search(patron, codigo):
+                    contador_formato += 1
+            
+            factor_formato = contador_formato / len(patrones_formato)
+            
+            # Combinar factores
+            estilo = (factor_indentacion * 0.4 + factor_nomenclatura * 0.4 + factor_formato * 0.2)
+            
+            return min(1.0, max(0.1, estilo))  # Asegurar rango 0.1-1.0
+            
+        except Exception as e:
+            logger.error(f"Error al evaluar estilo de código: {e}")
+            return 0.5  # Valor por defecto
+
+    def _evaluar_documentacion(self, codigo):
+        """
+        Evalúa la documentación del código basándose en comentarios, docstrings y claridad.
+        """
+        try:
+            lineas = codigo.split('\n')
+            total_lineas = len([l for l in lineas if l.strip()])
+            
+            if total_lineas == 0:
+                return 0.1  # Código vacío
+            
+            # Contar líneas de comentarios
+            comentarios_linea = len([l for l in lineas if l.strip().startswith(('//', '#', '*')) and not l.strip().startswith(('/*', '*/'))])
+            comentarios_bloque = 0
+            
+            # Detectar comentarios de bloque
+            en_bloque = False
+            for linea in lineas:
+                if '/*' in linea or '"""' in linea or "'''" in linea:
+                    en_bloque = True
+                if en_bloque:
+                    comentarios_bloque += 1
+                if '*/' in linea or '"""' in linea or "'''" in linea:
+                    en_bloque = False
+            
+            # Calcular ratio de comentarios
+            total_comentarios = comentarios_linea + comentarios_bloque
+            ratio_comentarios = total_comentarios / total_lineas
+            
+            # Factor de documentación basado en ratio (ideal: 15-30% de comentarios)
+            if ratio_comentarios < 0.05:
+                factor_cantidad = 0.2  # Muy pocos comentarios
+            elif ratio_comentarios < 0.15:
+                factor_cantidad = 0.6  # Pocos comentarios
+            elif ratio_comentarios <= 0.3:
+                factor_cantidad = 1.0  # Cantidad ideal
+            elif ratio_comentarios <= 0.5:
+                factor_cantidad = 0.8  # Muchos comentarios
+            else:
+                factor_cantidad = 0.5  # Demasiados comentarios
+            
+            # Detectar docstrings o comentarios de cabecera
+            patrones_docstring = [
+                r'""".*?"""',
+                r"'''.*?'''",
+                r'/\*\*.*?\*/',
+                r'/// <summary>.*?</summary>'
+            ]
+            
+            tiene_docstrings = False
+            for patron in patrones_docstring:
+                if re.search(patron, codigo, re.DOTALL):
+                    tiene_docstrings = True
+                    break
+            
+            factor_docstrings = 1.0 if tiene_docstrings else 0.5
+            
+            # Detectar comentarios explicativos vs. obvios
+            patrones_explicativos = [
+                'porque', 'para', 'debido a', 'evita', 'previene', 'asegura',
+                'optimiza', 'mejora', 'soluciona', 'implementa', 'TODO', 'FIXME',
+                'HACK', 'NOTE', 'WARNING'
+            ]
+            
+            comentarios_explicativos = 0
+            for linea in lineas:
+                if any(linea.strip().startswith(c) for c in ('//', '#', '*')) and any(p in linea.lower() for p in patrones_explicativos):
+                    comentarios_explicativos += 1
+            
+            factor_calidad = min(1.0, comentarios_explicativos / max(1, total_comentarios) * 2)
+            
+            # Combinar factores
+            documentacion = (factor_cantidad * 0.4 + factor_docstrings * 0.3 + factor_calidad * 0.3)
+            
+            return min(1.0, max(0.1, documentacion))  # Asegurar rango 0.1-1.0
+            
+        except Exception as e:
+            logger.error(f"Error al evaluar documentación: {e}")
+            return 0.5  # Valor por defecto
+
+    def _evaluar_profundidad(self, contenido, titulo, objetivo):
+        """
+        Evalúa la profundidad del análisis basándose en la presencia de conceptos clave,
+        desarrollo de ideas y complejidad del razonamiento.
+        """
+        try:
+            # Extraer conceptos clave del título y objetivo
+            if titulo and objetivo:
+                texto_referencia = f"{titulo} {objetivo}"
+                palabras_referencia = set(self._preprocess_text(texto_referencia).split())
+                
+                # Filtrar stopwords
+                palabras_referencia = {palabra for palabra in palabras_referencia 
+                                     if palabra not in self.spanish_stopwords and len(palabra) > 3}
+                
+                # Contar apariciones de conceptos clave en el contenido
+                contenido_procesado = self._preprocess_text(contenido)
+                palabras_contenido = contenido_procesado.split()
+                
+                # Contar apariciones de cada concepto clave
+                apariciones = sum(1 for palabra in palabras_contenido if palabra in palabras_referencia)
+                
+                # Normalizar por longitud del contenido
+                factor_conceptos = min(1.0, apariciones / (len(palabras_contenido) * 0.1))
+            else:
+                factor_conceptos = 0.5  # Valor por defecto si no hay título/objetivo
+            
+            # Evaluar desarrollo de ideas (párrafos con longitud adecuada)
+            parrafos = [p for p in contenido.split('\n\n') if p.strip()]
+            if parrafos:
+                longitudes_parrafos = [len(p.split()) for p in parrafos]
+                parrafos_adecuados = sum(1 for l in longitudes_parrafos if 30 <= l <= 200)
+                factor_desarrollo = min(1.0, parrafos_adecuados / len(parrafos))
+            else:
+                factor_desarrollo = 0.1  # Penalizar si no hay estructura de párrafos
+            
+            # Evaluar complejidad del razonamiento (presencia de marcadores de razonamiento)
+            marcadores = ['porque', 'debido a', 'como resultado', 'implica', 'demuestra', 
+                         'evidencia', 'análisis', 'conclusión', 'hipótesis', 'teoría']
+            
+            contador_marcadores = sum(1 for marcador in marcadores if marcador in contenido.lower())
+            factor_razonamiento = min(1.0, contador_marcadores / 5)  # Normalizar a máximo 1.0
+            
+            # Combinar factores
+            profundidad = (factor_conceptos * 0.4 + factor_desarrollo * 0.3 + factor_razonamiento * 0.3)
+            
+            return min(1.0, max(0.1, profundidad))  # Asegurar rango 0.1-1.0
+            
+        except Exception as e:
+            logger.error(f"Error al evaluar profundidad: {e}")
+            return 0.5  # Valor por defecto
+
+    def _evaluar_estructura(self, contenido):
+        """
+        Evalúa la estructura del contenido basándose en la organización, 
+        presencia de secciones y coherencia.
+        """
+        try:
+            # Verificar presencia de estructura básica (introducción, desarrollo, conclusión)
+            tiene_introduccion = any(marker in contenido.lower() for marker in 
+                                   ['introducción', 'introduccion', 'presentación', 'presentacion', 
+                                    'contexto', 'antecedentes', 'objetivo'])
+            
+            tiene_conclusion = any(marker in contenido.lower() for marker in 
+                                 ['conclusión', 'conclusion', 'resumen', 'finalmente', 
+                                  'en resumen', 'para concluir', 'en conclusión'])
+            
+            # Verificar presencia de secciones o apartados
+            lineas = contenido.split('\n')
+            posibles_encabezados = [l for l in lineas if l.strip() and len(l.split()) <= 5 and l.strip()[-1] != '.']
+            tiene_secciones = len(posibles_encabezados) >= 3  # Al menos 3 posibles encabezados
+            
+            # Verificar presencia de párrafos bien formados
+            parrafos = [p for p in contenido.split('\n\n') if p.strip()]
+            tiene_parrafos = len(parrafos) >= 3  # Al menos 3 párrafos
+            
+            # Calcular factor de estructura
+            factor_estructura = (
+                (0.3 if tiene_introduccion else 0.0) + 
+                (0.3 if tiene_conclusion else 0.0) + 
+                (0.2 if tiene_secciones else 0.0) + 
+                (0.2 if tiene_parrafos else 0.0)
+            )
+            
+            # Evaluar coherencia entre párrafos (presencia de conectores entre párrafos)
+            if len(parrafos) > 1:
+                conectores_parrafos = ['además', 'por otro lado', 'sin embargo', 'en consecuencia', 
+                                      'por lo tanto', 'de igual manera', 'asimismo', 'en contraste']
+                
+                # Contar párrafos que comienzan con conectores
+                parrafos_con_conectores = sum(1 for p in parrafos[1:] 
+                                            if any(p.lower().startswith(c) for c in conectores_parrafos))
+                
+                factor_coherencia = min(1.0, parrafos_con_conectores / (len(parrafos) - 1))
+            else:
+                factor_coherencia = 0.0
+            
+            # Combinar factores
+            estructura = factor_estructura * 0.7 + factor_coherencia * 0.3
+            
+            return min(1.0, max(0.1, estructura))  # Asegurar rango 0.1-1.0
+            
+        except Exception as e:
+            logger.error(f"Error al evaluar estructura: {e}")
+            return 0.5  # Valor por defecto
+
+    def _evaluar_originalidad(self, contenido):
+        """
+        Evalúa la originalidad del contenido basándose en la diversidad léxica,
+        presencia de ideas propias y ausencia de patrones comunes.
+        """
+        try:
+            # Calcular diversidad léxica (TTR: Type-Token Ratio)
+            palabras = [w for w in contenido.split() if w.lower() not in self.spanish_stopwords]
+            if palabras:
+                palabras_unicas = set(palabras)
+                ttr = len(palabras_unicas) / len(palabras)
+                # Normalizar TTR (valores típicos entre 0.4 y 0.7)
+                factor_diversidad = min(1.0, max(0.0, (ttr - 0.4) / 0.3))
+            else:
+                factor_diversidad = 0.0
+            
+            # Detectar presencia de marcadores de opinión personal
+            marcadores_opinion = ['considero', 'opino', 'creo que', 'desde mi perspectiva', 
+                                 'en mi opinión', 'a mi parecer', 'según mi análisis',
+                                 'mi interpretación', 'propongo', 'sugiero']
+            
+            tiene_opinion = any(marker in contenido.lower() for marker in marcadores_opinion)
+            factor_opinion = 0.3 if tiene_opinion else 0.0
+            
+            # Detectar presencia de análisis crítico
+            marcadores_critico = ['sin embargo', 'no obstante', 'por el contrario', 
+                                 'cuestionar', 'criticar', 'debatir', 'contrastar',
+                                 'ventajas y desventajas', 'fortalezas y debilidades']
+            
+            tiene_critica = any(marker in contenido.lower() for marker in marcadores_critico)
+            factor_critica = 0.3 if tiene_critica else 0.0
+            
+            # Detectar presencia de ejemplos originales
+            marcadores_ejemplos = ['por ejemplo', 'como ilustración', 'un caso', 
+                                  'para ilustrar', 'consideremos', 'imaginemos']
+            
+            tiene_ejemplos = any(marker in contenido.lower() for marker in marcadores_ejemplos)
+            factor_ejemplos = 0.2 if tiene_ejemplos else 0.0
+            
+            # Combinar factores
+            originalidad = factor_diversidad * 0.4 + factor_opinion + factor_critica + factor_ejemplos
+            
+            return min(1.0, max(0.1, originalidad))  # Asegurar rango 0.1-1.0
+            
+        except Exception as e:
+            logger.error(f"Error al evaluar originalidad: {e}")
+            return 0.5  # Valor por defecto
+
+    def _calcular_calificacion_alternativa(self, metricas):
+        """
+        Calcula una calificación alternativa basada en métricas cuando falla el modelo principal.
+        """
+        # Verificar si son métricas de código o de texto
+        if 'funcionalidad' in metricas:
+            # Ponderación de métricas para código
+            pesos = {
+                'funcionalidad': 0.4,
+                'eficiencia': 0.3,
+                'estilo': 0.2,
+                'documentacion': 0.1
+            }
+        else:
+            # Ponderación de métricas para texto
+            pesos = {
+                'claridad': 0.25,
+                'profundidad': 0.35,
+                'estructura': 0.25,
+                'originalidad': 0.15
+            }
+        
+        # Calcular calificación ponderada
+        calificacion = sum(metricas[metrica] * pesos[metrica] for metrica in pesos)
+        
+        # Escalar a rango 0-10
+        return calificacion * 10
+
+    def _ajustar_calificacion(self, calificacion_base, relevancia, claridad, profundidad, estructura):
+        """
+        Ajusta la calificación base según relevancia y métricas de calidad.
+        """
+        # Ajuste por relevancia (factor crítico)
+        if relevancia < 0.3:
+            factor_relevancia = relevancia / 0.3  # Penalización severa por baja relevancia
+        else:
+            factor_relevancia = 1.0
+        
+        # Ajuste por métricas de calidad
+        factor_calidad = (claridad * 0.3 + profundidad * 0.4 + estructura * 0.3)
+        
+        # Combinar factores
+        calificacion_ajustada = calificacion_base * factor_relevancia * factor_calidad
+        
+        return calificacion_ajustada
+
+    def _ajustar_calificacion_codigo(self, calificacion_base, relevancia, funcionalidad, eficiencia, estilo, documentacion):
+        """
+        Ajusta la calificación base para código según relevancia y métricas de calidad.
+        """
+        # Ajuste por relevancia (factor crítico)
+        if relevancia < 0.3:
+            factor_relevancia = relevancia / 0.3  # Penalización severa por baja relevancia
+        else:
+            factor_relevancia = 1.0
+        
+        # Ajuste por métricas de calidad
+        factor_calidad = (funcionalidad * 0.4 + eficiencia * 0.3 + estilo * 0.2 + documentacion * 0.1)
+        
+        # Combinar factores
+        calificacion_ajustada = calificacion_base * factor_relevancia * factor_calidad
+        
+        return calificacion_ajustada
+
+    def _identificar_fortalezas_debilidades(self, contenido, metricas, calificacion):
+        """
+        Identifica fortalezas y debilidades específicas en el trabajo.
+        """
+        fortalezas = []
+        debilidades = []
+        
+        # Analizar métricas para identificar fortalezas y debilidades
+        if metricas['claridad'] > 0.7:
+            fortalezas.append("Claridad en la exposición de ideas")
+        elif metricas['claridad'] < 0.4:
+            debilidades.append("Falta de claridad en la exposición de ideas")
+            
+        if metricas['profundidad'] > 0.7:
+            fortalezas.append("Análisis profundo del tema")
+        elif metricas['profundidad'] < 0.4:
+            debilidades.append("Análisis superficial del tema")
+            
+        if metricas['estructura'] > 0.7:
+            fortalezas.append("Buena estructura y organización del trabajo")
+        elif metricas['estructura'] < 0.4:
+            debilidades.append("Deficiencias en la estructura y organización del trabajo")
+            
+        if metricas['originalidad'] > 0.7:
+            fortalezas.append("Enfoque original y aportaciones propias")
+        elif metricas['originalidad'] < 0.4:
+            debilidades.append("Falta de originalidad y aportaciones propias")
+        
+        # Análisis específicos del contenido
+        palabras = len(contenido.split())
+        if palabras < 200:
+            debilidades.append("Desarrollo insuficiente del contenido")
+        elif palabras > 1000:
+            fortalezas.append("Desarrollo extenso y detallado del contenido")
+            
+        # Verificar presencia de elementos específicos
+        if 'bibliografía' in contenido.lower() or 'referencias' in contenido.lower():
+            fortalezas.append("Inclusión de referencias bibliográficas")
+        else:
+            debilidades.append("Ausencia de referencias bibliográficas")
+            
+        if any(marker in contenido.lower() for marker in ['gráfico', 'tabla', 'figura', 'imagen']):
+            fortalezas.append("Uso de elementos visuales para apoyar el contenido")
+            
+        if any(marker in contenido.lower() for marker in ['ejemplo', 'caso', 'ilustración']):
+            fortalezas.append("Inclusión de ejemplos para ilustrar conceptos")
+        else:
+            debilidades.append("Falta de ejemplos para ilustrar conceptos")
+        
+        return fortalezas, debilidades
+
+    def _identificar_fortalezas_debilidades_codigo(self, contenido, metricas, calificacion):
+        """
+        Identifica fortalezas y debilidades específicas en el código.
+        """
+        fortalezas = []
+        debilidades = []
+        
+        # Analizar métricas para identificar fortalezas y debilidades
+        if metricas['funcionalidad'] > 0.7:
+            fortalezas.append("Implementación funcional y correcta")
+        elif metricas['funcionalidad'] < 0.4:
+            debilidades.append("Problemas de funcionalidad en la implementación")
+            
+        if metricas['eficiencia'] > 0.7:
+            fortalezas.append("Código eficiente y optimizado")
+        elif metricas['eficiencia'] < 0.4:
+            debilidades.append("Código ineficiente que podría optimizarse")
+            
+        if metricas['estilo'] > 0.7:
+            fortalezas.append("Buen estilo de programación y convenciones")
+        elif metricas['estilo'] < 0.4:
+            debilidades.append("Problemas de estilo y convenciones de programación")
+            
+        if metricas['documentacion'] > 0.7:
+            fortalezas.append("Código bien documentado con comentarios claros")
+        elif metricas['documentacion'] < 0.4:
+            debilidades.append("Falta de documentación y comentarios en el código")
+        
+        # Análisis específicos del código
+        lineas = contenido.split('\n')
+        lineas_codigo = [l for l in lineas if l.strip() and not l.strip().startswith(('#', '//', '/*', '*', '*/'))]
+        
+        if len(lineas_codigo) < 10:
+            debilidades.append("Implementación demasiado breve o incompleta")
+        elif len(lineas_codigo) > 300:
+            if 'eficiencia' in metricas and metricas['eficiencia'] > 0.6:
+                fortalezas.append("Implementación completa y detallada")
+            else:
+                debilidades.append("Código excesivamente largo que podría simplificarse")
+        
+        # Verificar presencia de elementos específicos
+        if any(marker in contenido for marker in ['try', 'catch', 'except', 'finally']):
+            fortalezas.append("Implementación de manejo de errores")
+        else:
+            debilidades.append("Falta de manejo de errores y excepciones")
+            
+        if any(marker in contenido.lower() for marker in ['test', 'assert', 'spec', 'should', 'expect']):
+            fortalezas.append("Inclusión de pruebas o validaciones")
+            
+        if any(marker in contenido.lower() for marker in ['optimize', 'performance', 'efficient', 'complexity']):
+            fortalezas.append("Atención a la optimización y rendimiento")
+        
+        return fortalezas, debilidades
+
+    def _generar_respuesta_irrelevante(self, estilo_aprendizaje, titulo, objetivo):
+        """
+        Genera una respuesta para contenido irrelevante al tema solicitado.
+        """
+        comentario = np.random.choice(self.feedback_templates['irrelevant'])
+        
+        # Personalizar según estilo de aprendizaje
+        sugerencias = "Es fundamental revisar detenidamente el título y objetivo de la actividad para asegurarte de que tu entrega aborde el tema requerido."
+        
+        if estilo_aprendizaje:
+            estilos = estilo_aprendizaje.split(',')
+            for estilo in estilos:
+                estilo = estilo.strip().lower()
+                if estilo == 'visual':
+                    sugerencias += " Te recomendaría crear un mapa conceptual del tema solicitado antes de comenzar a escribir."
+                elif estilo == 'auditivo':
+                    sugerencias += " Podrías grabar una explicación verbal del tema solicitado para organizar tus ideas."
+                elif estilo == 'kinestesico':
+                    sugerencias += " Intenta realizar ejercicios prácticos relacionados con el tema solicitado para comprenderlo mejor."
+                elif estilo == 'lectura_escritura':
+                    sugerencias += " Te sugiero hacer un resumen escrito del tema solicitado antes de desarrollar tu trabajo."
+        
+        # Recomendar recursos educativos
+        recursos = self._recomendar_recursos(estilo_aprendizaje, titulo, objetivo, 0.0)
+        
+        return {
+            "calificacion": 0.0,
+            "comentarios": comentario,
+            "sugerencias": sugerencias,
+            "relevancia": 0.0,
+            "recursos_recomendados": recursos
+        }
+
+    def _generar_comentarios_detallados(self, calificacion, contenido, titulo, objetivo, fortalezas, debilidades, estilo_aprendizaje=None):
+        """
+        Genera comentarios detallados y personalizados basados en el análisis del contenido.
+        """
+        # Seleccionar plantilla base según calificación
+        if calificacion >= 9.0:
+            comentario_base = np.random.choice(self.feedback_templates['excellent'])
+        elif calificacion >= 8.0:
+            comentario_base = np.random.choice(self.feedback_templates['very_good'])
+        elif calificacion >= 7.0:
+            comentario_base = np.random.choice(self.feedback_templates['good'])
+        elif calificacion >= 5.0:
+            comentario_base = np.random.choice(self.feedback_templates['average'])
+        elif calificacion >= 3.0:
+            comentario_base = np.random.choice(self.feedback_templates['needs_improvement'])
+        else:
+            comentario_base = np.random.choice(self.feedback_templates['poor'])
+        
+        # Añadir comentarios sobre fortalezas específicas
+        comentario = comentario_base
+        if fortalezas:
+            comentario += "\n\nAspectos destacables:"
+            for fortaleza in fortalezas[:3]:  # Limitar a 3 fortalezas
+                comentario += f"\n- {fortaleza}."
+        
+        # Añadir comentarios sobre debilidades específicas
+        if debilidades:
+            comentario += "\n\nAspectos a mejorar:"
+            for debilidad in debilidades[:3]:  # Limitar a 3 debilidades
+                comentario += f"\n- {debilidad}."
+        
+        # Personalizar según estilo de aprendizaje
+        if estilo_aprendizaje:
+            estilos = estilo_aprendizaje.split(',')
+            comentario += "\n\nConsiderando tu estilo de aprendizaje:"
+            
+            for estilo in estilos:
+                estilo = estilo.strip().lower()
+                if estilo == 'visual':
+                    comentario += "\n- Como aprendiz visual, podrías beneficiarte de organizar tus ideas en diagramas o mapas conceptuales."
+                elif estilo == 'auditivo':
+                    comentario += "\n- Como aprendiz auditivo, podrías beneficiarte de explicar verbalmente los conceptos o discutirlos con otros."
+                elif estilo == 'kinestesico':
+                    comentario += "\n- Como aprendiz kinestésico, podrías beneficiarte de aplicar estos conceptos en ejercicios prácticos."
+                elif estilo == 'lectura_escritura':
+                    comentario += "\n- Como aprendiz orientado a la lectura/escritura, podrías beneficiarte de crear resúmenes escritos detallados."
+        
+        return comentario
+
+    def _generar_comentarios_detallados_codigo(self, calificacion, contenido, titulo, objetivo, fortalezas, debilidades, estilo_aprendizaje=None):
+        """
+        Genera comentarios detallados y personalizados basados en el análisis del código.
+        """
+        # Seleccionar plantilla base según calificación
+        if calificacion >= 9.0:
+            comentario_base = np.random.choice(self.code_feedback_templates['excellent'])
+        elif calificacion >= 8.0:
+            comentario_base = np.random.choice(self.code_feedback_templates['very_good'])
+        elif calificacion >= 7.0:
+            comentario_base = np.random.choice(self.code_feedback_templates['good'])
+        elif calificacion >= 5.0:
+            comentario_base = np.random.choice(self.code_feedback_templates['average'])
+        elif calificacion >= 3.0:
+            comentario_base = np.random.choice(self.code_feedback_templates['needs_improvement'])
+        else:
+            comentario_base = np.random.choice(self.code_feedback_templates['poor'])
+        
+        # Añadir comentarios sobre fortalezas específicas
+        comentario = comentario_base
+        if fortalezas:
+            comentario += "\n\nAspectos destacables:"
+            for fortaleza in fortalezas[:3]:  # Limitar a 3 fortalezas
+                comentario += f"\n- {fortaleza}."
+        
+        # Añadir comentarios sobre debilidades específicas
+        if debilidades:
+            comentario += "\n\nAspectos a mejorar:"
+            for debilidad in debilidades[:3]:  # Limitar a 3 debilidades
+                comentario += f"\n- {debilidad}."
+        
+        # Personalizar según estilo de aprendizaje
+        if estilo_aprendizaje:
+            estilos = estilo_aprendizaje.split(',')
+            comentario += "\n\nConsiderando tu estilo de aprendizaje:"
+            
+            for estilo in estilos:
+                estilo = estilo.strip().lower()
+                if estilo == 'visual':
+                    comentario += "\n- Como aprendiz visual, podrías beneficiarte de utilizar diagramas de flujo o UML para planificar tu código."
+                elif estilo == 'auditivo':
+                    comentario += "\n- Como aprendiz auditivo, podrías beneficiarte de explicar verbalmente tu código o discutirlo con otros programadores."
+                elif estilo == 'kinestesico':
+                    comentario += "\n- Como aprendiz kinestésico, podrías beneficiarte de implementar pequeños ejemplos prácticos para cada concepto."
+                elif estilo == 'lectura_escritura':
+                    comentario += "\n- Como aprendiz orientado a la lectura/escritura, podrías beneficiarte de documentar detalladamente tu código y escribir pseudocódigo."
+        
+        return comentario
+
+    def _generar_sugerencias_mejora(self, calificacion, contenido, titulo, objetivo, debilidades, estilo_aprendizaje=None):
+        """
+        Genera sugerencias específicas para mejorar el trabajo.
+        """
+        # Base de sugerencias según calificación
+        if calificacion >= 9.0:
+            sugerencias = "Para futuras entregas, considera profundizar en aspectos avanzados del tema o explorar aplicaciones innovadoras."
+        elif calificacion >= 7.0:
+            sugerencias = "Para mejorar, considera agregar más ejemplos o casos prácticos, y profundizar en los conceptos más complejos."
+        elif calificacion >= 5.0:
+            sugerencias = "Revisa la estructura y organización de tu trabajo. Profundiza más en los conceptos clave y mejora la claridad de tus explicaciones."
+        elif calificacion >= 3.0:
+            sugerencias = "Es importante revisar los conceptos fundamentales del tema. Consulta los materiales de clase y busca recursos adicionales para fortalecer tu comprensión."
+        else:
+            sugerencias = "Recomiendo revisar completamente los conceptos básicos del tema. Considera solicitar asesoría adicional y repasar los materiales de clase."
+        
+        # Añadir sugerencias específicas basadas en debilidades
+        if debilidades:
+            sugerencias += "\n\nSugerencias específicas:"
+            for debilidad in debilidades[:3]:  # Limitar a 3 debilidades
+                if "estructura" in debilidad.lower():
+                    sugerencias += "\n- Organiza tu trabajo con una introducción clara, desarrollo de ideas y conclusión."
+                elif "claridad" in debilidad.lower():
+                    sugerencias += "\n- Utiliza oraciones más cortas y precisas. Define los conceptos clave antes de desarrollarlos."
+                elif "profundidad" in debilidad.lower() or "superficial" in debilidad.lower():
+                    sugerencias += "\n- Profundiza en los conceptos clave. No solo menciones los términos, explícalos y relacionalos entre sí."
+                elif "ejemplo" in debilidad.lower():
+                    sugerencias += "\n- Incluye ejemplos concretos que ilustren los conceptos teóricos que presentas."
+                elif "referencia" in debilidad.lower() or "bibliografía" in debilidad.lower():
+                    sugerencias += "\n- Incluye referencias bibliográficas que respalden tus afirmaciones y enriquezcan tu trabajo."
+                elif "desarrollo insuficiente" in debilidad.lower():
+                    sugerencias += "\n- Desarrolla más extensamente tus ideas. El trabajo es demasiado breve para abordar adecuadamente el tema."
+                else:
+                    sugerencias += f"\n- Para mejorar en cuanto a '{debilidad}', revisa los materiales del curso y busca recursos adicionales."
+        
+        return sugerencias
+
+    def _generar_sugerencias_mejora_codigo(self, calificacion, contenido, titulo, objetivo, debilidades, estilo_aprendizaje=None):
+        """
+        Genera sugerencias específicas para mejorar el código.
+        """
+        # Base de sugerencias según calificación
+        if calificacion >= 9.0:
+            sugerencias = "Para futuras entregas, considera implementar optimizaciones avanzadas o explorar patrones de diseño alternativos."
+        elif calificacion >= 7.0:
+            sugerencias = "Para mejorar, considera optimizar la eficiencia del código y mejorar la documentación de las partes complejas."
+        elif calificacion >= 5.0:
+            sugerencias = "Revisa la estructura y organización del código. Implementa un mejor manejo de errores y mejora la legibilidad."
+        elif calificacion >= 3.0:
+            sugerencias = "Es importante revisar los conceptos fundamentales de programación. Asegúrate de que el código funcione correctamente antes de optimizarlo."
+        else:
+            sugerencias = "Recomiendo revisar completamente los conceptos básicos de programación. Considera solicitar asesoría adicional y repasar los materiales de clase."
+        
+        # Añadir sugerencias específicas basadas en debilidades
+        if debilidades:
+            sugerencias += "\n\nSugerencias específicas:"
+            for debilidad in debilidades[:3]:  # Limitar a 3 debilidades
+                if "funcionalidad" in debilidad.lower():
+                    sugerencias += "\n- Asegúrate de que tu código cumpla con todos los requisitos funcionales y maneja correctamente los casos límite."
+                elif "eficiencia" in debilidad.lower():
+                    sugerencias += "\n- Optimiza los algoritmos utilizados para mejorar el rendimiento. Evita operaciones redundantes y bucles anidados innecesarios."
+                elif "estilo" in debilidad.lower():
+                    sugerencias += "\n- Sigue las convenciones de estilo del lenguaje utilizado. Mantén una indentación consistente y nombres de variables descriptivos."
+                elif "documentación" in debilidad.lower() or "comentarios" in debilidad.lower():
+                    sugerencias += "\n- Añade comentarios explicativos para las secciones complejas y documenta las funciones con sus parámetros y valores de retorno."
+                elif "manejo de errores" in debilidad.lower():
+                    sugerencias += "\n- Implementa un manejo adecuado de errores y excepciones para hacer tu código más robusto."
+                elif "demasiado" in debilidad.lower() and "largo" in debilidad.lower():
+                    sugerencias += "\n- Refactoriza el código para hacerlo más modular y mantenible. Divide las funciones largas en funciones más pequeñas y específicas."
+                else:
+                    sugerencias += f"\n- Para mejorar en cuanto a '{debilidad}', revisa las buenas prácticas de programación y busca ejemplos de código bien estructurado."
+        
+        # Añadir sugerencias específicas para código
+        sugerencias += "\n\nPara mejorar tu código:"
+        sugerencias += "\n- Asegúrate de incluir comentarios explicativos para las secciones importantes."
+        sugerencias += "\n- Utiliza nombres de variables descriptivos que indiquen su propósito."
+        sugerencias += "\n- Implementa manejo de errores para hacer tu código más robusto."
+        sugerencias += "\n- Considera la modularidad: divide tu código en funciones con propósitos específicos."
+        
+        return sugerencias
+
+    def _recomendar_recursos(self, estilo_aprendizaje, titulo, objetivo, calificacion):
+        """
+        Recomienda recursos educativos específicos según el estilo de aprendizaje y tema.
+        """
+        if not estilo_aprendizaje:
+            return []
+            
+        recursos_recomendados = []
+        estilos = estilo_aprendizaje.split(',')
+        
+        # Determinar la categoría temática
+        categoria = self._determinar_categoria_tematica(titulo, objetivo)
+        
+        # Seleccionar recursos para cada estilo de aprendizaje
+        for estilo in estilos:
+            estilo = estilo.strip().lower()
+            if estilo in self.recursos_educativos and categoria in self.recursos_educativos[estilo]:
+                # Seleccionar hasta 2 recursos aleatorios para este estilo y categoría
+                recursos_disponibles = self.recursos_educativos[estilo][categoria]
+                if recursos_disponibles:
+                    seleccionados = random.sample(recursos_disponibles, min(2, len(recursos_disponibles)))
+                    for recurso in seleccionados:
+                        recursos_recomendados.append({
+                            "estilo": estilo,
+                            "titulo": recurso["titulo"],
+                            "url": recurso["url"]
+                        })
+        
+        # Si la calificación es baja, añadir recursos adicionales de comprensión básica
+        if calificacion < 6.0 and 'programacion' in self.recursos_educativos.get('lectura_escritura', {}):
+            recursos_basicos = self.recursos_educativos['lectura_escritura'][categoria]
+            if recursos_basicos:
+                seleccionado = random.choice(recursos_basicos)
+                recursos_recomendados.append({
+                    "estilo": "fundamental",
+                    "titulo": f"Recurso fundamental: {seleccionado['titulo']}",
+                    "url": seleccionado['url']
+                })
+        
+        return recursos_recomendados
+
+    def _determinar_categoria_tematica(self, titulo, objetivo):
+        """
+        Determina la categoría temática del trabajo basándose en el título y objetivo.
+        """
+        if not titulo and not objetivo:
+            return "programacion"  # Categoría por defecto
+            
+        texto_combinado = f"{titulo} {objetivo}".lower()
+        
+        # Palabras clave por categoría
+        keywords = {
+            'programacion': ['programación', 'código', 'algoritmo', 'desarrollo', 'software', 'aplicación', 
+                           'web', 'móvil', 'base de datos', 'api', 'interfaz', 'función', 'clase', 
+                           'objeto', 'variable', 'python', 'java', 'javascript', 'html', 'css'],
+            'matematicas': ['matemáticas', 'cálculo', 'álgebra', 'geometría', 'estadística', 'probabilidad', 
+                          'función', 'ecuación', 'teorema', 'demostración', 'conjunto', 'matriz', 
+                          'vector', 'integral', 'derivada', 'límite', 'serie', 'convergencia'],
+            'ciencias': ['física', 'química', 'biología', 'geología', 'astronomía', 'experimento', 
+                       'laboratorio', 'científico', 'teoría', 'hipótesis', 'observación', 'fenómeno', 
+                       'reacción', 'molécula', 'célula', 'organismo', 'ecosistema', 'energía']
+        }
+        
+        # Contar coincidencias por categoría
+        coincidencias = defaultdict(int)
+        for categoria, palabras in keywords.items():
+            for palabra in palabras:
+                if palabra in texto_combinado:
+                    coincidencias[categoria] += 1
+        
+        # Determinar la categoría con más coincidencias
+        if not coincidencias:
+            return "programacion"  # Categoría por defecto
+            
+        return max(coincidencias.items(), key=lambda x: x[1])[0]
+
+    def entrenar_modelo(self, entradas, salidas, tipo_contenido='texto', epochs=50, batch_size=8, validation_split=0.2):
+        """
+        Entrena el modelo con datos proporcionados, implementando técnicas avanzadas
+        como early stopping, learning rate scheduling y regularización.
+        
+        Args:
+            entradas: Lista de textos para entrenamiento
+            salidas: Lista de calificaciones (0-10)
+            tipo_contenido: 'texto' o 'codigo' para seleccionar el modelo a entrenar
+            epochs: Número de épocas de entrenamiento
+            batch_size: Tamaño del lote
+            validation_split: Proporción de datos para validación
+            
+        Returns:
+            Diccionario con métricas de entrenamiento
+        """
+        # Validar entradas
+        if not isinstance(entradas, list) or not isinstance(salidas, list):
+            raise ValueError("Las entradas y salidas deben ser listas")
+            
+        if len(entradas) != len(salidas):
+            raise ValueError("Las listas de entradas y salidas deben tener la misma longitud")
+            
+        if len(entradas) < 5:
+            raise ValueError("Se necesitan al menos 5 ejemplos para entrenar el modelo")
+        
+        logger.info(f"Iniciando entrenamiento con {len(entradas)} ejemplos para modelo de {tipo_contenido}")
+        
+        # Enriquecer datos de entrenamiento con la base de conocimiento
+        entradas_enriquecidas = entradas + self.base_conocimiento
+        salidas_enriquecidas = salidas + [8.0] * len(self.base_conocimiento)  # Asignar calificación 8.0 a ejemplos de la base
+        
+        # Ajustar vectorizador con todos los datos
+        self.vectorizer.fit(entradas_enriquecidas)
+        
+        # Dividir datos en entrenamiento y validación
+        indices = np.random.permutation(len(entradas))
+        n_val = max(1, int(len(entradas) * validation_split))
+        n_train = len(entradas) - n_val
+        
+        train_idx, val_idx = indices[:n_train], indices[n_train:]
+        
+        train_entradas = [entradas[i] for i in train_idx]
+        train_salidas = [salidas[i] for i in train_idx]
+        val_entradas = [entradas[i] for i in val_idx]
+        val_salidas = [salidas[i] for i in val_idx]
+        
+        # Crear datasets
+        train_dataset = TextDataset(train_entradas, train_salidas, self.vectorizer)
+        val_dataset = TextDataset(val_entradas, val_salidas, self.vectorizer)
+        
+        # Crear dataloaders
+        train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+        val_loader = DataLoader(val_dataset, batch_size=batch_size)
+        
+        # Seleccionar modelo y optimizador según tipo de contenido
+        if tipo_contenido == 'codigo':
+            model = self.modelo_codigo
+            optimizer = self.optimizer_codigo
+        else:
+            model = self.modelo_contenido
+            optimizer = self.optimizer_contenido
+        
+        # Configurar learning rate scheduler
+        scheduler = optim.lr_scheduler.ReduceLROnPlateau(
+            optimizer, mode='min', factor=0.5, patience=3, verbose=True
+        )
+        
+        # Parámetros para early stopping
+        best_val_loss = float('inf')
+        patience = 7
+        patience_counter = 0
+        best_model_state = None
+        
+        # Historial de pérdidas
+        train_losses = []
+        val_losses = []
+        
+        # Bucle de entrenamiento
+        model.train()
+        for epoch in range(epochs):
+            # Entrenamiento
+            train_loss = 0.0
+            model.train()
+            for inputs, targets in train_loader:
+                inputs, targets = inputs.to(self.device), targets.to(self.device)
+                
+                # Poner a cero los gradientes
+                optimizer.zero_grad()
+                
+                # Forward pass
+                outputs = model(inputs)
+                loss = self.criterion(outputs['global'].squeeze(), targets)
+                
+                # Backward pass y optimización
+                loss.backward()
+                
+                # Gradient clipping para estabilidad
+                torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
+                
+                optimizer.step()
+                
+                train_loss += loss.item() * inputs.size(0)
+            
+            train_loss = train_loss / len(train_loader.dataset)
+            train_losses.append(train_loss)
+            
+            # Validación
+            val_loss = 0.0
+            model.eval()
+            with torch.no_grad():
+                for inputs, targets in val_loader:
+                    inputs, targets = inputs.to(self.device), targets.to(self.device)
+                    outputs = model(inputs)
+                    loss = self.criterion(outputs['global'].squeeze(), targets)
+                    val_loss += loss.item() * inputs.size(0)
+            
+            val_loss = val_loss / len(val_loader.dataset)
+            val_losses.append(val_loss)
+            
+            # Actualizar learning rate
+            scheduler.step(val_loss)
+            
+            # Imprimir progreso
+            logger.info(f'Epoch {epoch+1}/{epochs}, Train Loss: {train_loss:.4f}, Val Loss: {val_loss:.4f}')
+            
+            # Early stopping
+            if val_loss < best_val_loss:
+                best_val_loss = val_loss
+                patience_counter = 0
+                # Guardar mejor modelo
+                best_model_state = model.state_dict().copy()
+                self.guardar_modelos()
+                logger.info(f"Nuevo mejor modelo guardado (val_loss: {val_loss:.4f})")
+            else:
+                patience_counter += 1
+                if patience_counter >= patience:
+                    logger.info(f'Early stopping en epoch {epoch+1}')
+                    break
+        
+        # Cargar el mejor modelo
+        if best_model_state:
+            model.load_state_dict(best_model_state)
+            logger.info("Mejor modelo restaurado")
+        
+        # Guardar modelo final
+        self.guardar_modelos()
+        
+        return {
+            "train_losses": train_losses,
+            "val_losses": val_losses,
+            "best_val_loss": best_val_loss,
+            "epochs_completed": epoch + 1
+        }
+
+    import random
+
+    def generar_practica(self, titulo, objetivo):
+        """
+        Genera una práctica completa y detallada basada en el título y objetivo.
+        """
+        # Combinar título y objetivo
+        prompt = f"{titulo}. {objetivo}"
+        
+        # Encontrar prácticas similares en la base de conocimiento
+        prompt_vec = self.vectorizer.transform([prompt])
+        similarities = cosine_similarity(prompt_vec, self.tfidf_matrix)
+        
+        # Obtener los 3 ejemplos más similares
+        top_indices = similarities[0].argsort()[-3:][::-1]
+        practicas_similares = [self.base_conocimiento[i] for i in top_indices]
+        
+        # Determinar la categoría temática
+        categoria = self._determinar_categoria_tematica(titulo, objetivo)
+        
+        # Generar descripción combinando elementos de prácticas similares
+        descripcion = f"Esta práctica se enfoca en {titulo.lower()}. "
+        descripcion += f"{practicas_similares[0]} "
+        if len(practicas_similares) > 1:
+            descripcion += f"Además, aborda aspectos relacionados con {practicas_similares[1].lower()}."
+        
+        # Generar instrucciones específicas según la categoría
+        instrucciones = [
+            f"Lee detenidamente el objetivo: {objetivo}",
+            "Investiga los conceptos teóricos relacionados con el tema"
+        ]
+        
+        if categoria == 'programacion':
+            instrucciones.extend([
+                "Diseña una solución que cumpla con los requisitos especificados",
+                "Implementa tu solución utilizando el lenguaje de programación adecuado",
+                "Documenta tu código con comentarios explicativos",
+                "Realiza pruebas para verificar el correcto funcionamiento",
+                "Analiza la complejidad y eficiencia de tu solución"
+            ])
+        elif categoria == 'matematicas':
+            instrucciones.extend([
+                "Identifica los conceptos matemáticos relevantes para el problema",
+                "Desarrolla paso a paso la solución, justificando cada etapa",
+                "Incluye demostraciones cuando sea necesario",
+                "Verifica tus resultados con ejemplos concretos",
+                "Analiza las implicaciones y aplicaciones de tu solución"
+            ])
+        elif categoria == 'ciencias':
+            instrucciones.extend([
+                "Formula una hipótesis basada en el objetivo planteado",
+                "Diseña un experimento o metodología para comprobar tu hipótesis",
+                "Recopila y analiza datos relevantes",
+                "Interpreta los resultados obtenidos",
+                "Elabora conclusiones fundamentadas en la evidencia"
+            ])
+        
+        instrucciones.append("Entrega tu trabajo antes de la fecha límite establecida")
+        
+        # Generar recursos recomendados
+        recursos = [
+            "Material de clase y apuntes",
+            "Biblioteca digital de la universidad"
+        ]
+        
+        if categoria == 'programacion':
+            recursos.extend([
+                "Documentación oficial del lenguaje de programación",
+                "Repositorios de código en GitHub",
+                "Foros especializados como Stack Overflow"
+            ])
+        elif categoria == 'matematicas':
+            recursos.extend([
+                "Libros de texto recomendados en el curso",
+                "Artículos académicos relacionados",
+                "Plataformas como Khan Academy o Wolfram Alpha"
+            ])
+        elif categoria == 'ciencias':
+            recursos.extend([
+                "Artículos científicos recientes sobre el tema",
+                "Bases de datos especializadas",
+                "Simuladores y laboratorios virtuales"
+            ])
+        
+        # Generar criterios de evaluación
+        criterios_evaluacion = [
+            "Comprensión del tema y conceptos clave (30%)",
+            "Calidad de la solución o análisis (40%)",
+            "Documentación y presentación (20%)",
+            "Creatividad e innovación (10%)"
+        ]
+        
+        # Generar objetivos de aprendizaje
+        objetivos_aprendizaje = []
+        
+        if categoria == 'programacion':
+            objetivos_aprendizaje = [
+                f"Comprender los fundamentos teóricos de {titulo.lower()}",
+                "Desarrollar habilidades de resolución de problemas mediante programación",
+                "Aplicar buenas prácticas de desarrollo de software",
+                "Implementar soluciones eficientes y bien documentadas"
+            ]
+        elif categoria == 'matematicas':
+            objetivos_aprendizaje = [
+                f"Dominar los conceptos matemáticos relacionados con {titulo.lower()}",
+                "Desarrollar capacidad de razonamiento lógico y abstracto",
+                "Aplicar métodos matemáticos para resolver problemas concretos",
+                "Comunicar ideas matemáticas con precisión y claridad"
+            ]
+        elif categoria == 'ciencias':
+            objetivos_aprendizaje = [
+                f"Comprender los principios científicos de {titulo.lower()}",
+                "Desarrollar habilidades de investigación y análisis",
+                "Aplicar el método científico en situaciones concretas",
+                "Interpretar datos y resultados experimentales"
+            ]
+        
+        # Generar recomendaciones según la categoría
+        recomendaciones = ""
+        if categoria == 'programacion':
+            recomendaciones = (
+                "Se recomienda practicar en plataformas como LeetCode y consultar documentación oficial."
+            )
+        elif categoria == 'matematicas':
+            recomendaciones = (
+                "Utiliza herramientas como Wolfram Alpha y busca problemas similares en Khan Academy."
+            )
+        elif categoria == 'ciencias':
+            recomendaciones = (
+                "Refuerza tus conocimientos con simuladores virtuales y experimentos caseros controlados."
+            )
+        else:
+            recomendaciones = (
+                "Consulta con tu profesor o utiliza recursos digitales para profundizar en el tema."
+            )
+    
+        # Construir y retornar la práctica completa
+        nueva_practica = {
+            "titulo": titulo,
+            "objetivo": objetivo,
+            "objetivos_aprendizaje": objetivos_aprendizaje,
+            "descripcion": descripcion,
+            "actividades": instrucciones,  # Reusamos instrucciones como actividades
+            "categoria": categoria,
+            "instrucciones": instrucciones,
+            "recursos": recursos,
+            "criterios_evaluacion": criterios_evaluacion,
+            "tiempo_estimado": "2-3 horas",
+            "nivel_dificultad": "Intermedio",
+            "recomendaciones": recomendaciones
+        }
+    
+        return nueva_practica
+
+
+
+    def guardar_modelos(self, ruta_base='modelos'):
+        """
+        Guarda los modelos y vectorizador en disco.
+        """
+        try:
+            # Crear directorio si no existe
+            os.makedirs(ruta_base, exist_ok=True)
+            
+            # Guardar modelos
+            torch.save(self.modelo_contenido.state_dict(), os.path.join(ruta_base, 'modelo_contenido.pt'))
+            torch.save(self.modelo_codigo.state_dict(), os.path.join(ruta_base, 'modelo_codigo.pt'))
+            
+            # Guardar vectorizador
+            with open(os.path.join(ruta_base, 'vectorizer.pkl'), 'wb') as f:
+                pickle.dump(self.vectorizer, f)
+                
+            logger.info(f"Modelos guardados en {ruta_base}")
+            return True
+        except Exception as e:
+            logger.error(f"Error al guardar modelos: {e}")
+            return False
+
+    def cargar_modelos(self, ruta_base='modelos'):
+        """
+        Carga los modelos y vectorizador desde disco.
+        """
+        try:
+            # Verificar si los archivos existen
+            ruta_contenido = os.path.join(ruta_base, 'modelo_contenido.pt')
+            ruta_codigo = os.path.join(ruta_base, 'modelo_codigo.pt')
+            ruta_vectorizer = os.path.join(ruta_base, 'vectorizer.pkl')
+            
+            if not os.path.exists(ruta_contenido) or not os.path.exists(ruta_codigo) or not os.path.exists(ruta_vectorizer):
+                logger.warning("Archivos de modelo no encontrados. Se usarán modelos nuevos.")
+                return False
+                
+            # Cargar modelos
+            self.modelo_contenido.load_state_dict(torch.load(ruta_contenido, map_location=self.device))
+            self.modelo_contenido.eval()
+            
+            self.modelo_codigo.load_state_dict(torch.load(ruta_codigo, map_location=self.device))
+            self.modelo_codigo.eval()
+            
+            # Cargar vectorizador
+            with open(ruta_vectorizer, 'rb') as f:
+                self.vectorizer = pickle.load(f)
+                
+            logger.info(f"Modelos cargados desde {ruta_base}")
+            return True
+        except Exception as e:
+            logger.error(f"Error al cargar modelos: {e}")
+            return False
+        
+    def evaluar_practica(self, texto_practica):
+        """
+        Evalúa la dificultad de una práctica basada en su texto.
+        
+        Args:
+            texto_practica: Texto de la práctica a evaluar
+            
+        Returns:
+            Dificultad estimada (0-1)
+        """
+        try:
+            # Detectar tipo de contenido
+            tipo_contenido = self.detectar_tipo_contenido(texto_practica)
+            
+            # Preprocesar el texto
+            texto_procesado = self._preprocess_text(texto_practica)
+            
+            # Vectorizar el texto
+            try:
+                texto_vectorizado = self.vectorizer.transform([texto_procesado]).toarray()[0]
+                
+                # Asegurar dimensiones consistentes
+                if len(texto_vectorizado) < 5000:
+                    texto_vectorizado = np.pad(texto_vectorizado, (0, 5000 - len(texto_vectorizado)), 'constant')
+                elif len(texto_vectorizado) > 5000:
+                    texto_vectorizado = texto_vectorizado[:5000]
+                    
+                # Convertir a tensor
+                input_tensor = torch.tensor(texto_vectorizado, dtype=torch.float32).unsqueeze(0).to(self.device)
+                
+                # Evaluar con el modelo adecuado
+                if tipo_contenido == 'codigo':
+                    self.modelo_codigo.eval()
+                    with torch.no_grad():
+                        outputs = self.modelo_codigo(input_tensor)
+                        dificultad = outputs['global'].item() / 10.0  # Normalizar a 0-1
+                else:
+                    self.modelo_contenido.eval()
+                    with torch.no_grad():
+                        outputs = self.modelo_contenido(input_tensor)
+                        dificultad = outputs['global'].item() / 10.0  # Normalizar a 0-1
+                
+                return dificultad
+                
+            except Exception as e:
+                logger.error(f"Error al evaluar dificultad: {e}")
+                
+                # Método alternativo basado en heurísticas
+                palabras = len(texto_procesado.split())
+                complejidad_lexica = len(set(texto_procesado.split())) / max(1, palabras)
+                
+                # Detectar términos técnicos o complejos
+                terminos_complejos = ['algoritmo', 'implementación', 'análisis', 'optimización', 
+                                     'recursión', 'complejidad', 'abstracción', 'paradigma',
+                                     'estructura', 'metodología', 'framework', 'arquitectura']
+                
+                contador_complejos = sum(1 for t in terminos_complejos if t in texto_procesado)
+                factor_complejidad = min(1.0, contador_complejos / 10)
+                
+                # Combinar factores
+                dificultad_estimada = (
+                    (palabras / 1000) * 0.3 +  # Longitud
+                    complejidad_lexica * 0.3 +  # Diversidad léxica
+                    factor_complejidad * 0.4    # Términos complejos
+                )
+                
+                return min(1.0, max(0.1, dificultad_estimada))
+                
+            except Exception as e:
+                logger.error(f"Error al vectorizar o evaluar texto: {e}")
+                return 0.75  # Valor predeterminado en caso de error
+                
+        except Exception as e:
+            logger.error(f"Error general al evaluar práctica: {e}")
+            return 0.75  # Valor predeterminado en caso de error

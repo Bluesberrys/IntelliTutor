@@ -1,0 +1,232 @@
+/* === Estilos Premium para la Página de Ayuda === */
+
+/* Título principal */
+.page-title {
+  font-size: 2.8rem;
+  color: var(--text-primary);
+  margin-bottom: 2.5rem;
+  text-align: center;
+  position: relative;
+  padding-bottom: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.page-title::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+  border-radius: 2px;
+}
+
+/* Tarjetas de guías con igual altura */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.col-md-4 {
+  flex: 1 1 calc(33.333% - 1rem);
+  display: flex;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: var(--card-bg);
+  border-radius: 14px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease-in-out;
+  padding: 1.5rem;
+  width: 100%;
+}
+
+.card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+}
+
+.card-title {
+  font-size: 1.6rem;
+  color: var(--text-primary);
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.card-body {
+  flex-grow: 1;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* Botón */
+.btn {
+  margin-top: 1.5rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  background-color: var(--accent-primary);
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  transition: background 0.3s ease;
+}
+
+.btn:hover {
+  background-color: var(--accent-secondary);
+}
+
+/* FAQ (Preguntas Frecuentes) */
+.accordion {
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+
+.accordion-button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 1.2rem 1.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  background-color: var(--card-bg);
+  color: var(--text-primary);
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.accordion-button:hover {
+  background-color: var(--hover-bg);
+}
+
+.accordion-button::after {
+  content: "\f078";
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  transition: transform 0.3s ease;
+}
+
+.accordion-button:not(.collapsed)::after {
+  transform: rotate(180deg);
+}
+
+.accordion-body {
+  padding: 1.25rem 1.5rem;
+  background-color: var(--card-bg-alt);
+  color: var(--text-secondary);
+  line-height: 1.6;
+  border-top: 1px solid var(--border-color);
+}
+
+/* Sección de contacto de soporte */
+.support-section {
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  margin-top: 3rem;
+}
+
+.support-section h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+.support-section p {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+.support-section .btn {
+  padding: 0.7rem 1.5rem;
+  font-size: 1.05rem;
+}
+
+/* Animación */
+.fade-in {
+  animation: fadeInUp 0.7s ease forwards;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .col-md-4 {
+    flex: 1 1 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-title {
+    font-size: 2rem;
+  }
+
+  .btn {
+    font-size: 0.95rem;
+  }
+}
+
+/* Modo oscuro */
+[data-theme="dark"] .card {
+  background-color: var(--card-bg-dark);
+}
+
+[data-theme="dark"] .card-title,
+[data-theme="dark"] .accordion-button {
+  color: var(--text-primary-dark);
+}
+
+[data-theme="dark"] .accordion-body {
+  background-color: var(--card-bg-alt-dark);
+  color: var(--text-secondary-dark);
+}
+
+[data-theme="dark"] .btn {
+  background-color: var(--accent-primary-dark);
+}
+
+[data-theme="dark"] .btn:hover {
+  background-color: var(--accent-secondary-dark);
+}
+
+[data-theme="dark"] .support-section {
+  background-color: var(--card-bg-dark);
+}
+
+/* Acordeón mejorado con animación de altura */
+.accordion-collapse {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, padding 0.4s ease;
+  padding: 0 1.5rem;
+}
+
+.accordion-collapse.show {
+  max-height: 500px; /* Puedes ajustarlo si esperas contenido más largo */
+  padding: 1.25rem 1.5rem;
+}
+
+.accordion-body {
+  color: var(--text-secondary);
+  line-height: 1.6;
+}

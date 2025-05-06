@@ -1,155 +1,229 @@
-<!DOCTYPE html>
-<html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Prácticas</title>
-    <link rel="icon" href="{{ url_for('static', filename='img/Escudo-UNAM-white.svg') }}" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Gabarito:wght@400..900&family=Josefin+Slab:wght@100..700&display=swap"
-      rel="stylesheet" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
-  </head>
-  <body>
-    <header>
-      <div class="logo">
-        <a href="/">
-          <img src="{{ url_for('static', filename='img/Escudo-UNAM-white.svg') }}" alt="Logo UNAM" />
-          <h1 class="alt-font">IntelliTutor UNAM</h1>
-        </a>
-      </div>
+{% extends 'layout.html' %}
 
-      <div class="menu">
-        <div class="header-btns">
-          <a href="{{ url_for('index') }}" class="btn alt-font">Inicio</a>
-          <a href="{{ url_for('practicas') }}" class="btn alt-font">Prácticas</a>
-          <a href="{{ url_for('evaluacion') }}" class="btn alt-font">Evaluación</a>
+{% block title %}Practicas - IntelliTutor UNAM{% endblock %}
+
+{% block content %}
+
+<main id="practicas">
+  <div class="practicas-header">
+    <h1 class="alt-font">Gestión de Prácticas</h1>
+    <p>Crea y administra prácticas para tus estudiantes de manera eficiente y profesional.</p>
+  </div>
+  <div class="busqueda-container">
+    <input type="text" class="busqueda-input" id="busquedaPracticas" placeholder="Buscar por título o materia...">
+    <i class="fas fa-search busqueda-icon"></i>
+  </div>
+  <div class="practicas-tabs">
+    <button class="practicas-tab active" data-tab="list-container" aria-pressed="true">
+      <i class="fas fa-list-ul"></i> Lista de Prácticas
+    </button>
+    <button class="practicas-tab" data-tab="form-container" aria-pressed="false">
+      <i class="fas fa-plus-circle"></i> Agregar Práctica
+    </button>
+  </div>
+
+  <!-- Formulario -->
+  <div id="form-container" class="practicas-content" aria-hidden="true">
+    <h2 class="alt-font">Nueva Práctica</h2>
+    <form action="{{ url_for('practicas') }}" method="POST" id="practica-gen-form">
+        <div class="form-group">
+            <label for="titulo"><i class="fas fa-heading"></i> Título:</label>
+            <input type="text" id="titulo" name="titulo" class="form-input" required placeholder="Ej: Introducción a Algoritmos" />
         </div>
-        <div class="user-menu">
-          <a href="" id="regis" class="btn alt-font">Registrarse</a>
-          <a href="" id="login" class="btn alt-font">Iniciar sesión</a>
+
+        <div class="form-group">
+            <label for="grupo_id">Grupo:</label>
+            <select id="grupo_id" name="grupo_id" class="form-input" required>
+                {% for grupo in grupos %}
+                <option value="{{ grupo.id }}">{{ grupo.nombre }}</option>
+                {% endfor %}
+            </select>
         </div>
-      </div>
 
-      <div class="burger-menu">
-        <i class="fas fa-bars"></i>
-      </div>
-    </header>
+        <div class="form-group">
+            <label for="nivel_id"><i class="fas fa-layer-group"></i> Nivel:</label>
+            <select id="nivel_id" name="nivel_id" class="form-input" required>
+                {% for nivel in niveles %}
+                <option value="{{ nivel.id }}">{{ nivel.nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
 
-    <main id="practicas">
-      <!-- Formulario -->
-      <div id="form-container">
-        <h2 class="alt-font">Agregar Práctica</h2>
-        <form action="{{ url_for('practicas') }}" method="POST" id="practica-gen-form">
-          <div class="form-group">
-            <label for="titulo">Título:</label>
-            <input type="text" id="titulo" name="titulo" class="form-input" required />
-          </div>
+        <div class="form-group">
+            {% if rol == 'administrador' %}
+            <label for="autor_id"><i class="fas fa-user-edit"></i> Autor:</label>
+            <select id="autor_id" class="form-input" name="autor_id" required>
+                <option value="">Seleccione un autor</option>
+                {% for autorizado in autorizados %}
+                <option value="{{ autorizado.id }}">{{ autorizado.nombre }}</option>
+                {% endfor %}
+            </select>
+            {% elif rol == 'profesor' %}
+            <label for="autor"><i class="fas fa-user-edit"></i> Autor:</label>
+            <input type="hidden" name="autor_id" class="form-input" value="{{ session['usuario_id'] }}">
+            <input type="text" id="autor" class="form-input" name="autor" value="{{ usuario_nombre }}" readonly>
+            {% endif %}
+        </div>
 
-          <div class="form-group">
+        <div class="form-group">
+            <label for="objetivo"><i class="fas fa-bullseye"></i> Objetivo:</label>
+            <textarea id="objetivo" name="objetivo" class="form-input" required placeholder="Describe el objetivo principal de esta práctica..."></textarea>
+        </div>
+
+        <div class="form-group">
             <label for="materia_id">Materia:</label>
             <select id="materia_id" name="materia_id" class="form-input" required>
-              {% for materia in materias %}
-              <option value="{{ materia.id }}">{{ materia.nombre }}</option>
-              {% endfor %}
+                {% for materia in materias %}
+                <option value="{{ materia.id }}">{{ materia.nombre }}</option>
+                {% endfor %}
             </select>
-          </div>
+        </div>
 
-          <div class="form-group">
-            <label for="nivel_id">Nivel:</label>
-            <select id="nivel_id" name="nivel_id" class="form-input" required>
-              {% for nivel in niveles %}
-              <option value="{{ nivel.id }}">{{ nivel.nombre }}</option>
-              {% endfor %}
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="autor_id">Autor:</label>
-            <select id="autor_id" name="autor_id" class="form-input" required>
-              {% for autorizado in autorizados %}
-              <option value="{{ autorizado.id }}">{{ autorizado.nombre }} - {{ autorizado.rol }}</option>
-              {% endfor %}
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="objetivo">Objetivo:</label>
-            <textarea id="objetivo" name="objetivo" class="form-input" required></textarea>
-          </div>
-
-          <div class="form-group">
-            <label for="fecha_entrega">Fecha de Entrega:</label>
+        <div class="form-group">
+            <label for="fecha_entrega"><i class="fas fa-calendar-alt"></i> Fecha de Entrega:</label>
             <input type="date" id="fecha_entrega" name="fecha_entrega" class="form-input" required />
-          </div>
+        </div>
 
-          <div class="form-group">
-            <label for="tiempo_estimado">Tiempo Estimado (horas):</label>
-            <input type="number" id="tiempo_estimado" name="tiempo_estimado" class="form-input" required />
-          </div>
+        <div class="form-group">
+            <label for="tiempo_estimado"><i class="fas fa-clock"></i> Tiempo Estimado (horas):</label>
+            <input type="number" id="tiempo_estimado" name="tiempo_estimado" class="form-input" required min="1" max="100" />
+        </div>
 
-          <div class="form-group">
-            <label for="concepto_id">Concepto:</label>
+        <div class="form-group">
+            <label for="concepto_id"><i class="fas fa-lightbulb"></i> Concepto:</label>
             <select id="concepto_id" name="concepto_id" class="form-input" required>
-              {% for concepto in conceptos %}
-              <option value="{{ concepto.id }}">{{ concepto.nombre }}</option>
-              {% endfor %}
+                {% for concepto in conceptos %}
+                <option value="{{ concepto.id }}">{{ concepto.nombre }}</option>
+                {% endfor %}
             </select>
-          </div>
+        </div>
 
-          <div class="form-group">
-            <label for="herramienta_id">Herramienta:</label>
+        <div class="form-group">
+            <label for="herramienta_id"><i class="fas fa-tools"></i> Herramienta:</label>
             <select id="herramienta_id" name="herramienta_id" class="form-input" required>
-              {% for herramienta in herramientas %}
-              <option value="{{ herramienta.id }}">{{ herramienta.nombre }}</option>
-              {% endfor %}
+                {% for herramienta in herramientas %}
+                <option value="{{ herramienta.id }}">{{ herramienta.nombre }}</option>
+                {% endfor %}
             </select>
-          </div>
+        </div>
 
-          <button type="submit" id="form-btn" class="alt-font">Agregar</button>
+        <div class="form-group">
+            <label for="tipo_asignacion"><i class="fas fa-tasks"></i> Tipo de Asignación:</label>
+            <select id="tipo_asignacion" name="tipo_asignacion" class="form-input" required>
+                <option value="practica">Práctica</option>
+                <option value="examen">Examen</option>
+                <option value="proyecto">Proyecto</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="uso_ia"><i class="fas fa-robot"></i> ¿Calificación automática con IA?</label>
+            <div class="switch-container">
+                <label class="switch">
+                    <input type="checkbox" id="uso_ia_switch" checked>
+                    <span class="slider"></span>
+                </label>
+                <input type="hidden" id="uso_ia" name="uso_ia" value="1">
+                <span class="switch-label" id="uso_ia_label">Activado</span>
+            </div>
+        </div>
+
+        <div id="form-btn-container">
+            <button type="submit" id="form-btn" class="alt-font">
+                <i class="fas fa-plus-circle"></i> Crear Nueva Práctica
+            </button>
+        </div>
+    </form>
+</div>
+
+<div class="practicas-grid">
+  {% if practicas and practicas|length > 0 %}
+      {% for practica in practicas %}
+      <div class="practica-card" data-estado="{{ practica.estado.lower() }}" onclick="openPracticaModal('{{ practica.id }}', '{{ practica.titulo }}')">
+          <div class="practica-card-header">
+              <h3>{{ practica.titulo }}</h3>
+          </div>
+          <div class="practica-card-body">
+              <div class="practica-info">
+                  <div class="practica-info-item">
+                      <i class="fas fa-book"></i>
+                      <span><strong>Materia:</strong> {{ practica.nombre_materia }}</span>
+                  </div>
+                  <div class="practica-info-item">
+                      <i class="fas fa-users"></i>
+                      <span><strong>Clase:</strong> {{ nombre_clase }}</span>
+                  </div>
+                  <div class="practica-info-item">
+                      <i class="fas fa-hashtag"></i>
+                      <span><strong>ID:</strong> {{ practica.id }}</span>
+                  </div>
+              </div>
+          </div>
+          <div class="practica-card-footer">
+              <div class="practica-fecha">
+                  <i class="fas fa-calendar-day"></i>
+                  <span>{{ practica.fecha_entrega.strftime('%Y-%m-%d') }}</span>
+              </div>
+              <div class="practica-actions">
+                  <a href="{{ url_for('ver_practica', practica_id=practica.id) }}" class="btn-action btn-view tooltip" aria-label="Ver detalles">
+                      <i class="fas fa-eye"></i>
+                      <span class="tooltiptext">Ver detalles</span>
+                  </a>
+                  <button class="btn-action btn-delete tooltip" onclick="confirmarEliminar('{{ practica.id }}')" aria-label="Eliminar práctica">
+                      <i class="fas fa-trash-alt"></i>
+                      <span class="tooltiptext">Eliminar</span>
+                  </button>
+              </div>
+          </div>
+      </div>
+      {% endfor %}
+  {% else %}
+      <div class="no-practicas">
+          <i class="fas fa-clipboard-list"></i>
+          <p>No hay prácticas disponibles. ¡Crea tu primera práctica para comenzar a gestionar tus actividades académicas!</p>
+          <button class="practicas-tab-btn" data-tab="form-container">
+              <i class="fas fa-plus-circle"></i> Crear Práctica
+          </button>
+      </div>
+  {% endif %}
+</div>
+  </div>
+  <!-- Lista de Prácticas -->
+  <div id="list-container" class="practicas-content active" aria-hidden="false">
+    <div class="practicas-controls">
+      
+      
+      <div class="filtro-container">
+        <button class="filtro-btn active" data-filter="todos" aria-pressed="true"><i class="fas fa-th-large"></i> Todos</button>
+        <button class="filtro-btn" data-filter="activo" aria-pressed="false"><i class="fas fa-check-circle"></i> Activos</button>
+        <button class="filtro-btn" data-filter="pendiente" aria-pressed="false"><i class="fas fa-clock"></i> Pendientes</button>
+        <button class="filtro-btn" data-filter="finalizado" aria-pressed="false"><i class="fas fa-flag-checkered"></i> Finalizados</button>
+      </div>
+    </div>
+
+  <!-- Modal de confirmación para eliminar -->
+  <div class="modal-overlay" id="modal-eliminar" aria-hidden="true">
+    <div class="modal-container" role="dialog" aria-labelledby="modal-title">
+      <div class="modal-header">
+        <i class="fas fa-exclamation-triangle"></i>
+        <h3 id="modal-title">Confirmar eliminación</h3>
+      </div>
+      <div class="modal-body">
+        <p>¿Estás seguro de que deseas eliminar esta práctica? Esta acción no se puede deshacer y eliminará todos los datos asociados.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-btn modal-btn-cancel" onclick="cerrarModal()">Cancelar</button>
+        <form id="form-eliminar" action="" method="POST" style="display: inline;">
+          <button type="submit" class="modal-btn modal-btn-confirm">Eliminar</button>
         </form>
       </div>
+    </div>
+  </div>
+</main>
 
-      <!-- Table -->
-      <div id="table-container">
-        <h2 class="alt-font">Lista de Prácticas</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Título</th>
-              <th>Materia</th>
-              <th>Fecha de Entrega</th>
-              <th>Estado</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for practica in practicas %}
-            <tr>
-              <td>{{ practica.id }}</td>
-              <td>
-                <a href="{{ url_for('ver_practica', practica_id=practica.id) }}">{{ practica.titulo }}</a>
-              </td>
-              <td>{{ practica.nombre_materia }}</td>
-              <td>{{ practica.fecha_entrega.strftime('%Y-%m-%d') }}</td>
-              <td>{{ practica.estado }}</td>
-              <td>
-                <form
-                  action="{{ url_for('eliminar_practica', practica_id=practica.id) }}"
-                  method="POST"
-                  id="table-reg-form">
-                  <button type="submit" id="eliminar-reg-btn">Eliminar</button>
-                </form>
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    </main>
-    <script src="{{ url_for('static', filename='js/functions.js') }}"></script>
-  </body>
-</html>
+<script src="{{ url_for('static', filename='js/practicas.js') }}"></script>
+<script src="{{ url_for('static', filename='js/modal.js') }}"></script>
+
+{% block scripts %}{% endblock %}
+
+{% endblock %}

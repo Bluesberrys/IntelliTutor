@@ -1,0 +1,338 @@
+{% extends 'layout.html' %}
+
+{% block title %}Mis Calificaciones - IntelliTutor UNAM{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.css">
+<style>
+    .stat-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    
+    .evaluation-score {
+        display: inline-block;
+        padding: 0.35rem 0.65rem;
+        font-weight: 700;
+        border-radius: 50rem;
+        text-align: center;
+    }
+    
+    .score-high {
+        background-color: rgba(40, 167, 69, 0.1);
+        color: #28a745;
+    }
+    
+    .score-medium {
+        background-color: rgba(255, 193, 7, 0.1);
+        color: #ffc107;
+    }
+    
+    .score-low {
+        background-color: rgba(220, 53, 69, 0.1);
+        color: #dc3545;
+    }
+    
+    .grades-container {
+        animation: fadeIn 0.8s ease-out;
+    }
+    
+    .card {
+        animation: slideUp 0.6s ease-out;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .badge {
+        display: inline-block;
+        padding: 0.35rem 0.65rem;
+        font-size: 0.75rem;
+        font-weight: 700;
+        line-height: 1;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: baseline;
+        border-radius: 50rem;
+    }
+    
+    .badge-practica {
+        background-color: rgba(13, 110, 253, 0.1);
+        color: #0d6efd;
+    }
+    
+    .badge-examen {
+        background-color: rgba(220, 53, 69, 0.1);
+        color: #dc3545;
+    }
+    
+    .badge-proyecto {
+        background-color: rgba(25, 135, 84, 0.1);
+        color: #198754;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<h1 class="page-title">Mis Calificaciones</h1>
+
+<div class="dashboard-grid">
+    <div class="stat-card fade-in">
+        <div class="stat-card-header">
+            <div class="stat-card-title">Promedio General</div>
+            <div class="stat-card-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+        </div>
+        <div class="stat-card-value">{{ promedio_general }}</div>
+        <div class="stat-card-description">Promedio de todas las materias</div>
+    </div>
+    
+    <div class="stat-card fade-in">
+        <div class="stat-card-header">
+            <div class="stat-card-title">Materias Aprobadas</div>
+            <div class="stat-card-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+        </div>
+        <div class="stat-card-value">{{ materias_aprobadas }}</div>
+        <div class="stat-card-description">Total de materias aprobadas</div>
+    </div>
+    
+    <div class="stat-card fade-in">
+        <div class="stat-card-header">
+            <div class="stat-card-title">Créditos Acumulados</div>
+            <div class="stat-card-icon">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+        </div>
+        <div class="stat-card-value">{{ creditos_acumulados }}</div>
+        <div class="stat-card-description">De {{ creditos_totales }} créditos totales</div>
+    </div>
+</div>
+
+<div class="grades-container">
+    <div class="grades-header">
+        <div class="grades-title">Calificaciones por Semestre</div>
+        <div class="grades-semester">
+            <label>Semestre:</label>
+            <select class="grades-semester-select" id="semestreSelect">
+                <option value="all">Todos los semestres</option>
+                {% for semestre in semestres %}
+                <option value="{{ semestre.id }}" {% if semestre.id == semestre_actual %}selected{% endif %}>{{ semestre.nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    
+    <div class="grades-chart">
+        <canvas id="gradesChart"></canvas>
+    </div>
+</div>
+
+<div class="card fade-in">
+    <div class="card-header">
+        <h2 class="card-title">Detalle de Calificaciones</h2>
+    </div>
+    <div class="card-body">
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Materia</th>
+                        <th>Semestre</th>
+                        <th>Calificación</th>
+                        <th>Desglose</th>
+                        <th>Créditos</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for calificacion in calificaciones %}
+                    <tr class="semestre-row" data-semestre="{{ calificacion.semestre_id }}">
+                        <td>{{ calificacion.materia_nombre }}</td>
+                        <td>{{ calificacion.semestre_nombre }}</td>
+                        <td>
+                            <div class="evaluation-score {% if calificacion.calificacion_final >= 8 %}score-high{% elif calificacion.calificacion_final >= 6 %}score-medium{% else %}score-low{% endif %}">
+                                {{ calificacion.calificacion_final }}
+                            </div>
+                        </td>
+                        <td>
+                            <button class="btn-sm btn-info" onclick="showBreakdown('{{ calificacion.id }}')">
+                                <i class="fas fa-chart-pie"></i> Ver desglose
+                            </button>
+                        </td>
+                        <td>{{ calificacion.creditos }}</td>
+                        <td>
+                            {% if calificacion.calificacion_final >= 6 %}
+                                <span class="badge badge-success">Aprobada</span>
+                            {% else %}
+                                <span class="badge badge-danger">No Aprobada</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para mostrar el desglose de calificación -->
+<div class="modal-overlay" id="breakdownModal" aria-hidden="true">
+    <div class="modal-container" role="dialog">
+        <div class="modal-header">
+            <h3>Desglose de Calificación</h3>
+            <button class="modal-close" onclick="closeBreakdownModal()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div id="breakdownContent">
+                <!-- Contenido dinámico -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+<script>
+    // Datos para el gráfico
+    const materias = {{ materias_json|safe }};
+    const calificaciones = {{ calificaciones_json|safe }};
+    
+    // Configuración del gráfico
+    const ctx = document.getElementById('gradesChart').getContext('2d');
+    const gradesChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: materias,
+            datasets: [{
+                label: 'Calificación',
+                data: calificaciones,
+                backgroundColor: calificaciones.map(cal => {
+                    if (cal >= 8) return 'rgba(40, 167, 69, 0.7)';
+                    if (cal >= 6) return 'rgba(255, 193, 7, 0.7)';
+                    return 'rgba(220, 53, 69, 0.7)';
+                }),
+                borderColor: calificaciones.map(cal => {
+                    if (cal >= 8) return 'rgb(40, 167, 69)';
+                    if (cal >= 6) return 'rgb(255, 193, 7)';
+                    return 'rgb(220, 53, 69)';
+                }),
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 10
+                }
+            },
+            animation: {
+                duration: 1500,
+                easing: 'easeOutQuart'
+            }
+        }
+    });
+    
+    // Filtrar por semestre
+    document.getElementById('semestreSelect').addEventListener('change', function() {
+        const semestreId = this.value;
+        
+        // Filtrar filas de la tabla
+        document.querySelectorAll('.semestre-row').forEach(row => {
+            if (semestreId === 'all' || row.getAttribute('data-semestre') === semestreId) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+        
+        // Actualizar gráfico (esto requeriría una llamada AJAX para obtener los datos del semestre seleccionado)
+        // Por ahora, simplemente redirigimos
+        window.location.href = "{{ url_for('calificaciones') }}?semestre_id=" + semestreId + "&estudiante_id={{ current_user.id }}";
+    });
+    
+    // Función para mostrar el desglose de calificación
+    function showBreakdown(calificacionId) {
+        // En un caso real, harías una petición AJAX para obtener los datos
+        // Por ahora, simulamos los datos para la demostración
+        fetch(`/api/calificacion_desglose/${calificacionId}?estudiante_id={{ current_user.id }}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    console.error(data.error);
+                    return;
+                }
+                
+                // Crear el contenido del modal
+                const content = `
+                    <div class="breakdown-container">
+                        <h4>${data.materia}</h4>
+                        <div class="breakdown-item">
+                            <span>Prácticas (${data.practicas_porcentaje}%):</span>
+                            <div class="progress">
+                                <div class="progress-bar" style="width: ${data.practicas_promedio * 10}%"></div>
+                            </div>
+                            <span>${data.practicas_promedio}</span>
+                        </div>
+                        <div class="breakdown-item">
+                            <span>Exámenes (${data.examenes_porcentaje}%):</span>
+                            <div class="progress">
+                                <div class="progress-bar" style="width: ${data.examenes_promedio * 10}%"></div>
+                            </div>
+                            <span>${data.examenes_promedio}</span>
+                        </div>
+                        <div class="breakdown-item">
+                            <span>Proyectos (${data.proyectos_porcentaje}%):</span>
+                            <div class="progress">
+                                <div class="progress-bar" style="width: ${data.proyectos_promedio * 10}%"></div>
+                            </div>
+                            <span>${data.proyectos_promedio}</span>
+                        </div>
+                        <div class="breakdown-item">
+                            <span>Asistencia (${data.asistencia_porcentaje}%):</span>
+                            <div class="progress">
+                                <div class="progress-bar" style="width: ${data.asistencia_porcentaje}%"></div>
+                            </div>
+                            <span>${data.asistencia_porcentaje}%</span>
+                        </div>
+                        <div class="breakdown-final">
+                            <span>Calificación Final:</span>
+                            <span class="final-grade">${data.calificacion_final}</span>
+                        </div>
+                    </div>
+                `;
+                
+                // Mostrar el modal con el contenido
+                document.getElementById('breakdownContent').innerHTML = content;
+                document.getElementById('breakdownModal').classList.add('active');
+            })
+            .catch(error => {
+                console.error('Error al obtener desglose:', error);
+            });
+    }
+    
+    // Función para cerrar el modal de desglose
+    function closeBreakdownModal() {
+        document.getElementById('breakdownModal').classList.remove('active');
+    }
+</script>
+{% endblock %}

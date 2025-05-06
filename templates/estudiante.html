@@ -1,0 +1,504 @@
+{% extends 'layout.html' %}
+
+{% block title %}Portal Estudiantil - IntelliTutor UNAM{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='code-editor.css') }}">
+{% endblock %}
+
+{% block content %}
+<h1 class="page-title">Portal Estudiantil</h1>
+
+<div class="course-filter">
+    <div class="course-filter-header">
+        <div class="course-filter-title">Filtrar por Clase</div>
+        <!-- <div class="course-filter-actions">
+            <button class="course-filter-btn active" data-course="all">Todas</button>
+            {% for materia in materias %}
+            <button class="course-filter-btn" data-course="{{ materia.nombre|lower|replace(' ', '-') }}">{{ materia.nombre }}</button>
+            {% endfor %}
+        </div> -->
+    </div>
+</div>
+
+<div class="tabs">
+    <div class="tab active" data-tab="practicas">Prácticas Activas</div>
+    <div class="tab" data-tab="evaluaciones">Mis Evaluaciones</div>
+</div>
+
+<div class="tab-content active" id="practicas">
+    <div class="card fade-in">
+        <div class="card-header">
+            <h2 class="card-title">Prácticas Activas</h2>
+        </div>
+        <div class="card-body">
+            {% if practicas %}
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Título</th>
+                            <th>Clase</th>
+                            <th>Fecha Límite</th>
+                            <th>Estado</th>
+                            <th>Objetivo</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for practica in practicas %}
+                        <tr class="course-row" data-course="{{ practica.materia.nombre|lower|replace(' ', '-') if practica.materia else 'all' }}">
+                            <td>{{ practica.titulo }}</td>
+                            <td>{{ practica.grupo.nombre if practica.grupo else (practica.materia.nombre if practica.materia else 'General') }}</td>
+                            <td>{{ practica.fecha_entrega.strftime('%d/%m/%Y') if practica.fecha_entrega else '' }}</td>
+                            <td>
+                                {% if practica.estado == 'entregado' %}
+                                    <span class="badge badge-success">Entregado</span>
+                                {% elif practica.estado == 'pendiente' %}
+                                    <span class="badge badge-warning">Pendiente</span>
+                                {% else %}
+                                    <span class="badge badge-info">{{ practica.estado }}</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ practica.objetivo }}</td>
+                            <td>
+                                {% if practica.estado != 'entregado' %}
+                                <form action="{{ url_for('subir_archivo', practica_id=practica.id) }}" method="POST" enctype="multipart/form-data" class="file-upload" id="form-{{ practica.id }}">
+                                    <div class="file-input-wrapper">
+                                        <input type="file" name="archivo" id="archivo-{{ practica.id }}">
+                                        <label for="archivo-{{ practica.id }}" class="file-input-label">
+                                            <i class="fas fa-upload"></i> Seleccionar archivo
+                                        </label>
+                                    </div>
+                                    <a href="{{ url_for('code_editor.editor') }}" class="nav-link codigo-editor" target="_blank">Editor de Código</a>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-paper-plane"></i> Entregar
+                                    </button>
+                                </form>
+                                {% else %}
+                                {% set entrega = entregas|selectattr('practica_id', 'equalto', practica.id)|first %}
+                                {% if entrega %}
+                                    <a href="{{ url_for('ver_practica', entrega_id=entrega.id) }}" class="btn btn-primary">
+                                        <i class="fas fa-eye"></i> Ver Entrega
+                                    </a>
+                                {% endif %}
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <i class="far fa-clipboard"></i>
+                <p>No hay prácticas activas en este momento.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="tab-content" id="evaluaciones">
+    {% if evaluaciones_calificadas %}
+    <div class="card fade-in">
+        <div class="card-header">
+            <h2 class="card-title">Mis Evaluaciones</h2>
+        </div>
+        <div class="card-body">
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Práctica</th>
+                            <th>Clase</th>
+                            <th>Calificación</th>
+                            <th>Fecha</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for evaluacion in evaluaciones_calificadas %}
+                        <tr class="course-row" data-course="{{ evaluacion.practica.materia.nombre|lower|replace(' ', '-') if evaluacion.practica and evaluacion.practica.materia else 'all' }}">
+                            <td>{{ evaluacion.practica.titulo if evaluacion.practica else evaluacion.practica_titulo }}</td>
+                            <td>{{ evaluacion.practica.grupo.nombre if evaluacion.practica and evaluacion.practica.grupo else (evaluacion.practica.materia.nombre if evaluacion.practica and evaluacion.practica.materia else 'General') }}</td>
+                            <td>
+                                <div class="evaluation-score {% if evaluacion.calificacion >= 8 %}score-high{% elif evaluacion.calificacion >= 6 %}score-medium{% else %}score-low{% endif %}">
+                                    {{ evaluacion.calificacion }}/10
+                                </div>
+                            </td>
+                            <td>{{ evaluacion.fecha_evaluacion.strftime('%d/%m/%Y') if evaluacion.fecha_evaluacion else 'No disponible' }}</td>
+                            <td>
+                              <a href="{{ url_for('ver_practica_detalle', practica_id=evaluacion.practica.id) }}">
+                                    <i class="fas fa-eye"></i> Ver Detalles
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <i class="far fa-clipboard"></i>
+        <p>No tienes evaluaciones calificadas en este momento.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Inicializar el editor de código
+window.codeEditors = {};
+
+// Función para abrir el editor de código
+window.openCodeEditor = (practicaId, title, form) => {
+  const codeEditorModal = document.getElementById("codeEditorModal");
+  const codeEditorTitle = document.getElementById("codeEditorTitle");
+  const codeEditorOutput = document.getElementById("codeEditorOutput");
+  const codeEditorSubmit = document.getElementById("codeEditorSubmit");
+  const codeEditorSidebar = document.getElementById("codeEditorSidebar");
+  const sidebarToggle = document.getElementById("sidebarToggle");
+
+  if (codeEditorModal && codeEditorTitle) {
+    codeEditorTitle.textContent = title || "Editor de Código";
+
+    // Limpiar el área de salida
+    if (codeEditorOutput) {
+      codeEditorOutput.innerHTML = "";
+      codeEditorOutput.style.display = "none";
+    }
+
+    // Marcar el formulario actual y guardar el ID de la práctica
+    if (form) {
+      form.setAttribute("data-editor", "true");
+      form.setAttribute("data-practica-id", practicaId);
+    }
+
+    // Mostrar el modal
+    codeEditorModal.classList.add("active");
+
+    // Obtener o crear el editor para esta práctica
+    const codeEditorElement = document.getElementById("codeEditor");
+
+    if (codeEditorElement) {
+      let codeEditor = window.codeEditors[practicaId];
+
+      if (!codeEditor && typeof CodeMirror !== "undefined") {
+        // Obtener configuración del editor
+        const editorTheme = localStorage.getItem("editorTheme") || "dracula";
+        const editorFontSize = localStorage.getItem("editorFontSize") || "14";
+        const editorLanguage = localStorage.getItem("editorLanguage") || "javascript";
+
+        try {
+          codeEditor = CodeMirror.fromTextArea(codeEditorElement, {
+            lineNumbers: true,
+            mode: getLanguageMode(editorLanguage),
+            theme: editorTheme,
+            indentUnit: 4,
+            smartIndent: true,
+            tabSize: 4,
+            indentWithTabs: false,
+            lineWrapping: true,
+            autoCloseBrackets: true,
+            matchBrackets: true,
+            autoCloseTags: true,
+            matchTags: true,
+            foldGutter: true,
+            gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+            extraKeys: {
+              "Ctrl-Space": "autocomplete",
+              "Tab": function(cm) {
+                if (cm.somethingSelected()) {
+                  cm.indentSelection("add");
+                } else {
+                  cm.replaceSelection("    ", "end");
+                }
+              }
+            }
+          });
+
+          // Aplicar tamaño de fuente
+          codeEditor.getWrapperElement().style.fontSize = `${editorFontSize}px`;
+
+          // Guardar el editor para esta práctica
+          window.codeEditors[practicaId] = codeEditor;
+
+          // Cargar contenido guardado si existe
+          const savedContent = localStorage.getItem(`code_${practicaId}`);
+          if (savedContent) {
+            codeEditor.setValue(savedContent);
+          }
+
+          // Guardar automáticamente mientras se escribe
+          codeEditor.on("change", () => {
+            localStorage.setItem(`code_${practicaId}`, codeEditor.getValue());
+          });
+
+          // Configurar los botones de lenguaje
+          document.querySelectorAll('.code-editor-btn-language').forEach(btn => {
+            btn.addEventListener('click', () => {
+              // Quitar la clase active de todos los botones
+              document.querySelectorAll('.code-editor-btn-language').forEach(b => {
+                b.classList.remove('active');
+              });
+              
+              // Añadir la clase active al botón clickeado
+              btn.classList.add('active');
+              
+              // Cambiar el modo del editor
+              const language = btn.getAttribute('data-language');
+              codeEditor.setOption('mode', getLanguageMode(language));
+              localStorage.setItem('editorLanguage', language);
+            });
+          });
+        } catch (error) {
+          console.error("CodeMirror initialization error:", error);
+          return;
+        }
+      }
+
+      // Asegurar que el editor se renderice correctamente
+      if (codeEditor) {
+        setTimeout(() => {
+          codeEditor.refresh();
+          codeEditor.focus();
+        }, 10);
+      }
+
+      // Configurar el botón de ejecución
+      const runButton = document.querySelector('.code-editor-btn-run');
+      if (runButton) {
+        runButton.onclick = () => {
+          executeCode(practicaId);
+        };
+      }
+
+      // Configurar el botón de toggle del sidebar
+      if (sidebarToggle && codeEditorSidebar) {
+        sidebarToggle.onclick = () => {
+          codeEditorSidebar.classList.toggle('active');
+          sidebarToggle.innerHTML = codeEditorSidebar.classList.contains('active') 
+            ? '<i class="fas fa-chevron-right"></i>' 
+            : '<i class="fas fa-chevron-left"></i>';
+        };
+      }
+
+      // Configurar el botón de envío
+      if (codeEditorSubmit) {
+        codeEditorSubmit.onclick = (event) => {
+          const codeEditor = window.codeEditors[practicaId];
+          if (!codeEditor) return;
+
+          const code = codeEditor.getValue();
+
+          // Mostrar área de salida
+          if (codeEditorOutput) {
+            codeEditorOutput.style.display = "block";
+            codeEditorOutput.innerHTML = "<div class='code-output-success'>Compilando código...</div>";
+          }
+
+          // Simular compilación
+          setTimeout(() => {
+            // Verificar si hay errores de sintaxis
+            let hasError = false;
+            try {
+              // Intentar evaluar el código (solo para JavaScript)
+              if (codeEditor.getOption("mode") === "javascript") {
+                new Function(code);
+              }
+            } catch (error) {
+              hasError = true;
+              if (codeEditorOutput) {
+                codeEditorOutput.innerHTML = `<div class='code-output-error'>Error de compilación: ${error.message}</div>`;
+              }
+            }
+
+            if (!hasError) {
+              if (codeEditorOutput) {
+                codeEditorOutput.innerHTML =
+                  "<div class='code-output-success'>Compilación exitosa. Listo para entregar.</div>";
+              }
+
+              // Guardar el código en el formulario
+              const currentForm = document.querySelector('form[data-editor="true"]');
+              if (currentForm) {
+                let contenidoInput = currentForm.querySelector('input[name="contenido"]');
+                if (!contenidoInput) {
+                  contenidoInput = document.createElement("input");
+                  contenidoInput.type = "hidden";
+                  contenidoInput.name = "contenido";
+                  currentForm.appendChild(contenidoInput);
+                }
+                contenidoInput.value = code;
+
+                // Enviar el formulario automáticamente si se presiona el botón de enviar
+                if (event.target.id === "codeEditorSubmit") {
+                  // Cerrar el editor
+                  codeEditorModal.classList.remove("active");
+
+                  // Enviar el formulario
+                  currentForm.submit();
+                  
+                  // Actualizar el estado en la interfaz
+                  const practicaRow = document.querySelector(`tr[data-practica-id="${practicaId}"]`);
+                  if (practicaRow) {
+                    const estadoCell = practicaRow.querySelector('td:nth-child(5)');
+                    if (estadoCell) {
+                      estadoCell.innerHTML = '<span class="badge badge-success">Entregado</span>';
+                    }
+                  }
+                }
+              }
+            }
+          }, 500);
+        };
+      }
+    }
+  }
+};
+
+// Función para ejecutar el código
+function executeCode(practicaId) {
+  const codeEditor = window.codeEditors[practicaId];
+  const terminalOutput = document.getElementById('terminal-output');
+  const codeEditorSidebar = document.getElementById('codeEditorSidebar');
+  const sidebarToggle = document.getElementById('sidebarToggle');
+  
+  if (!codeEditor || !terminalOutput) return;
+  
+  // Mostrar el sidebar
+  if (codeEditorSidebar && !codeEditorSidebar.classList.contains('active')) {
+    codeEditorSidebar.classList.add('active');
+    if (sidebarToggle) {
+      sidebarToggle.innerHTML = '<i class="fas fa-chevron-right"></i>';
+    }
+  }
+  
+  // Obtener el código
+  const code = codeEditor.getValue();
+  
+  // Limpiar el terminal
+  terminalOutput.innerHTML = '';
+  
+  // Mostrar el comando
+  terminalOutput.innerHTML += `<div class="terminal-command">$ ejecutando código...</div>`;
+  
+  // Simular ejecución
+  terminalOutput.innerHTML += `<div class="terminal-loading">Compilando...</div>`;
+  
+  setTimeout(() => {
+    // Eliminar el mensaje de carga
+    const loadingElement = terminalOutput.querySelector('.terminal-loading');
+    if (loadingElement) {
+      terminalOutput.removeChild(loadingElement);
+    }
+    
+    try {
+      // Intentar evaluar el código (solo para JavaScript)
+      if (codeEditor.getOption('mode') === 'javascript') {
+        // Capturar console.log
+        const originalLog = console.log;
+        const logs = [];
+        
+        console.log = function() {
+          logs.push(Array.from(arguments).join(' '));
+          originalLog.apply(console, arguments);
+        };
+        
+        // Evaluar el código
+        try {
+          const result = new Function(code)();
+          
+          // Mostrar los logs
+          logs.forEach(log => {
+            terminalOutput.innerHTML += `<div class="terminal-output-line">${log}</div>`;
+          });
+          
+          // Mostrar el resultado si hay uno
+          if (result !== undefined) {
+            terminalOutput.innerHTML += `<div class="terminal-output-line success">=> ${result}</div>`;
+          }
+          
+          // Mostrar mensaje de éxito
+          terminalOutput.innerHTML += `<div class="terminal-output-line success">Código ejecutado correctamente.</div>`;
+        } catch (error) {
+          terminalOutput.innerHTML += `<div class="terminal-output-line error">Error: ${error.message}</div>`;
+        }
+        
+        // Restaurar console.log
+        console.log = originalLog;
+      } else {
+        // Para otros lenguajes, mostrar un mensaje simulado
+        terminalOutput.innerHTML += `<div class="terminal-output-line">Simulando ejecución para ${codeEditor.getOption('mode')}...</div>`;
+        terminalOutput.innerHTML += `<div class="terminal-output-line success">Código ejecutado correctamente.</div>`;
+      }
+    } catch (error) {
+      terminalOutput.innerHTML += `<div class="terminal-output-line error">Error: ${error.message}</div>`;
+    }
+  }, 1000);
+}
+
+// Función para obtener el modo de lenguaje para CodeMirror
+function getLanguageMode(language) {
+  switch (language) {
+    case "javascript":
+      return "javascript";
+    case "python":
+      return "python";
+    case "java":
+      return "text/x-java";
+    case "cpp":
+      return "text/x-c++src";
+    default:
+      return "javascript";
+  }
+}
+
+// Cerrar el editor de código
+document.addEventListener("DOMContentLoaded", () => {
+  const codeEditorClose = document.getElementById("codeEditorClose");
+  const codeEditorModal = document.getElementById("codeEditorModal");
+
+  if (codeEditorClose && codeEditorModal) {
+    codeEditorClose.addEventListener("click", () => {
+      // Guardar el contenido en un campo oculto del formulario
+      const currentForm = document.querySelector('form[data-editor="true"]');
+      if (currentForm) {
+        const practicaId = currentForm.getAttribute("data-practica-id");
+        const codeEditor = window.codeEditors[practicaId];
+
+        if (codeEditor) {
+          let contenidoInput = currentForm.querySelector('input[name="contenido"]');
+          if (!contenidoInput) {
+            contenidoInput = document.createElement("input");
+            contenidoInput.type = "hidden";
+            contenidoInput.name = "contenido";
+            currentForm.appendChild(contenidoInput);
+          }
+          contenidoInput.value = codeEditor.getValue();
+        }
+      }
+
+      codeEditorModal.classList.remove("active");
+    });
+  }
+  
+  // Cerrar el sidebar
+  const sidebarClose = document.querySelector('.sidebar-close');
+  const codeEditorSidebar = document.getElementById('codeEditorSidebar');
+  const sidebarToggle = document.getElementById('sidebarToggle');
+  
+  if (sidebarClose && codeEditorSidebar && sidebarToggle) {
+    sidebarClose.addEventListener('click', () => {
+      codeEditorSidebar.classList.remove('active');
+      sidebarToggle.innerHTML = '<i class="fas fa-chevron-left"></i>';
+    });
+  }
+});
+
+</script>
+{% endblock %}

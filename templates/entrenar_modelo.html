@@ -1,0 +1,201 @@
+{% extends 'layout.html' %}
+
+{% block title %}Entrenar Modelo de IA - IntelliTutor UNAM{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.css">
+<style>
+    .training-params {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .chart-container {
+        height: 300px;
+        margin-bottom: 2rem;
+    }
+    
+    .metrics-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
+    
+    .metric-card {
+        background-color: #f8f9fa;
+        border-radius: 0.5rem;
+        padding: 1rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .metric-card h3 {
+        margin-top: 0;
+        font-size: 1rem;
+        color: #495057;
+    }
+    
+    .metric-value {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #003366;
+        margin: 0.5rem 0;
+    }
+    
+    .alert-training {
+        margin-top: 2rem;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="page-title">Entrenar Modelo de Inteligencia Artificial</h1>
+    
+    {% if resultado %}
+        <div class="alert alert-success">
+            <i class="fas fa-check-circle"></i> Modelo entrenado exitosamente con {{ num_ejemplos }} ejemplos.
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h2>Resultados del Entrenamiento</h2>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="lossChart"></canvas>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <h3>Pérdida Final (Evaluador)</h3>
+                        <div class="metric-value">{{ "%.4f"|format(resultado.evaluador.final_loss) }}</div>
+                    </div>
+                    
+                    {% if resultado.detector.final_accuracy %}
+                    <div class="metric-card">
+                        <h3>Precisión Final (Detector)</h3>
+                        <div class="metric-value">{{ "%.2f"|format(resultado.detector.final_accuracy * 100) }}%</div>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="metric-card">
+                        <h3>Épocas Completadas</h3>
+                        <div class="metric-value">{{ resultado.evaluador.loss_history|length }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="card">
+            <div class="card-header">
+                <h2>Configuración de Entrenamiento</h2>
+            </div>
+            <div class="card-body">
+                <p>El entrenamiento del modelo utilizará las evaluaciones existentes en el sistema como datos de entrenamiento. Asegúrese de tener suficientes evaluaciones calificadas antes de iniciar el proceso.</p>
+                
+                <form method="POST" action="{{ url_for('evaluacion_ia.entrenar_modelo') }}">
+                    <div class="training-params">
+                        <div class="form-group">
+                            <label for="epochs">Número de Épocas:</label>
+                            <input type="number" id="epochs" name="epochs" value="10" min="1" max="50" class="form-input">
+                            <small class="form-hint">Más épocas = mejor aprendizaje, pero más tiempo</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="batch_size">Tamaño de Lote:</label>
+                            <input type="number" id="batch_size" name="batch_size" value="8" min="1" max="32" class="form-input">
+                            <small class="form-hint">Lotes más pequeños = entrenamiento más estable</small>
+                        </div>
+                    </div>
+                    
+                    <div class="alert-training">
+                        <i class="fas fa-exclamation-triangle"></i> <strong>Advertencia:</strong> El entrenamiento puede tardar varios minutos dependiendo de la cantidad de datos y la configuración. No cierre esta página durante el proceso.
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-cogs"></i> Iniciar Entrenamiento
+                        </button>
+                        <a href="{{ url_for('admin_dashboard') }}" class="btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Volver
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% if resultado %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+<script>
+    // Configuración del gráfico de pérdida
+    const ctx = document.getElementById('lossChart').getContext('2d');
+    const lossChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: Array.from({length: {{ resultado.evaluador.loss_history|length }}}, (_, i) => i + 1),
+            datasets: [{
+                label: 'Pérdida del Evaluador',
+                data: {{ resultado.evaluador.loss_history|tojson }},
+                borderColor: 'rgba(0, 123, 255, 1)',
+                backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4
+            }{% if resultado.detector.loss_history %},
+            {
+                label: 'Pérdida del Detector',
+                data: {{ resultado.detector.loss_history|tojson }},
+                borderColor: 'rgba(220, 53, 69, 1)',
+                backgroundColor: 'rgba(220, 53, 69, 0.1)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4
+            }{% endif %}]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    title: {
+                        display: true,
+                        text: 'Pérdida'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Época'
+                    }
+                }
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Evolución de la Pérdida Durante el Entrenamiento',
+                    font: {
+                        size: 16
+                    }
+                },
+                legend: {
+                    position: 'top'
+                }
+            }
+        }
+    });
+</script>
+{% endif %}
+{% endblock %}

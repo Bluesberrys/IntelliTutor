@@ -1,0 +1,45 @@
+{% extends 'layout.html' %}
+
+{% block title %}Solicitudes de Registro - IntelliTutor UNAM{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='solicitudes.css') }}">
+{% endblock %}
+
+{% block content %}
+  <main class="solicitudes-main">
+    <div class="solicitudes-container">
+      <h1>Solicitudes de Registro</h1>
+      <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Rol Solicitado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="solicitudes-table">
+          {% for solicitud in solicitudes %}
+          <tr>
+              <td>{{ solicitud.id }}</td>
+              <td>{{ solicitud.nombre }}</td>
+              <td>{{ solicitud.email }}</td>
+              <td>{{ solicitud.rol_solicitado }}</td>
+              <td>
+                  <button onclick="gestionarSolicitud('{{ solicitud.id }}', 'aprobar')">Aprobar</button>
+                  <button onclick="gestionarSolicitud('{{ solicitud.id }}', 'rechazar')">Rechazar</button>
+              </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+<script src="{{ url_for('static', filename='js/solicitudes.js') }}"></script>
+<script src="{{ url_for('static', filename='js/notification.js') }}"></script>
+
+{% block scripts %}{% endblock %}
+{% endblock %}

@@ -1,0 +1,83 @@
+{% extends 'layout.html' %}
+
+{% block title %}Políticas de Privacidad - IntelliTutor UNAM{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='privacidad.css') }}">
+{% endblock %}
+{% block content %}
+<h1 class="page-title">Políticas de Privacidad</h1>
+
+<div class="card fade-in">
+    <div class="card-body">
+        <h2>Introducción</h2>
+        <p>La Universidad Nacional Autónoma de México (UNAM), a través de la plataforma IntelliTutor UNAM, está comprometida con la protección de los datos personales de sus usuarios. Esta política de privacidad describe cómo recopilamos, utilizamos y protegemos la información que nos proporciona al utilizar nuestra plataforma.</p>
+        
+        <h2>Información que Recopilamos</h2>
+        <p>Recopilamos la siguiente información personal:</p>
+        <ul>
+            <li>Nombre completo</li>
+            <li>Número de cuenta</li>
+            <li>Correo electrónico institucional</li>
+            <li>Información académica (facultad, carrera, semestre)</li>
+            <li>Calificaciones y evaluaciones</li>
+            <li>Contenido de las prácticas y entregas</li>
+        </ul>
+        
+        <h2>Uso de la Información</h2>
+        <p>La información recopilada se utiliza para los siguientes propósitos:</p>
+        <ul>
+            <li>Gestionar tu cuenta y proporcionar acceso a la plataforma</li>
+            <li>Facilitar la entrega y evaluación de prácticas académicas</li>
+            <li>Comunicar información relevante sobre tus cursos y actividades académicas</li>
+            <li>Generar estadísticas y reportes académicos</li>
+            <li>Mejorar la calidad de nuestros servicios educativos</li>
+        </ul>
+        
+        <h2>Protección de la Información</h2>
+        <p>La UNAM implementa medidas de seguridad técnicas, administrativas y físicas para proteger la información personal contra el acceso no autorizado, alteración, divulgación o destrucción. Estas medidas incluyen:</p>
+        <ul>
+            <li>Encriptación de datos sensibles</li>
+            <li>Acceso restringido a la información personal</li>
+            <li>Monitoreo y auditorías de seguridad</li>
+            <li>Capacitación del personal en materia de protección de datos</li>
+        </ul>
+        
+        <h2>Compartir Información</h2>
+        <p>La información personal puede ser compartida con:</p>
+        <ul>
+            <li>Profesores y personal académico involucrado en tus cursos</li>
+            <li>Áreas administrativas de la UNAM que requieran la información para fines académicos</li>
+            <li>Autoridades competentes cuando sea requerido por ley</li>
+        </ul>
+        <p>No compartimos tu información con terceros para fines comerciales o publicitarios.</p>
+        
+        <h2>Derechos ARCO</h2>
+        <p>Como titular de los datos personales, tienes derecho a:</p>
+        <ul>
+            <li><strong>A</strong>cceder a tus datos personales</li>
+            <li><strong>R</strong>ectificar tus datos cuando sean inexactos o incompletos</li>
+            <li><strong>C</strong>ancelar tus datos (sujeto a excepciones legales)</li>
+            <li><strong>O</strong>ponerte al tratamiento de tus datos para fines específicos</li>
+        </ul>
+        <p>Para ejercer estos derechos, puedes enviar una solicitud al correo electrónico: privacidad@intellitutor.unam.mx</p>
+        
+        <h2>Cookies y Tecnologías Similares</h2>
+        <p>Utilizamos cookies y tecnologías similares para mejorar tu experiencia en la plataforma, recordar tus preferencias y analizar el uso de nuestro sitio. Puedes configurar tu navegador para rechazar todas las cookies o para que te avise cuando se envía una cookie.</p>
+        
+        <h2>Cambios a la Política de Privacidad</h2>
+        <p>La UNAM se reserva el derecho de modificar esta política de privacidad en cualquier momento. Los cambios serán publicados en esta página y, cuando sea apropiado, se te notificará por correo electrónico.</p>
+        
+        <h2>Contacto</h2>
+        <p>Si tienes preguntas o inquietudes sobre esta política de privacidad, puedes contactarnos en:</p>
+        <p>
+            Unidad de Transparencia UNAM<br>
+            Circuito Norponiente del Estadio Olímpico, Ciudad Universitaria<br>
+            Coyoacán, 04510, Ciudad de México<br>
+            Correo electrónico: privacidad@intellitutor.unam.mx<br>
+            Teléfono: (55) 5622-1234
+        </p>
+        
+        <p class="mt-4"><strong>Última actualización:</strong> {{ año_actual }}</p>
+    </div>
+</div>
+{% endblock %}

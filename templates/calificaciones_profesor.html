@@ -1,0 +1,454 @@
+{% extends 'layout.html' %}
+
+{% block title %}Calificaciones de Grupos - IntelliTutor UNAM{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.css">
+<style>
+    .stat-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    
+    .evaluation-score {
+        display: inline-block;
+        padding: 0.35rem 0.65rem;
+        font-weight: 700;
+        border-radius: 50rem;
+        text-align: center;
+    }
+    
+    .score-high {
+        background-color: rgba(40, 167, 69, 0.1);
+        color: #28a745;
+    }
+    
+    .score-medium {
+        background-color: rgba(255, 193, 7, 0.1);
+        color: #ffc107;
+    }
+    
+    .score-low {
+        background-color: rgba(220, 53, 69, 0.1);
+        color: #dc3545;
+    }
+    
+    .grades-container {
+        animation: fadeIn 0.8s ease-out;
+    }
+    
+    .card {
+        animation: slideUp 0.6s ease-out;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .badge {
+        display: inline-block;
+        padding: 0.35rem 0.65rem;
+        font-size: 0.75rem;
+        font-weight: 700;
+        line-height: 1;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: baseline;
+        border-radius: 50rem;
+    }
+    
+    .badge-success {
+        background-color: rgba(40, 167, 69, 0.1);
+        color: #28a745;
+    }
+    
+    .badge-danger {
+        background-color: rgba(220, 53, 69, 0.1);
+        color: #dc3545;
+    }
+    
+    .grupo-card {
+        margin-bottom: 2rem;
+        border-radius: 0.5rem;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .grupo-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+    }
+    
+    .grupo-header {
+        padding: 1rem;
+        background-color: var(--accent-primary);
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .grupo-body {
+        padding: 1rem;
+        background-color: var(--card-bg);
+    }
+    
+    .grupo-stats {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .grupo-stat {
+        flex: 1;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        text-align: center;
+    }
+    
+    .grupo-stat-value {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: var(--text-color);
+    }
+    
+    .grupo-stat-label {
+        font-size: 0.9rem;
+        color: var(--gray);
+    }
+    
+    .estudiantes-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .estudiantes-table th {
+        padding: 0.75rem;
+        text-align: left;
+        border-bottom: 2px solid #dee2e6;
+    }
+    
+    .estudiantes-table td {
+        padding: 0.75rem;
+        border-bottom: 1px solid #dee2e6;
+    }
+    
+    .estudiantes-table tr:last-child td {
+        border-bottom: none;
+    }
+    
+    .estudiantes-table tr:hover {
+        background-color: #f8f9fa;
+    }
+    
+    .toggle-details {
+        background: none;
+        border: none;
+        color: var(--accent-primary);
+        cursor: pointer;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .toggle-details:hover {
+        text-decoration: underline;
+    }
+    
+    .grupo-details {
+        display: none;
+        margin-top: 1rem;
+    }
+    
+    .grupo-details.active {
+        display: block;
+        animation: fadeIn 0.5s ease-out;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<h1 class="page-title">Calificaciones de Mis Grupos</h1>
+
+<div class="dashboard-grid">
+    <div class="stat-card fade-in">
+        <div class="stat-card-header">
+            <div class="stat-card-title">Promedio General</div>
+            <div class="stat-card-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+        </div>
+        <div class="stat-card-value">{{ promedio_general }}</div>
+        <div class="stat-card-description">Promedio de todos los grupos</div>
+    </div>
+    
+    <div class="stat-card fade-in">
+        <div class="stat-card-header">
+            <div class="stat-card-title">Grupos Activos</div>
+            <div class="stat-card-icon">
+                <i class="fas fa-chalkboard-teacher"></i>
+            </div>
+        </div>
+        <div class="stat-card-value">{{ total_grupos }}</div>
+        <div class="stat-card-description">Total de grupos activos</div>
+    </div>
+    
+    <div class="stat-card fade-in">
+        <div class="stat-card-header">
+            <div class="stat-card-title">Estudiantes</div>
+            <div class="stat-card-icon">
+                <i class="fas fa-user-graduate"></i>
+            </div>
+        </div>
+        <div class="stat-card-value">{{ total_estudiantes }}</div>
+        <div class="stat-card-description">Total de estudiantes inscritos</div>
+    </div>
+</div>
+
+<div class="grades-container">
+    <div class="grades-header">
+        <div class="grades-title">Calificaciones por Semestre</div>
+        <div class="grades-semester">
+            <label>Semestre:</label>
+            <select class="grades-semester-select" id="semestreSelect">
+                <option value="all">Todos los semestres</option>
+                {% for semestre in semestres %}
+                <option value="{{ semestre.id }}" {% if semestre.id == semestre_actual %}selected{% endif %}>{{ semestre.nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    
+    <div class="grades-chart">
+        <canvas id="gradesChart"></canvas>
+    </div>
+</div>
+
+<div class="grupos-container">
+    <h2 class="section-title">Detalle de Grupos</h2>
+    
+    {% for grupo in grupos %}
+    <div class="grupo-card fade-in">
+        <div class="grupo-header">
+            <h3>{{ grupo.grupo_nombre }} - {{ grupo.materia_nombre }}</h3>
+            <span class="grupo-semestre">{{ grupo.semestre_nombre }}</span>
+        </div>
+        <div class="grupo-body">
+            <div class="grupo-stats">
+                <div class="grupo-stat">
+                    <div class="grupo-stat-value">{{ grupo.total_estudiantes }}</div>
+                    <div class="grupo-stat-label">Estudiantes</div>
+                </div>
+                <div class="grupo-stat">
+                    <div class="grupo-stat-value">{{ grupo.promedio_grupo|round(2) if grupo.promedio_grupo else 'N/A' }}</div>
+                    <div class="grupo-stat-label">Promedio</div>
+                </div>
+                <div class="grupo-stat">
+                    <div class="grupo-stat-value">
+                        {% if grupo.promedio_grupo %}
+                            {% if grupo.promedio_grupo >= 8 %}
+                                <i class="fas fa-smile text-success"></i>
+                            {% elif grupo.promedio_grupo >= 6 %}
+                                <i class="fas fa-meh text-warning"></i>
+                            {% else %}
+                                <i class="fas fa-frown text-danger"></i>
+                            {% endif %}
+                        {% else %}
+                            <i class="fas fa-question text-secondary"></i>
+                        {% endif %}
+                    </div>
+                    <div class="grupo-stat-label">Rendimiento</div>
+                </div>
+            </div>
+            
+            <button class="toggle-details" onclick="toggleDetails('{{ grupo.grupo_id }}')">
+                <i class="fas fa-chevron-down" id="icon-{{ grupo.grupo_id }}"></i>
+                <span>Ver detalles de estudiantes</span>
+            </button>
+            
+            <div class="grupo-details" id="details-{{ grupo.grupo_id }}">
+                {% if grupos_detalle[grupo.grupo_id]|length > 0 %}
+                <table class="estudiantes-table">
+                    <thead>
+                        <tr>
+                            <th>Estudiante</th>
+                            <th>Prácticas</th>
+                            <th>Exámenes</th>
+                            <th>Proyectos</th>
+                            <th>Asistencia</th>
+                            <th>Final</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for estudiante in grupos_detalle[grupo.grupo_id] %}
+                        <tr>
+                            <td>{{ estudiante.estudiante_nombre }}</td>
+                            <td>{{ estudiante.practicas_promedio|round(2) if estudiante.practicas_promedio else 'N/A' }}</td>
+                            <td>{{ estudiante.examenes_promedio|round(2) if estudiante.examenes_promedio else 'N/A' }}</td>
+                            <td>{{ estudiante.proyectos_promedio|round(2) if estudiante.proyectos_promedio else 'N/A' }}</td>
+                            <td>{{ estudiante.asistencia_porcentaje|round(2) }}%</td>
+                            <td>
+                                <div class="evaluation-score {% if estudiante.calificacion_final >= 8 %}score-high{% elif estudiante.calificacion_final >= 6 %}score-medium{% else %}score-low{% endif %}">
+                                    {{ estudiante.calificacion_final|round(2) }}
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="no-data">No hay calificaciones disponibles para este grupo.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="no-data-card">
+        <i class="fas fa-info-circle"></i>
+        <p>No hay grupos disponibles para mostrar.</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+<script>
+    // Datos para el gráfico
+    const grupos = {{ grupos_json|safe }};
+    const promedios = {{ promedios_json|safe }};
+    
+    // Configuración del gráfico
+    const ctx = document.getElementById('gradesChart').getContext('2d');
+    const gradesChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: grupos,
+            datasets: [{
+                label: 'Promedio del grupo',
+                data: promedios,
+                backgroundColor: promedios.map(prom => {
+                    if (prom >= 8) return 'rgba(40, 167, 69, 0.7)';
+                    if (prom >= 6) return 'rgba(255, 193, 7, 0.7)';
+                    return 'rgba(220, 53, 69, 0.7)';
+                }),
+                borderColor: promedios.map(prom => {
+                    if (prom >= 8) return 'rgb(40, 167, 69)';
+                    if (prom >= 6) return 'rgb(255, 193, 7)';
+                    return 'rgb(220, 53, 69)';
+                }),
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 10
+                }
+            },
+            animation: {
+                duration: 1500,
+                easing: 'easeOutQuart'
+            }
+        }
+    });
+    
+    // Filtrar por semestre
+    document.getElementById('semestreSelect').addEventListener('change', function() {
+        const semestreId = this.value;
+        window.location.href = "{{ url_for('calificaciones') }}?semestre_id=" + semestreId + "&profesor_id={{ current_user.id }}";
+    });
+    
+    // Función para mostrar/ocultar detalles de un grupo
+    function toggleDetails(grupoId) {
+    const details = document.getElementById(`details-${grupoId}`);
+    const icon = document.getElementById(`icon-${grupoId}`);
+    
+    if (details.classList.contains('active')) {
+        details.classList.remove('active');
+        icon.classList.remove('fa-chevron-up');
+        icon.classList.add('fa-chevron-down');
+    } else {
+        // Cargar los detalles del grupo mediante AJAX si no se han cargado aún
+        if (details.getAttribute('data-loaded') !== 'true') {
+            fetch(`/api/grupo_detalles/${grupoId}?profesor_id={{ current_user.id }}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        console.error(data.error);
+                        return;
+                    }
+                    
+                    // Generar HTML para los estudiantes
+                    let estudiantesHTML = '';
+                    if (data.estudiantes && data.estudiantes.length > 0) {
+                        estudiantesHTML = `
+                            <table class="estudiantes-table">
+                                <thead>
+                                    <tr>
+                                        <th>Estudiante</th>
+                                        <th>Prácticas</th>
+                                        <th>Exámenes</th>
+                                        <th>Proyectos</th>
+                                        <th>Asistencia</th>
+                                        <th>Final</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                        `;
+                        
+                        data.estudiantes.forEach(estudiante => {
+                            estudiantesHTML += `
+                                <tr>
+                                    <td>${estudiante.estudiante_nombre}</td>
+                                    <td>${estudiante.practicas_promedio !== null ? estudiante.practicas_promedio.toFixed(2) : 'N/A'}</td>
+                                    <td>${estudiante.examenes_promedio !== null ? estudiante.examenes_promedio.toFixed(2) : 'N/A'}</td>
+                                    <td>${estudiante.proyectos_promedio !== null ? estudiante.proyectos_promedio.toFixed(2) : 'N/A'}</td>
+                                    <td>${estudiante.asistencia_porcentaje !== null ? estudiante.asistencia_porcentaje.toFixed(2) : '0'}%</td>
+                                    <td>
+                                        <div class="evaluation-score ${
+                                            estudiante.calificacion_final >= 8 ? 'score-high' : 
+                                            estudiante.calificacion_final >= 6 ? 'score-medium' : 'score-low'
+                                        }">
+                                            ${estudiante.calificacion_final !== null ? estudiante.calificacion_final.toFixed(2) : 'N/A'}
+                                        </div>
+                                    </td>
+                                </tr>
+                            `;
+                        });
+                        
+                        estudiantesHTML += `
+                                </tbody>
+                            </table>
+                        `;
+                    } else {
+                        estudiantesHTML = '<p class="no-data">No hay calificaciones disponibles para este grupo.</p>';
+                    }
+                    
+                    details.innerHTML = estudiantesHTML;
+                    details.setAttribute('data-loaded', 'true');
+                })
+        }
+        
+        details.classList.add('active');
+        icon.classList.remove('fa-chevron-down');
+        icon.classList.add('fa-chevron-up');
+    }
+}
+</script>
+{% endblock %}

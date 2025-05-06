@@ -1,94 +1,85 @@
-<!DOCTYPE html>
-<html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Evaluación de Prácticas</title>
-    <link rel="icon" href="{{ url_for('static', filename='img/Escudo-UNAM-white.svg') }}" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Gabarito:wght@400..900&family=Josefin+Slab:wght@100..700&display=swap"
-      rel="stylesheet" />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
-  </head>
-  <body>
-    <header>
-      <div class="logo">
-        <a href="/">
-          <img src="{{ url_for('static', filename='img/Escudo-UNAM-white.svg') }}" alt="Logo UNAM" />
-          <h1 class="alt-font">IntelliTutor UNAM</h1>
-        </a>
-      </div>
+{% extends 'layout.html' %}
 
-      <div class="menu">
-        <div class="header-btns">
-          <a href="{{ url_for('index') }}" class="btn alt-font">Inicio</a>
-          <a href="{{ url_for('practicas') }}" class="btn alt-font">Prácticas</a>
-          <a href="{{ url_for('evaluacion') }}" class="btn alt-font">Evaluación</a>
-        </div>
-        <div class="user-menu">
-          <a href="" id="regis" class="btn alt-font">Registrarse</a>
-          <a href="" id="login" class="btn alt-font">Iniciar sesión</a>
-        </div>
-      </div>
+{% block title %}Ayuda - IntelliTutor UNAM{% endblock %}
 
-      <div class="burger-menu">
-        <i class="fas fa-bars"></i>
-      </div>
-    </header>
-    <main id="evaluacion">
-      <div id="table-container">
-        <h2 class="alt-font">Evaluaciones</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Estudiante</th>
-              <th>Práctica</th>
-              <th>Fecha de Evaluación</th>
-              <th>Estado</th>
-              <th>Comentario</th>
-              <th>Calificación</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for evaluacion in evaluaciones %}
-            <tr>
-              <td>{{ evaluacion.id }}</td>
-              <td>{{ evaluacion.estudiante }}</td>
-              <td>{{ evaluacion.practica }}</td>
-              <td>
-                {{ evaluacion.fecha_evaluacion.strftime('%Y-%m-%d') if evaluacion.fecha_evaluacion else '' }}
-              </td>
-              <td>{{ evaluacion.estado }}</td>
-              <td>{{ evaluacion.comentarios }}</td>
-              <td>{{ evaluacion.calificacion }}</td>
-              <td>
-                <form action="{{ url_for('evaluacion') }}" method="POST">
-                  <input type="hidden" name="evaluacion_id" value="{{ evaluacion.id }}" />
-                  <textarea name="comentario" placeholder="Agregar comentario">
-{{ evaluacion.comentarios }}</textarea
-                  >
-                  <input
-                    type="number"
-                    name="calificacion"
-                    placeholder="Calificación"
-                    value="{{ evaluacion.calificacion }}" />
-                  <button type="submit">Guardar</button>
-                </form>
-                <a href="{{ url_for('eliminar_evaluacion', evaluacion_id=evaluacion.id) }}">Eliminar</a>
-              </td>
-            </tr>
+{% block content %}
+
+<main id="practicas">
+<div class="practicas-header">
+  <h1 class="alt-font">Prácticas Académicas</h1>
+  <p>Gestiona y visualiza las prácticas académicas organizadas por materias.</p>
+</div>
+
+<div class="controles-container">
+  <div class="busqueda-container">
+    <input type="text" class="busqueda-input" id="busquedaPractica" placeholder="Buscar por título o materia...">
+    <i class="fas fa-search busqueda-icon"></i>
+  </div>
+  
+  <select class="selector-grupo" id="selectorGrupo">
+    <!-- <option value="todos">Todas las materias</option> -->
+    {% for materia in materias %}
+      <option value="{{ materia.id }}" {% if loop.first %}selected{% endif %}>{{ materia.nombre }}</option>
+    {% endfor %}
+  </select>
+  
+  <!-- <div class="filtro-estado">
+    <button class="filtro-btn active" data-filter="todos">Todos</button>
+    <button class="filtro-btn" data-filter="pendiente">Pendientes</button>
+    <button class="filtro-btn" data-filter="entregado">Por evaluar</button>
+    <button class="filtro-btn" data-filter="calificado">Calificados</button>
+  </div> -->
+</div>
+
+<div class="grupos-container">
+  {% if materias %}
+    {% for materia in materias %}
+      <div class="materia-section" data-materia="{{ materia.id }}">
+        <h2 class="materia-header" data-header="{{ materia.nombre }}">
+          <span class="word"></span>
+        </h2>        
+        {% if materia.id in practicas_por_materia %}
+          <div class="practicas-grid">
+            {% for practica in practicas_por_materia[materia.id] %}
+              <div class="practica-card" data-practica-id="{{ practica.id }}" onclick="openPracticaModal('{{ practica.id }}', '{{ practica.titulo }}')">
+                <div class="practica-card-header">
+                  <h3>{{ practica.titulo }}</h3>
+                  <!-- <span class="practica-badge">{{ practica.estudiantes|length }} estudiantes</span> -->
+                </div>
+                <div class="practica-card-body">
+                  <div class="practica-info">
+                    <div class="practica-info-item">
+                      <i class="fas fa-calendar-alt"></i>
+                      <span><strong>Fecha de Entrega:</strong> {{ practica.fecha_entrega.strftime('%Y-%m-%d') }}</span>
+                    </div>
+                    <div class="practica-info-item">
+                      <i class="fas fa-clock"></i>
+                      <span><strong>Tiempo Estimado:</strong> {{ practica.tiempo_estimado }} minutos</span>
+                    </div>
+                    <div class="practica-info-item">
+                      <i class="fas fa-bullseye"></i>
+                      <span><strong>Objetivo:</strong> {{ practica.objetivo|truncate(100) }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             {% endfor %}
-          </tbody>
-        </table>
+          </div>
+        {% else %}
+          <p>No hay prácticas asociadas a esta materia.</p>
+        {% endif %}
       </div>
-    </main>
-    <script src="{{ url_for('static', filename='js/functions.js') }}"></script>
-  </body>
-</html>
+    {% endfor %}
+  {% else %}
+    <div class="no-practicas">
+      <i class="fas fa-clipboard-check"></i>
+      <p>No hay materias disponibles.</p>
+    </div>
+  {% endif %}
+</div>
+</main>
+
+<script src="{{ url_for('static', filename='js/evaluacion.js') }}"></script>
+
+{% block scripts %}{% endblock %}
+{% endblock %}

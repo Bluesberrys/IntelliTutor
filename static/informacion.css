@@ -1,0 +1,88 @@
+/* ======== Estilos Base Informativos ======== */
+body {
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    background-color: #f9fafb;
+    color: #1f2937;
+    line-height: 1.75;
+    padding: 2rem 1rem;
+}
+
+/* Contenedor principal */
+.policy-container {
+    max-width: 800px;
+    margin: auto;
+    background-color: #ffffff;
+    padding: 3rem 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+/* Título principal */
+.policy-container h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+/* Subtítulos */
+.policy-container h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-top: 2rem;
+    color: #1f2937;
+    border-left: 4px solid #3b82f6;
+    padding-left: 0.75rem;
+}
+
+/* Párrafos */
+.policy-container p {
+    font-size: 1.05rem;
+    margin: 1rem 0;
+    color: #374151;
+}
+
+/* Listas */
+.policy-container ul {
+    margin-left: 1.5rem;
+    list-style: disc;
+}
+.policy-container li {
+    margin: 0.5rem 0;
+    color: #374151;
+}
+
+/* Línea divisoria */
+hr {
+    margin: 2rem 0;
+    border: none;
+    border-top: 1px solid #e5e7eb;
+}
+
+/* Última actualización */
+.updated-date {
+    font-size: 0.9rem;
+    color: #6b7280;
+    text-align: right;
+    margin-top: 2rem;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .policy-container {
+        padding: 2rem 1.25rem;
+    }
+
+    .policy-container h1 {
+        font-size: 2rem;
+    }
+
+    .policy-container h2 {
+        font-size: 1.25rem;
+    }
+
+    .policy-container p {
+        font-size: 1rem;
+    }
+}

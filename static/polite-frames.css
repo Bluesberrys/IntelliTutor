@@ -1,0 +1,190 @@
+/* Estilos para los marcos de perfil */
+:root {
+    /* Colores para marcos */
+    --marco-basico-color: #d59f0f;
+    --marco-segundo-color: #4cc9f0;
+    --marco-tercer-color: #f72585;
+    --marco-cuarto-color: #7209b7;
+    --marco-quinto-color: #3a0ca3;
+    --marco-sexto-color: #4361ee;
+    --marco-septimo-color: #4895ef;
+    --marco-octavo-color: #4cc9f0;
+    --marco-noveno-color: #98f5e1;
+    --marco-excelencia-color: #ffd700;
+    --marco-responsable-color: #00b4d8;
+    --marco-numero-uno-color: #ff0054;
+  }
+  
+  /* Marcos de perfil */
+  .profile-frame {
+    border: 2px solid #fff;
+    border-radius: 100px;
+    padding: 2px;
+    box-shadow: 0 0 5px rgba(255,255,255,0.6);
+    z-index: 10000;
+
+  }
+  
+  /* Estilos para los diferentes marcos */
+  .marco-basico {
+    border: 5px solid var(--marco-basico-color);
+    box-shadow: 0 0 15px rgba(213, 159, 15, 0.5);
+  }
+  
+  .marco-segundo-semestre {
+    border: 5px solid var(--marco-segundo-color);
+    box-shadow: 0 0 15px rgba(76, 201, 240, 0.5);
+  }
+  
+  .marco-tercer-semestre {
+    border: 5px solid var(--marco-tercer-color);
+    box-shadow: 0 0 15px rgba(247, 37, 133, 0.5);
+    z-index: 10000;
+
+  }
+  
+  .marco-cuarto-semestre {
+    border: 5px solid var(--marco-cuarto-color);
+    box-shadow: 0 0 15px rgba(114, 9, 183, 0.5);
+  }
+  
+  .marco-quinto-semestre {
+    border: 5px solid var(--marco-quinto-color);
+    box-shadow: 0 0 15px rgba(58, 12, 163, 0.5);
+  }
+  
+  .marco-sexto-semestre {
+    border: 5px solid var(--marco-sexto-color);
+    box-shadow: 0 0 15px rgba(67, 97, 238, 0.5);
+  }
+  
+  .marco-septimo-semestre {
+    border: 5px solid var(--marco-septimo-color);
+    box-shadow: 0 0 15px rgba(72, 149, 239, 0.5);
+  }
+  
+  .marco-octavo-semestre {
+    border: 5px solid var(--marco-octavo-color);
+    box-shadow: 0 0 15px rgba(76, 201, 240, 0.5);
+  }
+  
+  .marco-noveno-semestre {
+    border: 5px solid var(--marco-noveno-color);
+    box-shadow: 0 0 15px rgba(152, 245, 225, 0.5);
+  }
+  
+  .marco-excelencia {
+    border: 5px solid var(--marco-excelencia-color);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.7);
+    animation: glow 2s infinite alternate;
+  }
+  
+  .marco-responsable {
+    border: 5px solid var(--marco-responsable-color);
+    box-shadow: 0 0 15px rgba(0, 180, 216, 0.5);
+  }
+  
+  .marco-numero-uno {
+    border: 5px solid var(--marco-numero-uno-color);
+    box-shadow: 0 0 20px rgba(255, 0, 84, 0.7);
+    animation: glow 2s infinite alternate;
+  }
+  
+  @keyframes glow {
+    from {
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    }
+    to {
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.9);
+    }
+  }
+  
+  /* Marcos en la selección */
+  .marcos-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  
+  .marco-item {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .marco-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  .marco-item.selected {
+    border: 3px solid var(--marco-basico-color);
+  }
+  
+  .marco-preview {
+    width: 100%;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8f9fa;
+    position: relative;
+  }
+  
+  .marco-preview-inner {
+    width: 80%;
+    height: 80%;
+    border-radius: 50%;
+    background-color: #e9ecef;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .marco-frame {
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    border-radius: 50%;
+    z-index: 2;
+  }
+  
+  .marco-name {
+    padding: 0.5rem;
+    text-align: center;
+    font-size: 0.9rem;
+    font-weight: 500;
+    background-color: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+  }
+  
+  .marco-radio {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+  
+  .marco-radio:checked + .marco-preview::after {
+    content: "\f00c";
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 20px;
+    height: 20px;
+    background-color: #28a745;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+  }
+  

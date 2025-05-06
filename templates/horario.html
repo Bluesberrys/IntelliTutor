@@ -1,0 +1,51 @@
+{% extends 'layout.html' %}
+{% block title %}Mi Horario - IntelliTutor UNAM{% endblock %}
+{% block content %}
+<h1 class="page-title">Mi Horario</h1>
+<div class="schedule-container">
+    <div class="schedule-header">
+        <div class="schedule-title">Horario Semanal</div>
+        <div class="schedule-actions">
+            <select class="form-control" id="semanaSelect">
+                {% for semana_key, semana_label in semanas.items() %}
+                <option value="{{ semana_key }}" {% if semana_key == semana_seleccionada %}selected{% endif %}>{{ semana_label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="schedule-grid">
+        <div class="schedule-time"></div>
+        <div class="schedule-day">Lunes</div>
+        <div class="schedule-day">Martes</div>
+        <div class="schedule-day">Miércoles</div>
+        <div class="schedule-day">Jueves</div>
+        <div class="schedule-day">Viernes</div>
+        <div class="schedule-day">Sábado</div>
+        <div class="schedule-day">Domingo</div>
+        {% for hora in range(0, 24) %}
+        <div class="schedule-time">{{ hora }}:00</div>
+        {% for dia in range(1, 8) %}
+        <div class="schedule-cell" data-hora="{{ hora }}" data-dia="{{ dia }}">
+            {% for clase in clases %}
+            {% if clase.dia == dia and clase.hora_inicio <= hora and clase.hora_fin > hora %}
+            <div class="schedule-class">
+                <div class="schedule-class-title">{{ clase.materia.nombre }}</div>
+                <div class="schedule-class-info">{{ clase.profesor.nombre }}</div>
+                <div class="schedule-class-info">{{ clase.aula }}</div>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+        {% endfor %}
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.getElementById('semanaSelect').addEventListener('change', function() {
+        window.location.href = "{{ url_for('horario') }}?semana=" + this.value;
+    });
+</script>
+{% endblock %}

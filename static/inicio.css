@@ -1,0 +1,255 @@
+/* Estilos específicos para la página de inicio */
+
+/* Hero section con imagen de fondo */
+.hero {
+  height: 60vh;
+  min-height: 400px;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  animation: fadeIn 1s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+  
+  .info_inicio {
+    max-width: 800px;
+    text-align: center;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(10px);
+    padding: 2rem;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .info_inicio h1 {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 700;
+  }
+  
+  .info_inicio p {
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+  }
+  
+  /* Contenedor de tarjetas */
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem 1.5rem;
+    width: 100%;
+  }
+  
+  @media (max-width: 768px) {
+    .dashboard-grid {
+      grid-template-columns: 1fr;
+      padding: 1rem;
+      gap: 1rem;
+    }
+  
+    .card {
+      font-size: 0.95rem;
+    }
+  
+    .card-title {
+      font-size: 1.25rem;
+    }
+  }
+
+  #container-cards {
+    margin: 0 auto;
+    max-width: 1400px;
+  }  
+  
+  .section-title {
+    grid-column: 1 / -1;
+    text-align: center;
+    font-size: 2rem;
+    margin: 3rem 0;
+    color: var(--text-color);
+    font-family: "Montserrat", sans-serif;
+    font-weight: 700;
+  }
+  
+  /* Tarjetas */
+  .card {
+    background-color: var(--card-bg);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    display: flex;
+    flex-direction: column;
+    animation: fadeInCard 0.6s ease forwards;
+    text-align: center;
+  }
+  
+  @keyframes fadeInCard {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .card i {
+    font-size: 2.5rem;
+    color: var(--text-color);
+    margin-bottom: 1rem;
+    padding: 10px;
+    filter: brightness(1.5);
+  }
+  
+  
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+  
+  .card-body {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  .card img {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    display: block;
+  }
+  
+  .card-title {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: var(--accent-primary);
+    font-family: "Montserrat", sans-serif;
+    font-weight: 600;
+  }
+  
+  .card-text {
+    color: var(--text-color);
+    margin-bottom: 1.5rem;
+    flex-grow: 1;
+  }
+  
+  /* Estilos para las notificaciones */
+  .notifications-section {
+    max-width: 1200px;
+    margin: 0 auto 2rem;
+    padding: 0 1.5rem;
+  }
+  
+  .alert {
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    border-left: 5px solid;
+  }
+  
+  .alert-warning {
+    background-color: rgba(255, 193, 7, 0.1);
+    border-color: #ffc107;
+    color: #856404;
+  }
+  
+  .alert-danger {
+    background-color: rgba(220, 53, 69, 0.1);
+    border-color: #dc3545;
+    color: #721c24;
+  }
+  
+  .alert h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+  }
+  
+  .alert h3 i {
+    margin-right: 0.5rem;
+  }
+  
+  .alert ul {
+    margin: 0;
+    padding-left: 2rem;
+  }
+  
+  .alert li {
+    margin-bottom: 0.5rem;
+  }
+  
+  /* Responsive */
+  @media (max-width: 1024px) {
+    #container-cards {
+      padding: 2rem;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .hero {
+      height: 60vh;
+    }
+    
+    .info_inicio {
+      width: 90%;
+      padding: 1.5rem;
+    }
+    
+    .info_inicio h1 {
+      font-size: 2rem;
+    }
+    
+    .info_inicio p {
+      font-size: 1rem;
+    }
+    
+    #container-cards {
+      padding: 1.5rem;
+    }
+    
+    .section-title {
+      font-size: 1.5rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .hero {
+      height: 50vh;
+    }
+    
+    .info_inicio h1 {
+      font-size: 1.5rem;
+    }
+    
+    .info_inicio p {
+      font-size: 0.9rem;
+    }
+  }
+  
+  /* Estilos específicos por rol */
+  #admin-dashboard .hero {
+    background-image: linear-gradient(rgba(0, 30, 59, 0.7), rgba(0, 30, 59, 0.7)), url('./img/fondo-administradores.webp');
+  }
+  
+  #profesor-dashboard .hero {
+    background-image: linear-gradient(rgba(0, 30, 59, 0.7), rgba(0, 30, 59, 0.7)), url('./img/fondo_profesores.webp');
+  }
+  
+  #estudiante-dashboard .hero {
+    background-image: linear-gradient(rgba(0, 30, 59, 0.7), rgba(0, 30, 59, 0.7)), url('./img/fondo-estudiantes.jpeg');
+  }
+  

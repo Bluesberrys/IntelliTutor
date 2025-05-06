@@ -1,0 +1,147 @@
+{
+    "34": {
+        "nombre": "Leonel Almanza Medina",
+        "email": "leonelalmanza21@gmail.com",
+        "numero_cuenta": 258195546,
+        "telefono": "5655059570",
+        "facultad": "Economía",
+        "carrera": "Diseñador Grafico",
+        "semestre": "10",
+        "promedio": "8.3",
+        "foto_url": "uploads/34_1744312209_foto-cv.jpg",
+        "estilos_aprendizaje": "autonomo",
+        "marco_id": 3
+    },
+    "39": {
+        "nombre": "Fernanda Guitierrez Mendoza",
+        "email": "fernanda@comunidad.unam.mx",
+        "numero_cuenta": 351835863,
+        "telefono": "123456789",
+        "facultad": "",
+        "carrera": "",
+        "semestre": "",
+        "promedio": "",
+        "foto_url": "uploads/39_1744965985_profe.png",
+        "departamento": "Informatica",
+        "especialidad": "Desarrollo Web",
+        "grado_academico": "Doctorado"
+    },
+    "41": {
+        "nombre": "Deylan Nieto Figueroa",
+        "email": "deylan@gmail.com",
+        "numero_cuenta": 957115772,
+        "semestre": 1,
+        "facultad": "Artes y Diseño",
+        "carrera": "Diseñador Grafico",
+        "estilos_aprendizaje": "colaborativo,autonomo",
+        "marco_id": 1,
+        "foto_url": "uploads/41_1744854165_IMG_20231011_101717268.jpg",
+        "telefono": "None"
+    },
+    "51": {
+        "nombre": "Yael",
+        "email": "yaelthezombie@gmail.com",
+        "numero_cuenta": 146140374,
+        "semestre": 8,
+        "facultad": "FES Cuautitlán",
+        "carrera": "Licenciado en youtube",
+        "estilos_aprendizaje": "visual,auditivo,kinestesico",
+        "telefono": "238947238458",
+        "foto_url": "uploads/51_1744346620_ChatGPT_Image_Apr_1_2025_10_18_02_PM.png",
+        "marco_id": 5
+    },
+    "43": {
+        "foto_url": "uploads/43_1744363516_fondo_unam.jpg",
+        "nombre": "Administrador",
+        "email": "leonelalmanza23@gmail.com",
+        "numero_cuenta": 907745326,
+        "telefono": "None",
+        "departamento": "None",
+        "cargo": "None"
+    },
+    "55": {
+        "nombre": "Paracetamol",
+        "email": "yaelromanrr2003@gmail.com",
+        "numero_cuenta": 440487636,
+        "semestre": "10",
+        "facultad": "FES Cuautitlán",
+        "carrera": "Diseñador Grafico",
+        "estilos_aprendizaje": "visual,kinestesico,lectura_escritura,autonomo"
+    },
+    "47": {
+        "nombre": "Andrea Michelle Rodarte Espinosa",
+        "email": "sanguineape2189@gmail.com",
+        "numero_cuenta": 517955498,
+        "semestre": 10,
+        "facultad": "Ingeniería",
+        "carrera": "Arquitecto",
+        "estilos_aprendizaje": "auditivo",
+        "marco_id": 2,
+        "foto_url": "uploads/47_1744414697_carita_feli.jpg",
+        "telefono": "None"
+    },
+    "62": {
+        "nombre": "123",
+        "email": "123@123",
+        "numero_cuenta": 237752870,
+        "semestre": "1",
+        "facultad": "Música",
+        "carrera": "Informatica",
+        "estilos_aprendizaje": "visual"
+    },
+    "69": {
+        "nombre": "000000",
+        "email": "0@0",
+        "numero_cuenta": 841072567,
+        "semestre": 10,
+        "facultad": "FES Cuautitlán",
+        "carrera": "Informatica",
+        "estilos_aprendizaje": "lectura_escritura",
+        "marco_id": 2,
+        "foto_url": "uploads/69_1744961174_imagen-cv-2.jpg",
+        "telefono": "None"
+    },
+    "79": {
+        "nombre": "Víctor Almanza Medina",
+        "email": "victorunam2021@gmail.com",
+        "numero_cuenta": 223695088,
+        "semestre": 10,
+        "facultad": "FES Cuautitlán",
+        "carrera": "Informatica",
+        "estilos_aprendizaje": "auditivo",
+        "foto_url": "uploads/79_1744971841_imagen-cv-2.jpg",
+        "telefono": "None",
+        "marco_id": 3
+    },
+    "3": {
+        "nombre": "Fernando Guitierrez Mendoza",
+        "email": "fernanfloo@outlook.com",
+        "numero_cuenta": 497348280,
+        "semestre": 10,
+        "facultad": "FES Cuautitlán",
+        "carrera": "Informatica",
+        "estilos_aprendizaje": "visual,kinestesico,lectura_escritura",
+        "marco_id": 3,
+        "foto_url": "uploads/3_1746152988_Captura_de_pantalla_2024-08-15_193004.png",
+        "telefono": "5655059485"
+    },
+    "1": {
+        "foto_url": "uploads/1_1746150214_Captura_de_pantalla_2025-02-22_225755.png",
+        "nombre": "Deylan Luis Gabriel Foca Express",
+        "email": "focasinderechos@yahoo.com",
+        "numero_cuenta": 593096027,
+        "telefono": "5524887744",
+        "departamento": "La Katawila",
+        "especialidad": "Fondos de Bacacho",
+        "grado_academico": "Maestría"
+    },
+    "4": {
+        "nombre": "Leonel",
+        "email": "fernanfloo@gmail.com",
+        "numero_cuenta": 397965189,
+        "semestre": "2",
+        "facultad": "Medicina Veterinaria y Zootecnia",
+        "carrera": "Diseñador Grafico",
+        "estilos_aprendizaje": "auditivo,kinestesico,autonomo"
+    }
+}

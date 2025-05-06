@@ -1,0 +1,1271 @@
+{
+    "34": [
+        {
+            "accion": "login",
+            "fecha": "2025-04-18",
+            "hora": "01:18:15",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:00:04"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-04-18",
+            "hora": "01:18:19"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-04-18",
+            "hora": "01:21:59",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
+            }
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-04-18",
+            "hora": "01:27:58",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:00:09"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-04-18",
+            "hora": "01:28:07"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-04-18",
+            "hora": "02:58:56",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:09:27"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-04-18",
+            "hora": "03:08:23"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-04-18",
+            "hora": "03:08:35",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:48:57"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-04-18",
+            "hora": "03:57:32"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-04-18",
+            "hora": "03:59:24",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:07:31"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-04-18",
+            "hora": "04:06:55"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-04-18",
+            "hora": "04:31:51",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:05:21"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-04-18",
+            "hora": "04:37:12"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-04-18",
+            "hora": "04:38:43",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:19:10"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-04-18",
+            "hora": "04:57:53"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-04-18",
+            "hora": "04:58:21",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
+            }
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-01",
+            "hora": "18:24:14",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:02:47"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-05-01",
+            "hora": "18:27:01"
+        }
+    ],
+    "43": [
+        {
+            "accion": "login",
+            "fecha": "2025-04-18",
+            "hora": "01:23:37",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:00:25"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-04-18",
+            "hora": "01:24:02"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-04-18",
+            "hora": "01:31:23",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:23:01"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-04-18",
+            "hora": "01:54:24"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-04-18",
+            "hora": "02:26:35",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:00:16"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-04-18",
+            "hora": "02:26:51"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-04-18",
+            "hora": "04:09:28",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:02:38"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-04-18",
+            "hora": "04:12:06"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-04-18",
+            "hora": "04:15:38",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:01:59"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-04-18",
+            "hora": "04:17:37"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-04-18",
+            "hora": "04:17:54",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:00:09"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-04-18",
+            "hora": "04:18:03"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-04-18",
+            "hora": "04:18:50",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
+            }
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-04-18",
+            "hora": "04:20:15",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:01:34"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-04-18",
+            "hora": "04:21:49"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-04-18",
+            "hora": "04:21:53",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:00:14"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-04-18",
+            "hora": "04:22:07"
+        }
+    ],
+    "69": [
+        {
+            "accion": "logout",
+            "fecha": "2025-04-18",
+            "hora": "01:27:53"
+        }
+    ],
+    "47": [
+        {
+            "accion": "login",
+            "fecha": "2025-04-18",
+            "hora": "01:28:11",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:00:06"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-04-18",
+            "hora": "01:28:17"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-04-18",
+            "hora": "04:30:11",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:00:15"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-04-18",
+            "hora": "04:30:26"
+        }
+    ],
+    "39": [
+        {
+            "accion": "login",
+            "fecha": "2025-04-18",
+            "hora": "01:28:20",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:02:59"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-04-18",
+            "hora": "01:31:19"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-04-18",
+            "hora": "01:54:31",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:01:32"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-04-18",
+            "hora": "01:56:03"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-04-18",
+            "hora": "02:26:55",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:22:38"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-04-18",
+            "hora": "02:49:33"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-04-18",
+            "hora": "02:49:39",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:01:59"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-04-18",
+            "hora": "02:51:38"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-04-18",
+            "hora": "03:08:26",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:00:06"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-04-18",
+            "hora": "03:08:32"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-04-18",
+            "hora": "04:24:55",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:03:59"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-04-18",
+            "hora": "04:28:54"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-04-18",
+            "hora": "04:29:23",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:00:24"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-04-18",
+            "hora": "04:29:47"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-04-18",
+            "hora": "04:29:58",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:00:10"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-04-18",
+            "hora": "04:30:08"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-04-18",
+            "hora": "04:30:31",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:01:16"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-04-18",
+            "hora": "04:31:47"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-04-18",
+            "hora": "04:37:17",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:01:21"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-04-18",
+            "hora": "04:38:38"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-04-18",
+            "hora": "04:57:57",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:00:21"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-04-18",
+            "hora": "04:58:18"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-01",
+            "hora": "18:27:05",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:02:26"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-05-01",
+            "hora": "18:29:31"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-01",
+            "hora": "18:29:43",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            }
+        }
+    ],
+    "79": [
+        {
+            "accion": "login",
+            "fecha": "2025-04-18",
+            "hora": "04:22:25",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:02:26"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-04-18",
+            "hora": "04:24:51"
+        }
+    ],
+    "41": [
+        {
+            "accion": "login",
+            "fecha": "2025-04-18",
+            "hora": "04:29:00",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:00:19"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-04-18",
+            "hora": "04:29:19"
+        }
+    ],
+    "1": [
+        {
+            "accion": "login",
+            "fecha": "2025-05-01",
+            "hora": "17:48:04",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            }
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-01",
+            "hora": "19:07:47",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:54:41"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-05-01",
+            "hora": "20:02:28"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-01",
+            "hora": "20:15:00",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:00:29"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-05-01",
+            "hora": "20:15:29"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-01",
+            "hora": "20:20:34",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:05:54"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-05-01",
+            "hora": "20:26:28"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-01",
+            "hora": "20:30:37",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:40:23"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-05-01",
+            "hora": "21:11:00"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-03",
+            "hora": "18:32:13",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:01:24"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-05-03",
+            "hora": "18:33:37"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-03",
+            "hora": "18:34:41",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:00:14"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-05-03",
+            "hora": "18:34:55"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-03",
+            "hora": "18:36:18",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:00:24"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-05-03",
+            "hora": "18:36:42"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-03",
+            "hora": "19:07:37",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:00:05"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-05-03",
+            "hora": "19:07:42"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-03",
+            "hora": "19:07:51",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            }
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-03",
+            "hora": "19:10:47",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:00:12"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-05-03",
+            "hora": "19:10:59"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-03",
+            "hora": "19:26:02",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:00:02"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-05-03",
+            "hora": "19:26:04"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-03",
+            "hora": "21:15:54",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:00:04"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-05-03",
+            "hora": "21:15:58"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-04",
+            "hora": "15:00:46",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            }
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-04",
+            "hora": "18:26:12",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:00:06"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-05-04",
+            "hora": "18:26:18"
+        }
+    ],
+    "2": [
+        {
+            "accion": "login",
+            "fecha": "2025-05-01",
+            "hora": "17:52:20",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:10:35"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-05-01",
+            "hora": "18:02:55"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-01",
+            "hora": "19:05:36",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:01:32"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-05-01",
+            "hora": "19:07:08"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-01",
+            "hora": "20:02:32",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            }
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-01",
+            "hora": "20:10:10",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:02:37"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-05-01",
+            "hora": "20:12:47"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-01",
+            "hora": "20:26:42",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:00:20"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-05-01",
+            "hora": "20:27:02"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-01",
+            "hora": "20:27:08",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            }
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-01",
+            "hora": "20:30:21",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            }
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-03",
+            "hora": "18:37:02",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:00:37"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-05-03",
+            "hora": "18:37:39"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-03",
+            "hora": "18:37:43",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:27:03"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-05-03",
+            "hora": "19:04:46"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-03",
+            "hora": "19:08:05",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:01:45"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-05-03",
+            "hora": "19:09:50"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-03",
+            "hora": "19:11:03",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:14:51"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-05-03",
+            "hora": "19:25:54"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-03",
+            "hora": "21:16:07",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:00:25"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-05-03",
+            "hora": "21:16:32"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-03",
+            "hora": "21:16:58",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            },
+            "duracion": "17:13:33"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-05-04",
+            "hora": "14:30:31"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-04",
+            "hora": "14:30:36",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:00:45"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-05-04",
+            "hora": "14:31:21"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-04",
+            "hora": "14:32:25",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:28:10"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-05-04",
+            "hora": "15:00:35"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-04",
+            "hora": "15:00:38",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:00:03"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-05-04",
+            "hora": "15:00:41"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-04",
+            "hora": "15:05:41",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            },
+            "duracion": "02:35:01"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-05-04",
+            "hora": "17:40:42"
+        }
+    ],
+    "3": [
+        {
+            "accion": "login",
+            "fecha": "2025-05-01",
+            "hora": "18:03:04",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            }
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-01",
+            "hora": "20:13:10",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:00:57"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-05-01",
+            "hora": "20:14:07"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-01",
+            "hora": "20:15:55",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:04:17"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-05-01",
+            "hora": "20:20:12"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-01",
+            "hora": "20:27:29",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:02:47"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-05-01",
+            "hora": "20:30:16"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-01",
+            "hora": "21:36:59",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:05:01"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-05-01",
+            "hora": "21:42:00"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-01",
+            "hora": "21:42:25",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            }
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-03",
+            "hora": "18:35:09",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:00:59"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-05-03",
+            "hora": "18:36:08"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-03",
+            "hora": "19:05:08",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:02:23"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-05-03",
+            "hora": "19:07:31"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-03",
+            "hora": "19:10:06",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:00:36"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-05-03",
+            "hora": "19:10:42"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-03",
+            "hora": "19:26:12",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:02:23"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-05-03",
+            "hora": "19:28:35"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-03",
+            "hora": "19:29:29",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            },
+            "duracion": "01:45:54"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-05-03",
+            "hora": "21:15:23"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-03",
+            "hora": "21:15:27",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:00:03"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-05-03",
+            "hora": "21:15:30"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-03",
+            "hora": "21:15:33",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:00:15"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-05-03",
+            "hora": "21:15:48"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-03",
+            "hora": "21:16:01",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:00:03"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-05-03",
+            "hora": "21:16:04"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-03",
+            "hora": "21:16:42",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:00:13"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-05-03",
+            "hora": "21:16:55"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-04",
+            "hora": "14:31:31",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            }
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-04",
+            "hora": "14:31:39",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:00:09"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-05-04",
+            "hora": "14:31:48"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-04",
+            "hora": "14:31:51",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:00:29"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-05-04",
+            "hora": "14:32:20"
+        },
+        {
+            "accion": "login",
+            "fecha": "2025-05-04",
+            "hora": "15:00:54",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:04:41"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-05-04",
+            "hora": "15:05:35"
+        }
+    ],
+    "4": [
+        {
+            "accion": "login",
+            "fecha": "2025-05-01",
+            "hora": "21:11:50",
+            "detalles": {
+                "ip": "127.0.0.1",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            },
+            "duracion": "00:24:53"
+        },
+        {
+            "accion": "logout",
+            "fecha": "2025-05-01",
+            "hora": "21:36:43"
+        }
+    ]
+}

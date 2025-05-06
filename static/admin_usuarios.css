@@ -1,0 +1,222 @@
+main {
+  flex: 1;
+  max-width: 1400px;
+  margin: 2rem auto;
+  width: 100%;
+}
+
+/* Estructura general de la página */
+#usuarios {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  gap: 1.5rem;
+  padding: 2rem;
+}
+
+/* Agregar usuario */
+#form-container {
+  grid-row: span 3 / span 3;
+  grid-column: 1;
+  background-color: var(--card-bg);
+  border-radius: 10px;
+  padding: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Tabla de usuarios */
+#table-container {
+  grid-column: span 4 / span 4;
+  grid-column-start: 2;
+  grid-row: span 5 / span 5;
+  background-color: var(--card-bg);
+  border-radius: 10px;
+  padding: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
+}
+
+/* Actualizar rol */
+#update-role-container {
+  grid-row: span 2 / span 2;
+  grid-column-start: 1;
+  grid-row-start: 4;
+  background-color: var(--card-bg);
+  border-radius: 10px;
+  padding: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+#form-container h2,
+#table-container h2,
+#update-role-container h2 {
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid var(--accent-primary);
+  padding-bottom: 0.5rem;
+}
+
+/* Formulario de agregar usuario */
+#form-container form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+#form-container label {
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+#form-container input,
+#form-container select {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  background-color: var(--input-bg);
+  color: var(--text-primary);
+  font-size: 1rem;
+  transition: border-color 0.2s ease;
+}
+
+#form-container input:focus,
+#form-container select:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+}
+
+#form-container button {
+  background-color: var(--accent-primary);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.85rem 1.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-weight: 600;
+}
+
+#form-container button:hover {
+  background-color: var(--accent-secondary);
+}
+
+/* Tabla de usuarios */
+#table-container table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#table-container th,
+#table-container td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+#table-container th {
+  background-color: var(--table-header-bg);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+#table-container tr:nth-child(even) {
+  background-color: var(--table-row-alt);
+}
+
+#table-container tr:hover {
+  background-color: var(--table-row-hover);
+}
+
+/* Formulario para actualizar rol */
+#update-role-container form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+#update-role-container label {
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+#update-role-container input,
+#update-role-container select {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  background-color: var(--input-bg);
+  color: var(--text-primary);
+  font-size: 1rem;
+  transition: border-color 0.2s ease;
+}
+
+#update-role-container input:focus,
+#update-role-container select:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+}
+
+#update-role-container button {
+  background-color: var(--accent-primary);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.85rem 1.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-weight: 600;
+}
+
+#update-role-container button:hover {
+  background-color: var(--accent-secondary);
+}
+
+/* Responsividad */
+@media (max-width: 1024px) {
+  #usuarios {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto auto;
+  }
+
+  #form-container {
+    grid-column: span 2;
+    grid-row: auto;
+  }
+
+  #table-container {
+    grid-column: span 2;
+    grid-row: auto;
+  }
+
+  #update-role-container {
+    grid-column: span 2;
+    grid-row: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  #usuarios {
+    grid-template-columns: 1fr;
+  }
+
+  #form-container,
+  #table-container,
+  #update-role-container {
+    grid-column: span 1;
+  }
+}
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+select option{
+  background: var(--card-bg);
+  color: var(--text-color);
+}
