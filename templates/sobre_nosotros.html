@@ -1,0 +1,45 @@
+{% extends 'layout.html' %} {% block title %}Sobre nosotros - IntelliTutor UNAM{% endblock %} {% block
+extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='sobre_nosotros.css') }}" />
+{% endblock %} {% block content %}
+<div class="content">
+  <!-- Sobre nosotros -->
+  <div class="container">
+    <div class="container-title">
+      <h2>Sobre nosotros</h2>
+    </div>
+    <div class="container-text">
+      <p>
+        IntelliTutor es un sistema de tutoría inteligente diseñado para ayudar a los estudiantes a mejorar su
+        rendimiento académico. Utiliza técnicas avanzadas de inteligencia artificial y aprendizaje automático
+        para ofrecer una experiencia personalizada y adaptativa.
+      </p>
+      <p>
+        Nuestro objetivo es proporcionar a los estudiantes las herramientas necesarias para alcanzar su máximo
+        potencial académico, facilitando el acceso a recursos educativos y brindando apoyo en tiempo real.
+      </p>
+    </div>
+  </div>
+  <!-- Creditos -->
+  <div class="card-container">
+    <div class="container-title">
+      <h2>Creditos</h2>
+    </div>
+    {% for persona in equipo %}
+    <div class="card">
+      {% if persona.foto_url %}
+      <div class="card-image">
+        <img src="{{ url_for('static', filename=persona.foto_url) }}" alt="foto de {{ persona.nombre }}" />
+      </div>
+      {% endif %}
+      <div class="card-content">
+        <h3>{{ persona.nombre }}</h3>
+        <p><strong>Rol:</strong> {{ persona.rol }}</p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %} {% block extra_js %}
+<script></script>
+{% endblock %}

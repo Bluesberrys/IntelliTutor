@@ -1,0 +1,37 @@
+{
+  "creditos": [
+    {
+      "nombre": "Rosalba Nancy Rosas Fonseca",
+      "rol": "Product Owner / Team leader"
+    },
+    {
+      "nombre": "Leonel Almanza Medina",
+      "rol": "Desarrollador / Diseñador"
+    },
+    {
+      "nombre": "Adrian Maximiliano Rodriguez Martinez",
+      "rol": "Desarrollador",
+      "foto_url": "img/credits/max.png"
+    },
+    {
+      "nombre": "Deylan Luis Gabriel Nieto Figueroa",
+      "rol": "Desarrollador / Tester"
+    },
+    {
+      "nombre": "Gustavo Ortiz Colin",
+      "rol": "investigador"
+    },
+    {
+      "nombre": "Aguilar Gamero Froilan Gamaliel",
+      "rol": "Tester"
+    },
+    {
+      "nombre": "Yael Roman Reyes Rendon",
+      "rol": "Desarrollador"
+    },
+    {
+      "nombre": "Enriquez Navarro Isaac Emmanuel",
+      "rol": "Chillador profesional"
+    }
+  ]
+}

@@ -958,6 +958,12 @@ def privacidad():
     año_actual = datetime.now().year
     return render_template('privacidad.html', año_actual=año_actual, usuario=usuario)
 
+@app.route('/sobre-nosotros')
+def sobre_nosotros():
+    # Obtener informacion de las personas que desarrollaron el sistema
+    creditos = cargar_json('creditos.json')
+    return render_template('sobre_nosotros.html', equipo = creditos.get("creditos", []))
+
 @app.route('/cambiar-password', methods=['POST'])
 @login_required
 def cambiar_password():

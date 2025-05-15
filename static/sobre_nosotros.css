@@ -1,0 +1,68 @@
+:root {
+  --pic-size: 200px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+/* Credits cards */
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  width: 100%;
+  justify-content: center;
+}
+
+.container-title {
+  font-size: 1.4em;
+  grid-column: 1 / -1;
+  width: 100%;
+  padding: 20px;
+  text-align: center;
+}
+
+.card {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 100% !important;
+  min-height: 100px !important;
+  text-align: center;
+}
+
+.card img {
+  border-radius: 50%;
+  width: var(--pic-size);
+  height: var(--pic-size);
+  border: 4px solid #ccc;
+}
+.card h3 {
+  margin: 10px 0;
+}
+.card p {
+  color: #555;
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+  :root {
+    --pic-size: 150px;
+  }
+  .card-container {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+}
