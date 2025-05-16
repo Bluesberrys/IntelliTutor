@@ -3786,9 +3786,8 @@ def aulas():
             if not materia or not semestre:
                 flash('Materia o semestre no válidos.', 'error')
                 return redirect(url_for('aulas'))
-        
-            letra_turno = 'A' if turno == 'matutino' else 'B'
-            nombre_grupo = f"{materia['nombre']} {letra_turno}-{semestre['nombre']}{grupo_numero}"
+
+            nombre_grupo = f"{materia['nombre']} {semestre['nombre']}{grupo_numero}"
         
             cursor.execute("""
                 INSERT INTO grupos (nombre, descripcion, profesor_id, materia_id, semestre_id, turno, fecha_inicio, fecha_fin)
@@ -3810,11 +3809,13 @@ def aulas():
             
         elif 'editar_grupo_id' in request.form:  # Editar grupo existente
             grupo_id = request.form['editar_grupo_id']
-            descripcion = request.form['descripcion']
-            turno = request.form['turno']
-            semestre_id = request.form['semestre_id']
-            fecha_inicio = request.form.get('fecha_inicio')
-            fecha_fin = request.form.get('fecha_fin')
+
+            if request.form.get('descripcion'):
+                descripcion = request.form['descripcion']
+                turno = request.form['turno']
+                semestre_id = request.form['semestre_id']
+                fecha_inicio = request.form.get('fecha_inicio')
+                fecha_fin = request.form.get('fecha_fin')
             
             # Criterios de evaluación
             practicas_porcentaje = request.form.get('practicas_porcentaje')
@@ -3831,25 +3832,18 @@ def aulas():
                 
                 # Actualizar criterios de evaluación
                 cursor.execute("""
-                    INSERT INTO criterios_evaluacion 
-                    (grupo_id, practicas_porcentaje, examenes_porcentaje, proyectos_porcentaje, asistencia_porcentaje)
-                    VALUES (%s, %s, %s, %s, %s)
-                    ON DUPLICATE KEY UPDATE
-                    practicas_porcentaje = %s,
-                    examenes_porcentaje = %s,
-                    proyectos_porcentaje = %s,
-                    asistencia_porcentaje = %s
-                """, (
-                    grupo_id, practicas_porcentaje, examenes_porcentaje, proyectos_porcentaje, asistencia_porcentaje,
-                    practicas_porcentaje, examenes_porcentaje, proyectos_porcentaje, asistencia_porcentaje
-                ))
+                               UPDATE criterios_evaluacion
+                               SET practicas_porcentaje = %s, examenes_porcentaje = %s, proyectos_porcentaje = %s, asistencia_porcentaje = %s
+                               WHERE grupo_id = %s
+                """, (practicas_porcentaje, examenes_porcentaje, proyectos_porcentaje, asistencia_porcentaje, grupo_id))
             
-            # Actualizar grupo
-            cursor.execute("""
-                UPDATE grupos 
-                SET descripcion = %s, semestre_id = %s, fecha_inicio = %s, fecha_fin = %s, turno = %s
-                WHERE id = %s
-            """, (descripcion, semestre_id, fecha_inicio, fecha_fin, turno, grupo_id))
+            if request.form.get('descripcion'):
+                # Actualizar grupo
+                cursor.execute("""
+                    UPDATE grupos 
+                    SET descripcion = %s, semestre_id = %s, fecha_inicio = %s, fecha_fin = %s, turno = %s
+                    WHERE id = %s
+                """, (descripcion, semestre_id, fecha_inicio, fecha_fin, turno, grupo_id))
 
             
             connection.commit()
@@ -3883,6 +3877,7 @@ def aulas():
             'id': grupo['id'],
             'nombre': grupo['nombre'],
             'descripcion': grupo['descripcion'],
+            'turno': grupo['turno'],
             'materia_nombre': grupo['materia_nombre'],
             'profesor_nombre': grupo['profesor_nombre'],
             'fecha_inicio': grupo['fecha_inicio'],
@@ -3919,8 +3914,10 @@ def aulas():
             SELECT * FROM criterios_evaluacion WHERE grupo_id = %s
         """, (grupo['id'],))
         criterios = cursor.fetchone()
+        cursor.fetchall()
         if criterios:
             grupos[grupo_id]['criterios'] = criterios
+
     
     # Obtener materias y semestres para los formularios
     cursor.execute("SELECT id, nombre FROM materias")

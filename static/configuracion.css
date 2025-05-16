@@ -200,12 +200,12 @@
 }
 
 .btn-secondary {
-    background-color: var(--bg-tertiary);
-    color: var(--text-primary);
+    background-color: var(--accent-primary);
+    color: white;
 }
 
 .btn-secondary:hover {
-    background-color: var(--bg-secondary);
+    background-color: var(--accent-secondary);
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -351,7 +351,7 @@
     height: 6px;
     -webkit-appearance: none;
     appearance: none;
-    background: var(--bg-tertiary);
+    background: var(--gray);
     border-radius: 3px;
     outline: none;
 }

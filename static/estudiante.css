@@ -222,7 +222,7 @@ header {
 
 .user-dropdown-item:hover {
     background-color: rgba(19, 34, 87, 0.05);
-    color: var(--accent-primary);
+    /*color: var(--accent-primary);*/
 }
 
 .user-dropdown-item i {
@@ -368,7 +368,7 @@ main {
     font-family: 'Montserrat', sans-serif;
     font-size: 1.25rem;
     font-weight: 600;
-    color: var(--text-color);
+    /*color: var(--text-color);*/
     margin: 0;
 }
 

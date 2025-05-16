@@ -8,345 +8,351 @@
 
 {% block content %}
 <div class="config-container">
-    <h1 class="page-title titulo">Configuración</h1>
+  <h1 class="page-title titulo">Configuración</h1>
 
-    <div class="config-tabs">
-        <button class="tab-btn active subtitulo-2" data-tab="general">
-            <i class="fas fa-cog subtitulo-2"></i> General
-        </button>
-        <button class="tab-btn subtitulo-2" data-tab="apariencia">
-            <i class="fas fa-palette"></i> Apariencia
-        </button>
-        <button class="tab-btn subtitulo-2" data-tab="notificaciones">
-            <i class="fas fa-bell"></i> Notificaciones
-        </button>
-        <button class="tab-btn subtitulo-2" data-tab="editor">
-            <i class="fas fa-code"></i> Editor de Código
-        </button>
-        <button class="tab-btn subtitulo-2" data-tab="privacidad">
-            <i class="fas fa-user-shield"></i> Privacidad
-        </button>
+  <div class="config-tabs">
+    <button class="tab-btn active subtitulo-2" data-tab="general">
+      <i class="fas fa-cog"></i> General
+    </button>
+    <button class="tab-btn subtitulo-2" data-tab="apariencia">
+      <i class="fas fa-palette"></i> Apariencia
+    </button>
+    <button class="tab-btn subtitulo-2" data-tab="notificaciones">
+      <i class="fas fa-bell"></i> Notificaciones
+    </button>
+    <button class="tab-btn subtitulo-2" data-tab="editor">
+      <i class="fas fa-code"></i> Editor de Código
+    </button>
+    <button class="tab-btn subtitulo-2" data-tab="privacidad">
+      <i class="fas fa-user-shield"></i> Privacidad
+    </button>
+  </div>
+
+  <div class="config-content">
+    <!-- Sección General -->
+    <div class="tab-content active" id="general">
+      <div class="card fade-in">
+        <div class="card-header">
+          <h2 class="card-title">Preferencias Generales</h2>
+        </div>
+        <div class="card-body">
+          <form id="generalForm" class="config-form">
+            <div class="form-group">
+              <label class="form-label">Idioma*</label>
+              <select name="idioma" class="form-control" disabled>
+                <option value="es" {% if configuracion.idioma == 'es' %}selected{% endif %}>Español</option>
+                <option value="en" {% if configuracion.idioma == 'en' %}selected{% endif %}>English</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Zona Horaria*</label>
+              <select name="zona_horaria" class="form-control" disabled>
+                <option value="America/Mexico_City" {% if configuracion.zona_horaria == 'America/Mexico_City' %}selected{% endif %}>Ciudad de México (GMT-6)</option>
+                <option value="America/Tijuana" {% if configuracion.zona_horaria == 'America/Tijuana' %}selected{% endif %}>Tijuana (GMT-8)</option>
+                <option value="America/Cancun" {% if configuracion.zona_horaria == 'America/Cancun' %}selected{% endif %}>Cancún (GMT-5)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Formato de Fecha</label>
+              <select name="formato_fecha" class="form-control">
+                <option value="dd/mm/yyyy" {% if configuracion.formato_fecha == 'dd/mm/yyyy' %}selected{% endif %}>DD/MM/AAAA</option>
+                <option value="mm/dd/yyyy" {% if configuracion.formato_fecha == 'mm/dd/yyyy' %}selected{% endif %}>MM/DD/AAAA</option>
+                <option value="yyyy-mm-dd" {% if configuracion.formato_fecha == 'yyyy-mm-dd' %}selected{% endif %}>AAAA-MM-DD</option>
+              </select>
+            </div>
+            <p>* Opción en desarrollo</p>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
 
-    <div class="config-content">
-        <!-- Sección General -->
-        <div class="tab-content active" id="general">
-            <div class="card fade-in">
-                <div class="card-header">
-                    <h2 class="card-title">Preferencias Generales</h2>
-                </div>
-                <div class="card-body">
-                    <form id="generalForm" class="config-form">
-                        <div class="form-group">
-                            <label class="form-label">Idioma</label>
-                            <select name="idioma" class="form-control">
-                                <option value="es" {% if configuracion.idioma == 'es' %}selected{% endif %}>Español</option>
-                                <option value="en" {% if configuracion.idioma == 'en' %}selected{% endif %}>English</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label">Zona Horaria</label>
-                            <select name="zona_horaria" class="form-control">
-                                <option value="America/Mexico_City" {% if configuracion.zona_horaria == 'America/Mexico_City' %}selected{% endif %}>Ciudad de México (GMT-6)</option>
-                                <option value="America/Tijuana" {% if configuracion.zona_horaria == 'America/Tijuana' %}selected{% endif %}>Tijuana (GMT-8)</option>
-                                <option value="America/Cancun" {% if configuracion.zona_horaria == 'America/Cancun' %}selected{% endif %}>Cancún (GMT-5)</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label">Formato de Fecha</label>
-                            <select name="formato_fecha" class="form-control">
-                                <option value="dd/mm/yyyy" {% if configuracion.formato_fecha == 'dd/mm/yyyy' %}selected{% endif %}>DD/MM/AAAA</option>
-                                <option value="mm/dd/yyyy" {% if configuracion.formato_fecha == 'mm/dd/yyyy' %}selected{% endif %}>MM/DD/AAAA</option>
-                                <option value="yyyy-mm-dd" {% if configuracion.formato_fecha == 'yyyy-mm-dd' %}selected{% endif %}>AAAA-MM-DD</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-actions">
-                            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+    <!-- Sección Apariencia -->
+    <div class="tab-content" id="apariencia">
+      <div class="card fade-in">
+        <div class="card-header">
+          <h2 class="card-title">Apariencia</h2>
         </div>
+        <div class="card-body">
+          <form id="aparienciaForm" class="config-form">
+            <div class="form-group">
+              <label class="form-label">Tema</label>
+              <div class="theme-selector">
+                <div class="theme-option {% if configuracion.tema == 'light' %}selected{% endif %}" data-theme="light">
+                  <div class="theme-preview light-theme"></div>
+                  <span>Claro</span>
+                  <input type="radio" name="tema" value="light" {% if configuracion.tema == 'light' %}checked{% endif %}>
+                </div>
+                <div class="theme-option {% if configuracion.tema == 'dark' %}selected{% endif %}" data-theme="dark">
+                  <div class="theme-preview dark-theme"></div>
+                  <span>Oscuro</span>
+                  <input type="radio" name="tema" value="dark" {% if configuracion.tema == 'dark' %}checked{% endif %}>
+                </div>
+                <div class="theme-option {% if configuracion.tema == 'system' %}selected{% endif %}" data-theme="system">
+                  <div class="theme-preview system-theme"></div>
+                  <span>Sistema</span>
+                  <input type="radio" name="tema" value="system" {% if configuracion.tema == 'system' %}checked{% endif %}>
+                </div>
+              </div>
+            </div>
 
-        <!-- Sección Apariencia -->
-        <div class="tab-content" id="apariencia">
-            <div class="card fade-in">
-                <div class="card-header">
-                    <h2 class="card-title">Apariencia</h2>
+            <div class="form-group">
+              <label class="form-label">Color de Acento</label>
+              <div class="color-selector">
+                <div class="color-option {% if configuracion.color_acento == '#003d79' %}selected{% endif %}" data-color="#003d79">
+                  <div class="color-preview" style="background-color: #003d79;"></div>
+                  <span>Azul</span>
+                  <input type="radio" name="color_acento" value="#003d79" {% if configuracion.color_acento == '#003d79' %}checked{% endif %}>
                 </div>
-                <div class="card-body">
-                    <form id="aparienciaForm" class="config-form">
-                        <div class="form-group">
-                            <label class="form-label">Tema</label>
-                            <div class="theme-selector">
-                                <div class="theme-option {% if configuracion.tema == 'light' %}selected{% endif %}" data-theme="light">
-                                    <div class="theme-preview light-theme"></div>
-                                    <span>Claro</span>
-                                    <input type="radio" name="tema" value="light" {% if configuracion.tema == 'light' %}checked{% endif %}>
-                                </div>
-                                <div class="theme-option {% if configuracion.tema == 'dark' %}selected{% endif %}" data-theme="dark">
-                                    <div class="theme-preview dark-theme"></div>
-                                    <span>Oscuro</span>
-                                    <input type="radio" name="tema" value="dark" {% if configuracion.tema == 'dark' %}checked{% endif %}>
-                                </div>
-                                <div class="theme-option {% if configuracion.tema == 'system' %}selected{% endif %}" data-theme="system">
-                                    <div class="theme-preview system-theme"></div>
-                                    <span>Sistema</span>
-                                    <input type="radio" name="tema" value="system" {% if configuracion.tema == 'system' %}checked{% endif %}>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label">Color de Acento</label>
-                            <div class="color-selector">
-                                <div class="color-option {% if configuracion.color_acento == '#003d79' %}selected{% endif %}" data-color="#003d79">
-                                    <div class="color-preview" style="background-color: #003d79;"></div>
-                                    <span>Azul</span>
-                                    <input type="radio" name="color_acento" value="#003d79" {% if configuracion.color_acento == '#003d79' %}checked{% endif %}>
-                                </div>
-                                <div class="color-option {% if configuracion.color_acento == '#076d1e' %}selected{% endif %}" data-color="#076d1e">
-                                    <div class="color-preview" style="background-color: #076d1e;"></div>
-                                    <span>Verde</span>
-                                    <input type="radio" name="color_acento" value="#076d1e" {% if configuracion.color_acento == '#076d1e' %}checked{% endif %}>
-                                </div>
-                                <div class="color-option {% if configuracion.color_acento == '#8b3b8a' %}selected{% endif %}" data-color="#8b3b8a">
-                                    <div class="color-preview" style="background-color: #8b3b8a;"></div>
-                                    <span>Rosa</span>
-                                    <input type="radio" name="color_acento" value="#8b3b8a" {% if configuracion.color_acento == '#8b3b8a' %}checked{% endif %}>
-                                </div>
-                                <div class="color-option {% if configuracion.color_acento == '#aa8712' %}selected{% endif %}" data-color="#aa8712">
-                                    <div class="color-preview" style="background-color: #aa8712;"></div>
-                                    <span>Dorado</span>
-                                    <input type="radio" name="color_acento" value="#aa8712" {% if configuracion.color_acento == '#aa8712' %}checked{% endif %}>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label">Tamaño de Fuente</label>
-                            <div class="range-slider">
-                                <input type="range" name="tamano_fuente" min="12" max="20" step="1" value="{{ configuracion.tamano_fuente|default(14) }}">
-                                <span class="range-value">{{ configuracion.tamano_fuente|default(14) }}px</span>
-                            </div>
-                        </div>
-                        
-                        <div class="form-actions">
-                            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-                        </div>
-                    </form>
+                <div class="color-option {% if configuracion.color_acento == '#076d1e' %}selected{% endif %}" data-color="#076d1e">
+                  <div class="color-preview" style="background-color: #076d1e;"></div>
+                  <span>Verde</span>
+                  <input type="radio" name="color_acento" value="#076d1e" {% if configuracion.color_acento == '#076d1e' %}checked{% endif %}>
                 </div>
+                <div class="color-option {% if configuracion.color_acento == '#8b3b8a' %}selected{% endif %}" data-color="#8b3b8a">
+                  <div class="color-preview" style="background-color: #8b3b8a;"></div>
+                  <span>Rosa</span>
+                  <input type="radio" name="color_acento" value="#8b3b8a" {% if configuracion.color_acento == '#8b3b8a' %}checked{% endif %}>
+                </div>
+                <div class="color-option {% if configuracion.color_acento == '#aa8712' %}selected{% endif %}" data-color="#aa8712">
+                  <div class="color-preview" style="background-color: #aa8712;"></div>
+                  <span>Dorado</span>
+                  <input type="radio" name="color_acento" value="#aa8712" {% if configuracion.color_acento == '#aa8712' %}checked{% endif %}>
+                </div>
+              </div>
             </div>
-        </div>
 
-        <!-- Sección Notificaciones -->
-        <div class="tab-content" id="notificaciones">
-            <div class="card fade-in">
-                <div class="card-header">
-                    <h2 class="card-title">Notificaciones</h2>
-                </div>
-                <div class="card-body">
-                    <form id="notificacionesForm" class="config-form">
-                        <div class="form-group">
-                            <label class="form-label">Canales de Notificación</label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="notificaciones_email" id="notificacionesEmail" {% if configuracion.notificaciones_email %}checked{% endif %}>
-                                <label class="form-check-label" for="notificacionesEmail">
-                                    <i class="fas fa-envelope"></i> Correo Electrónico
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="notificaciones_sistema" id="notificacionesSistema" {% if configuracion.notificaciones_sistema %}checked{% endif %}>
-                                <label class="form-check-label" for="notificacionesSistema">
-                                    <i class="fas fa-bell"></i> Notificaciones del Sistema
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="notificaciones_navegador" id="notificacionesNavegador" {% if configuracion.notificaciones_navegador %}checked{% endif %}>
-                                <label class="form-check-label" for="notificacionesNavegador">
-                                    <i class="fas fa-desktop"></i> Notificaciones del Navegador
-                                </label>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label">Tipos de Notificaciones</label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="notif_nuevas_practicas" id="notifNuevasPracticas" {% if configuracion.notif_nuevas_practicas %}checked{% endif %}>
-                                <label class="form-check-label" for="notifNuevasPracticas">
-                                    Nuevas prácticas asignadas
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="notif_calificaciones" id="notifCalificaciones" {% if configuracion.notif_calificaciones %}checked{% endif %}>
-                                <label class="form-check-label" for="notifCalificaciones">
-                                    Calificaciones recibidas
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="notif_recordatorios" id="notifRecordatorios" {% if configuracion.notif_recordatorios %}checked{% endif %}>
-                                <label class="form-check-label" for="notifRecordatorios">
-                                    Recordatorios de entrega
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="notif_mensajes" id="notifMensajes" {% if configuracion.notif_mensajes %}checked{% endif %}>
-                                <label class="form-check-label" for="notifMensajes">
-                                    Mensajes de profesores
-                                </label>
-                            </div>
-                        </div>
-                        
-                        <div class="form-actions">
-                            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-                            <button type="button" id="testNotification" class="btn btn-secondary">Probar Notificación</button>
-                        </div>
-                    </form>
-                </div>
+            <div class="form-group">
+              <label class="form-label">Tamaño de Fuente</label>
+              <div class="range-slider">
+                <input type="range" name="tamano_fuente" min="12" max="20" step="1" value="{{ configuracion.tamano_fuente|default(14) }}">
+                <span class="range-value">
+                  {{ configuracion.tamano_fuente|default(14) }}px</span>
+              </div>
             </div>
-        </div>
 
-        <!-- Sección Editor de Código -->
-        <div class="tab-content" id="editor">
-            <div class="card fade-in">
-                <div class="card-header">
-                    <h2 class="card-title">Editor de Código</h2>
-                </div>
-                <div class="card-body">
-                    <form id="editorForm" class="config-form">
-                        <div class="form-group">
-                            <label class="form-label">Tema del Editor</label>
-                            <select name="editor_tema" class="form-control">
-                                <option value="dracula" {% if configuracion.editor_tema == 'dracula' %}selected{% endif %}>Dracula</option>
-                                <option value="monokai" {% if configuracion.editor_tema == 'monokai' %}selected{% endif %}>Monokai</option>
-                                <option value="material" {% if configuracion.editor_tema == 'material' %}selected{% endif %}>Material</option>
-                                <option value="nord" {% if configuracion.editor_tema == 'nord' %}selected{% endif %}>Nord</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label">Tamaño de Fuente del Editor</label>
-                            <div class="range-slider">
-                                <input type="range" name="editor_tamano_fuente" min="10" max="24" step="1" value="{{ configuracion.editor_tamano_fuente|default(14) }}">
-                                <span class="range-value">{{ configuracion.editor_tamano_fuente|default(14) }}px</span>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label">Lenguaje Predeterminado</label>
-                            <select name="editor_lenguaje_default" class="form-control">
-                                <option value="python" {% if configuracion.editor_lenguaje_default == 'python' %}selected{% endif %}>Python</option>
-                                <option value="javascript" {% if configuracion.editor_lenguaje_default == 'javascript' %}selected{% endif %}>JavaScript</option>
-                                <option value="cpp" {% if configuracion.editor_lenguaje_default == 'cpp' %}selected{% endif %}>C++</option>
-                                <option value="java" {% if configuracion.editor_lenguaje_default == 'java' %}selected{% endif %}>Java</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label">Opciones</label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="editor_autocompletado" id="editorAutocompletado" {% if configuracion.editor_autocompletado %}checked{% endif %}>
-                                <label class="form-check-label" for="editorAutocompletado">
-                                    Habilitar autocompletado
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="editor_line_numbers" id="editorLineNumbers" {% if configuracion.editor_line_numbers %}checked{% endif %}>
-                                <label class="form-check-label" for="editorLineNumbers">
-                                    Mostrar números de línea
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="editor_wrap_lines" id="editorWrapLines" {% if configuracion.editor_wrap_lines %}checked{% endif %}>
-                                <label class="form-check-label" for="editorWrapLines">
-                                    Ajustar líneas largas
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="editor_highlight_active_line" id="editorHighlightActiveLine" {% if configuracion.editor_highlight_active_line %}checked{% endif %}>
-                                <label class="form-check-label" for="editorHighlightActiveLine">
-                                    Resaltar línea activa
-                                </label>
-                            </div>
-                        </div>
-                        
-                        <div class="form-actions">
-                            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-                            <button type="button" id="resetEditorConfig" class="btn btn-secondary">Restablecer Valores Predeterminados</button>
-                        </div>
-                    </form>
-                </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">Guardar Cambios</button>
             </div>
+          </form>
         </div>
-
-        <!-- Sección Privacidad -->
-        <div class="tab-content" id="privacidad">
-            <div class="card fade-in">
-                <div class="card-header">
-                    <h2 class="card-title">Privacidad</h2>
-                </div>
-                <div class="card-body">
-                    <form id="privacidadForm" class="config-form">
-                        <div class="form-group">
-                            <label class="form-label">Visibilidad del Perfil</label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="perfil_publico" id="perfilPublico" {% if configuracion.perfil_publico %}checked{% endif %}>
-                                <label class="form-check-label" for="perfilPublico">
-                                    Hacer mi perfil visible para otros estudiantes
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="mostrar_calificaciones" id="mostrarCalificaciones" {% if configuracion.mostrar_calificaciones %}checked{% endif %}>
-                                <label class="form-check-label" for="mostrarCalificaciones">
-                                    Mostrar mis calificaciones en mi perfil público
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="mostrar_actividad" id="mostrarActividad" {% if configuracion.mostrar_actividad %}checked{% endif %}>
-                                <label class="form-check-label" for="mostrarActividad">
-                                    Mostrar mi actividad reciente
-                                </label>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label">Datos y Cookies</label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="aceptar_cookies" id="aceptarCookies" {% if configuracion.aceptar_cookies %}checked{% endif %}>
-                                <label class="form-check-label" for="aceptarCookies">
-                                    Aceptar cookies de análisis y personalización
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="compartir_datos_academicos" id="compartirDatosAcademicos" {% if configuracion.compartir_datos_academicos %}checked{% endif %}>
-                                <label class="form-check-label" for="compartirDatosAcademicos">
-                                    Compartir datos académicos para mejorar la plataforma
-                                </label>
-                            </div>
-                        </div>
-                        
-                        <div class="form-actions">
-                            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-                            <button type="button" id="exportarDatos" class="btn btn-secondary">Exportar Mis Datos</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
+
+    <!-- Sección Notificaciones -->
+    <div class="tab-content" id="notificaciones">
+      <div class="card fade-in">
+        <div class="card-header">
+          <h2 class="card-title">Notificaciones</h2>
+        </div>
+        <div class="card-body">
+          <form id="notificacionesForm" class="config-form">
+            <div class="form-group">
+              <label class="form-label">Canales de Notificación</label>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="notificaciones_email" id="notificacionesEmail" {% if configuracion.notificaciones_email %}checked{% endif %}>
+                <label class="form-check-label" for="notificacionesEmail">
+                  <i class="fas fa-envelope"></i> Correo Electrónico
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="notificaciones_sistema" id="notificacionesSistema" {% if configuracion.notificaciones_sistema %}checked{% endif %}>
+                <label class="form-check-label" for="notificacionesSistema">
+                  <i class="fas fa-bell"></i> Notificaciones del Sistema
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="notificaciones_navegador" id="notificacionesNavegador" {% if configuracion.notificaciones_navegador %}checked{% endif %}>
+                <label class="form-check-label" for="notificacionesNavegador">
+                  <i class="fas fa-desktop"></i> Notificaciones del Navegador
+                </label>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Tipos de Notificaciones*</label>
+              <div class="form-check">
+                <input class="form-check-input" disabled type="checkbox" name="notif_nuevas_practicas" id="notifNuevasPracticas" {% if configuracion.notif_nuevas_practicas %}checked{% endif %}>
+                <label class="form-check-label" for="notifNuevasPracticas">
+                  Nuevas prácticas asignadas
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" disabled type="checkbox" name="notif_calificaciones" id="notifCalificaciones" {% if configuracion.notif_calificaciones %}checked{% endif %}>
+                <label class="form-check-label" for="notifCalificaciones">
+                  Calificaciones recibidas
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" disabled type="checkbox" name="notif_recordatorios" id="notifRecordatorios" {% if configuracion.notif_recordatorios %}checked{% endif %}>
+                <label class="form-check-label" for="notifRecordatorios">
+                  Recordatorios de entrega
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" disabled type="checkbox" name="notif_mensajes" id="notifMensajes" {% if configuracion.notif_mensajes %}checked{% endif %}>
+                <label class="form-check-label" for="notifMensajes">
+                  Mensajes de profesores
+                </label>
+              </div>
+            </div>
+            <p>* Opción en desarrollo</p>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+              <button type="button" id="testNotification" class="btn btn-secondary">Probar Notificación</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección Editor de Código -->
+    <div class="tab-content" id="editor">
+      <div class="card fade-in">
+        <div class="card-header">
+          <h2 class="card-title">Editor de Código</h2>
+        </div>
+        <div class="card-body">
+          <form id="editorForm" class="config-form">
+            <div class="form-group">
+              <label class="form-label">Tema del Editor</label>
+              <select name="editor_tema" class="form-control">
+                <option value="dracula" {% if configuracion.editor_tema == 'dracula' %}selected{% endif %}>Dracula</option>
+                <option value="monokai" {% if configuracion.editor_tema == 'monokai' %}selected{% endif %}>Monokai</option>
+                <option value="material" {% if configuracion.editor_tema == 'material' %}selected{% endif %}>Material</option>
+                <option value="nord" {% if configuracion.editor_tema == 'nord' %}selected{% endif %}>Nord</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Tamaño de Fuente del Editor</label>
+              <div class="range-slider">
+                <input type="range" name="editor_tamano_fuente" min="10" max="24" step="1" value="{{ configuracion.editor_tamano_fuente|default(14) }}">
+                <span class="range-value">
+                  {{ configuracion.editor_tamano_fuente|default(14) }}px</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Lenguaje Predeterminado</label>
+              <select name="editor_lenguaje_default" class="form-control">
+                <option value="python" {% if configuracion.editor_lenguaje_default == 'python' %}selected{% endif %}>Python</option>
+                <option value="javascript" {% if configuracion.editor_lenguaje_default == 'javascript' %}selected{% endif %}>JavaScript</option>
+                <option disabled value="cpp" {% if configuracion.editor_lenguaje_default == 'cpp' %}selected{% endif %}>C++</option>
+                <option disabled value="java" {% if configuracion.editor_lenguaje_default == 'java' %}selected{% endif %}>Java</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Opciones</label>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="editor_autocompletado" id="editorAutocompletado" {% if configuracion.editor_autocompletado %}checked{% endif %}>
+                <label class="form-check-label" for="editorAutocompletado">
+                  Habilitar autocompletado
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="editor_line_numbers" id="editorLineNumbers" {% if configuracion.editor_line_numbers %}checked{% endif %}>
+                <label class="form-check-label" for="editorLineNumbers">
+                  Mostrar números de línea
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="editor_wrap_lines" id="editorWrapLines" {% if configuracion.editor_wrap_lines %}checked{% endif %}>
+                <label class="form-check-label" for="editorWrapLines">
+                  Ajustar líneas largas
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="editor_highlight_active_line" id="editorHighlightActiveLine" {% if configuracion.editor_highlight_active_line %}checked{% endif %}>
+                <label class="form-check-label" for="editorHighlightActiveLine">
+                  Resaltar línea activa
+                </label>
+              </div>
+            </div>
+            <p>* Opción en desarrollo</p>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+              <button type="button" id="resetEditorConfig" class="btn btn-secondary">Restablecer Valores Predeterminados</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección Privacidad -->
+    <div class="tab-content" id="privacidad">
+      <div class="card fade-in">
+        <div class="card-header">
+          <h2 class="card-title">Privacidad</h2>
+        </div>
+        <div class="card-body">
+          <form id="privacidadForm" class="config-form">
+            <div class="form-group">
+              <label class="form-label">Visibilidad del Perfil</label>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="perfil_publico" id="perfilPublico" {% if configuracion.perfil_publico %}checked{% endif %}>
+                <label class="form-check-label" for="perfilPublico">
+                  Hacer mi perfil visible para otros estudiantes
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="mostrar_calificaciones" id="mostrarCalificaciones" {% if configuracion.mostrar_calificaciones %}checked{% endif %}>
+                <label class="form-check-label" for="mostrarCalificaciones">
+                  Mostrar mis calificaciones en mi perfil público
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" disabled type="checkbox" name="mostrar_actividad" id="mostrarActividad" {% if configuracion.mostrar_actividad %}checked{% endif %}>
+                <label class="form-check-label" for="mostrarActividad">
+                  Mostrar mi actividad reciente*
+                </label>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Datos y Cookies*</label>
+              <div class="form-check">
+                <input class="form-check-input" disabled type="checkbox" name="aceptar_cookies" id="aceptarCookies" {% if configuracion.aceptar_cookies %}checked{% endif %}>
+                <label class="form-check-label" for="aceptarCookies">
+                  Aceptar cookies de análisis y personalización
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" disabled type="checkbox" name="compartir_datos_academicos" id="compartirDatosAcademicos" {% if configuracion.compartir_datos_academicos %}checked{% endif %}>
+                <label class="form-check-label" for="compartirDatosAcademicos">
+                  Compartir datos académicos para mejorar la plataforma
+                </label>
+              </div>
+            </div>
+            <p>* Opción en desarrollo</p>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+              <button type="button" id="exportarDatos" class="btn btn-secondary">Exportar Mis Datos</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- Animación de verificación mejorada -->
 <div id="checkAnimation" class="check-animation hidden">
-    <div class="checkmark-circle">
-        <div class="checkmark-circle-bg"></div>
-        <div class="checkmark-circle-outline"></div>
-        <div class="checkmark draw"></div>
-    </div>
-    <div class="success-text">¡Guardado!</div>
+  <div class="checkmark-circle">
+    <div class="checkmark-circle-bg"></div>
+    <div class="checkmark-circle-outline"></div>
+    <div class="checkmark draw"></div>
+  </div>
+  <div class="success-text">¡Guardado!</div>
 </div>
 
 {% endblock %}

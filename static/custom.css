@@ -364,7 +364,7 @@
   
   .info-card-icon {
     font-size: 2rem;
-    color: var(--primary);
+    /*color: var(--primary);*/
     margin-right: 1.5rem;
     display: flex;
     align-items: center;
@@ -802,7 +802,7 @@
   .card-title {
     font-size: 1.5rem;
     margin: 0;
-    color: var(--text-color);
+    /*color: var(--text-color);*/
   }
   
   .card-body {
