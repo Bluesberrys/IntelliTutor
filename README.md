@@ -4,26 +4,27 @@ Flask web application project that creates programming activities and exercises
 
 ## Tech stack
 
-- **Server side:** Flask
+- **Server side:** Python - Flask
 - **Database:** MySQL via XAMPP
 
 ## Install
 
-from project directory in a terminal run:
+Recomended Python version: 3.11 - 3.12
+
+From project directory in a terminal run:
 
 1. ```console
-   python -m venv venv
-   ```
-2. ```console
-   .\venv\Scripts\activate
-   ```
-3. ```console
    pip install -r requirements.txt
    ```
-4. ```console
+2. ```console
    set FLASK_APP=app.py
    ```
-5. For **development**
+3. For first set-up run:
+   ```console
+   python admin_creator.py
+   ```
+   this will create an administrator profile
+4. For **development**
    ```console
    pyhton app.py
    ```
@@ -31,11 +32,3 @@ from project directory in a terminal run:
    ```console
    flask run
    ```
-
-### ES
-
-## Problemas actuales
-
-- Detalles de diseño de frontend
-- Funciones faltantes
-  - Agregar actividades manualmente para administradores o profesores

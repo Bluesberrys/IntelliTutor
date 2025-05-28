@@ -19,10 +19,12 @@ import random
 from routes.code_editor import code_editor_bp
 # Importar el blueprint de configuración
 from routes.configuracion import config_bp, aplicar_configuracion, guardar_configuracion, obtener_configuracion, crear_configuracion_por_defecto, cargar_configuracion, obtener_configuracion_predeterminada
-
-# Importaciones para Flask-Login
+# from routes.admin import admin_bp
+# from routes.profesor import profesor_bp
+# from routes.api import api_bp
+# from routes.actividades import actividades_bp
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
-
+# from routes.juegos_educativos import juegos_bp
 
 # Inicialización de la aplicación
 port = 5000
@@ -34,6 +36,11 @@ app.config['MAX_CONTENT_LENGTH'] = APP_CONFIG["MAX_CONTENT_LENGTH"]
 # Registrar el blueprint en la aplicación
 app.register_blueprint(config_bp)
 app.register_blueprint(code_editor_bp)
+# app.register_blueprint(admin_bp)
+# app.register_blueprint(profesor_bp)
+# app.register_blueprint(api_bp)
+# app.register_blueprint(actividades_bp)
+# app.register_blueprint(juegos_bp)
 
 # Aplicar configuraciones globalmente
 aplicar_configuracion(app)
@@ -43,13 +50,59 @@ generador = GeneradorPracticasExtendido(DB_CONFIG)
 
 # Inicializar modelo ML
 try:
-    # Intentar usar el modelo mejorado con SBERT si está disponible
-    modelo_ml = GeneradorPracticasML(DB_CONFIG, use_sbert=True)
+    # Asegurarse de que sentence-transformers esté instalado
+    import importlib.util
+    sbert_spec = importlib.util.find_spec('sentence_transformers')
+    if sbert_spec is None:
+        print("ADVERTENCIA: El módulo sentence_transformers no está instalado. Instalando...")
+        import subprocess
+        subprocess.check_call(["pip", "install", "sentence-transformers"])
+        print("sentence-transformers instalado correctamente.")
+    
+    # Intentar usar el modelo mejorado con SBERT
+    from modelo_ml_enhanced import GeneradorPracticasML
+    modelo_ml = GeneradorPracticasML(db_config=DB_CONFIG, use_sbert=True)
     print("Modelo inicializado con soporte SBERT")
-except TypeError:
+except Exception as e:
+    print(f"Error al inicializar modelo con SBERT: {str(e)}")
     # Fallback al modelo original o mejorado sin SBERT
-    modelo_ml = GeneradorPracticasML()
-    print("Modelo inicializado sin soporte SBERT")
+    try:
+        from modelo_ml_enhanced import GeneradorPracticasML
+        modelo_ml = GeneradorPracticasML(db_config=DB_CONFIG, use_sbert=False)
+        print("Modelo inicializado sin soporte SBERT (explícitamente desactivado)")
+    except Exception as e2:
+        print(f"Error al inicializar modelo sin SBERT: {str(e2)}")
+        # Último recurso: modelo dummy
+        modelo_ml = GeneradorPracticasML(db_config=DB_CONFIG, use_sbert=False)
+        print("Modelo inicializado con configuración por defecto")
+
+# Configurar entrenamiento automático periódico
+def entrenar_modelo_periodicamente():
+    """Función para entrenar el modelo periódicamente."""
+    try:
+        print("Iniciando entrenamiento periódico del modelo...")
+        modelo_ml._entrenar_incremental()
+        print("Entrenamiento periódico completado.")
+    except Exception as e:
+        print(f"Error en entrenamiento periódico: {str(e)}")
+
+# Configurar un temporizador para entrenar el modelo cada 6 horas
+import threading
+import time
+
+def programar_entrenamiento():
+    while True:
+        # Esperar 6 horas
+        time.sleep(6 * 60 * 60)
+        entrenar_modelo_periodicamente()
+
+# Iniciar el hilo de entrenamiento periódico
+entrenamiento_thread = threading.Thread(target=programar_entrenamiento, daemon=True)
+entrenamiento_thread.start()
+
+# También entrenar al inicio si hay suficientes datos
+if hasattr(modelo_ml, 'historial_evaluaciones') and len(modelo_ml.historial_evaluaciones) > 5:
+    entrenar_modelo_periodicamente()
 
 # Configuración de Flask-Mail
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
@@ -2446,7 +2499,7 @@ def obtener_calificaciones_por_semestre(estudiante_id, semestre_id=None):
             AVG(e.calificacion) as calificacion
         FROM evaluaciones e
         JOIN practicas p ON e.practica_id = p.id
-        JOIN materias m ON p.materia_id = m.id
+        JOIN materias m ON p.materia_id = p.id
         JOIN grupos g ON p.grupo_id = g.id
         JOIN semestres s ON g.semestre_id = s.id
         WHERE e.estudiante_id = %s AND e.calificacion IS NOT NULL
@@ -2587,7 +2640,7 @@ def retroalimentacion(practica_id):
     try:
         try:
             from modelo_ml_enhanced import EnhancedModeloEvaluacionInteligente as ModeloML
-            modelo = ModeloML(db_config=DB_CONFIG)
+            modelo = ModeloML(db_config=DB_CONFIG, use_sbert=True)
         except ImportError:
             from modelo_ml_scikit import ModeloEvaluacionInteligente as ModeloML
             modelo = ModeloML()
@@ -2807,6 +2860,7 @@ def crear_practica():
     flash("Práctica creada exitosamente", "success")
     return redirect(url_for('practicas', usuario=usuario))
 
+# Modificar la función crear_practica para guardar correctamente el tipo_asignacion
 @app.route('/practicas', methods=['GET', 'POST'])
 @login_required
 def practicas():
@@ -2831,17 +2885,25 @@ def practicas():
         concepto_id = request.form['concepto_id']
         herramienta_id = request.form['herramienta_id']
         uso_ia = request.form.get('uso_ia', '0')
-        tipo_asignacion = request.form.get('tipo_asignacion', 'practica')
+        
+        # Obtener tipo de práctica y tipo de juego
+        tipo = request.form.get('tipo', 'juego')
+        tipo = request.form.get('tipo') if tipo == 'juego' else None
+        
+        # Establecer tipo_asignacion según el tipo de práctica
+        tipo_asignacion = 'juego' if tipo == 'juego' else request.form.get('tipo_asignacion', 'practica')
         
         # Insertar la práctica en la base de datos
         cursor.execute("""
             INSERT INTO practicas 
             (titulo, grupo_id, nivel_id, autor_id, objetivo, materia_id, 
-             fecha_entrega, tiempo_estimado, concepto_id, herramienta_id, uso_ia, tipo_asignacion)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+             fecha_entrega, tiempo_estimado, concepto_id, herramienta_id, uso_ia, 
+             tipo_asignacion, tipo)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """, (
             titulo, grupo_id, nivel_id, autor_id, objetivo, materia_id,
-            fecha_entrega, tiempo_estimado, concepto_id, herramienta_id, uso_ia, tipo_asignacion
+            fecha_entrega, tiempo_estimado, concepto_id, herramienta_id, uso_ia, 
+            tipo_asignacion, tipo
         ))
         
         practica_id = cursor.lastrowid
@@ -2856,7 +2918,12 @@ def practicas():
         
         connection.commit()
         flash('Práctica creada exitosamente.', 'success')
-        return redirect(url_for('practicas'))
+        
+        # Si es un juego, redirigir a la página de creación de juegos
+        if tipo == 'juego':
+            return redirect(url_for('juegos.crear_juego', practica_id=practica_id))
+        else:
+            return redirect(url_for('practicas'))
     
     # Obtener datos para la vista
     if current_user.rol == 'administrador':
@@ -2929,6 +2996,69 @@ def practicas():
         usuario_nombre=current_user.nombre,
         año_actual=datetime.now().year
     )
+
+# Modificar la función ver_practica para manejar juegos
+@app.route('/ver_practica/<int:practica_id>')
+@login_required
+def ver_practica(practica_id):
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    
+    # Obtener información de la práctica
+    cursor.execute("""
+        SELECT p.*, m.nombre as nombre_materia, g.nombre as nombre_grupo
+        FROM practicas p
+        JOIN materias m ON p.materia_id = m.id
+        JOIN grupos g ON p.grupo_id = g.id
+        WHERE p.id = %s
+    """, (practica_id,))
+    
+    practica = cursor.fetchone()
+    
+    if not practica:
+        flash('Práctica no encontrada', 'error')
+        return redirect(url_for('practicas'))
+    
+    # Si es un estudiante y la práctica es un juego, redirigir al juego
+    if current_user.rol == 'estudiante' and practica['tipo_asignacion'] == 'juego':
+        # Determine the game type and redirect accordingly
+        cursor.execute("""
+            SELECT * FROM contenido_generado
+            WHERE practica_id = %s
+        """, (practica_id,))
+        contenido = cursor.fetchone()
+
+        if contenido:
+            tipo_juego = contenido['tipo']
+            if tipo_juego == 'memorama':
+                return redirect(url_for('juegos.memorama', practica_id=practica_id))
+            elif tipo_juego == 'quiz':
+                return redirect(url_for('juegos.quiz', practica_id=practica_id))
+            else:
+                return redirect(url_for('juegos.menu_juegos', practica_id=practica_id))
+        else:
+            flash('No se ha especificado el tipo de juego.', 'error')
+            return redirect(url_for('practicas'))
+    
+    # Si es profesor y la práctica es un juego, mostrar opciones de edición
+    if (current_user.rol == 'profesor' or current_user.rol == 'administrador') and practica['tipo_asignacion'] == 'juego':
+        # Verificar si ya existe contenido para este juego
+        cursor.execute("""
+            SELECT id FROM contenido_generado
+            WHERE practica_id = %s
+        """, (practica_id,))
+        
+        tiene_contenido = cursor.fetchone() is not None
+        
+        # Si no tiene contenido, redirigir a la página de creación
+        if not tiene_contenido:
+            flash('Esta práctica requiere configuración adicional. Por favor, configura el juego.', 'info')
+            return redirect(url_for('juegos.crear_juego', practica_id=practica_id))
+    
+    connection.close()
+    
+    # Renderizar la plantilla correspondiente
+    return render_template('ver_practica.html', practica=practica)
 
 # Función para calcular calificaciones finales de un grupo
 def calcular_calificaciones_finales(grupo_id):
@@ -3517,143 +3647,168 @@ def guardar_calificacion():
 
     return redirect(url_for('evaluacion'))
 
-@app.route('/practica/<int:practica_id>', methods=['GET'])
-def ver_practica(practica_id):
-    practica = generador.obtener_practica_por_id(practica_id)
-    contenido_generado = generador.obtener_contenido_generado(practica_id)
+# @app.route('/practica/<int:practica_id>', methods=['GET'])
+# def ver_practica(practica_id):
+#     practica = generador.obtener_practica_por_id(practica_id)
+#     contenido_generado = generador.obtener_contenido_generado(practica_id)
     
-    if not practica:
-        flash("Práctica no encontrada.", "error")
-        return redirect(url_for('practicas'))  # Redirigir a la lista de prácticas
+#     if not practica:
+#         flash("Práctica no encontrada.", "error")
+#         return redirect(url_for('practicas'))  # Redirigir a la lista de prácticas
 
-    # Generar datos adicionales con el modelo ML
-    titulo = practica.titulo
-    objetivo = practica.objetivo
-    practica_generada = modelo_ml.generar_practica(titulo, objetivo)
+#     # Generar datos adicionales con el modelo ML
+#     titulo = practica.titulo
+#     objetivo = practica.objetivo
+#     practica_generada = modelo_ml.generar_practica(titulo, objetivo)
     
-    prediccion_exito = 'Alta'  # Ejemplo de predicción de éxito
-    recomendaciones_personalizadas = 'Recomendaciones personalizadas generadas por IA'  # Ejemplo de recomendaciones
+#     prediccion_exito = 'Alta'  # Ejemplo de predicción de éxito
+#     recomendaciones_personalizadas = 'Recomendaciones personalizadas generadas por IA'  # Ejemplo de recomendaciones
     
-    modelo_ml_data = {
-        'prediccion_exito': prediccion_exito,
-        'recomendaciones_personalizadas': recomendaciones_personalizadas
-    }
+#     modelo_ml_data = {
+#         'prediccion_exito': prediccion_exito,
+#         'recomendaciones_personalizadas': recomendaciones_personalizadas
+#     }
     
-    # Crear el diccionario contenido_generado
-    contenido_generado = {
-        'descripcion': practica_generada['descripcion'],
-        'objetivos_aprendizaje': practica_generada['objetivos_aprendizaje'],
-        'actividades': practica_generada['actividades'],
-        'recursos': practica_generada['recursos'],
-        'criterios_evaluacion': practica_generada['criterios_evaluacion'],
-        'recomendaciones': practica_generada['recomendaciones']
-    }
+#     # Crear el diccionario contenido_generado
+#     contenido_generado = {
+#         'descripcion': practica_generada['descripcion'],
+#         'objetivos_aprendizaje': practica_generada['objetivos_aprendizaje'],
+#         'actividades': practica_generada['actividades'],
+#         'recursos': practica_generada['recursos'],
+#         'criterios_evaluacion': practica_generada['criterios_evaluacion'],
+#         'recomendaciones': practica_generada['recomendaciones']
+#     }
     
-    print(f"Práctica: {practica}")
-    print(f"Contenido generado: {contenido_generado}")
-    print(f"Datos generados por IA: {modelo_ml_data}")
+#     print(f"Práctica: {practica}")
+#     print(f"Contenido generado: {contenido_generado}")
+#     print(f"Datos generados por IA: {modelo_ml_data}")
     
-    return render_template('ver_practica.html', practica=practica, contenido=contenido_generado, modelo_ml=modelo_ml_data)
+#     return render_template('ver_practica.html', practica=practica, contenido=contenido_generado, modelo_ml=modelo_ml_data)
 
 # Añade esta ruta a tu archivo app.py
-@app.route('/ver_practica/<int:practica_id>')
+
+@app.route('/ver_practica_detalle/<int:practica_id>')
 @login_required
 def ver_practica_detalle(practica_id):
-    connection = get_db_connection()
-    cursor = connection.cursor(dictionary=True)  # O DictCursor si estás usando MySQLdb
-
-    
-    # Obtener práctica
-    cursor.execute("SELECT * FROM practicas WHERE id = %s", (practica_id,))
-    practica_data = cursor.fetchone()
-    
-    if not practica_data:
-        flash('Práctica no encontrada', 'error')
-        return redirect(url_for('dashboard'))
-
-    # Verificar permisos
-    if current_user.rol == 'estudiante':
-        cursor.execute(
-            "SELECT * FROM evaluaciones WHERE practica_id = %s AND estudiante_id = %s",
-            (practica_id, current_user.id)
-        )
-        asignacion = cursor.fetchone()
-        if not asignacion:
-            flash('No tienes permiso para ver esta práctica', 'error')
-            return redirect(url_for('vista_estudiante', estudiante_id=current_user.id))
-
-    elif current_user.rol == 'profesor':
-        cursor.execute("SELECT profesor_id FROM materias WHERE id = %s", (practica_data['materia_id'],))
-        materia_info = cursor.fetchone()
-        if not materia_info or materia_info['profesor_id'] != current_user.id:
-            flash('No tienes permiso para ver esta práctica', 'error')
-            return redirect(url_for('practicas'))
-
-    # Obtener contenido
+    """Muestra los detalles de una práctica."""
     try:
-        contenido = json.loads(practica_data['contenido']) if practica_data['contenido'] else {}
-    except:
-        contenido = {
-            "descripcion": "No hay descripción disponible",
-            "objetivos_aprendizaje": [],
-            "actividades": [],
-            "recursos": [],
-            "criterios_evaluacion": [],
-            "recomendaciones": "No hay recomendaciones disponibles"
-        }
-
-    # Evaluación solo para estudiante
-    evaluacion = None
-    if current_user.rol == 'estudiante':
-        cursor.execute(
-            "SELECT * FROM entregas WHERE practica_id = %s AND estudiante_id = %s",
-            (practica_id, current_user.id)
+        connection = get_db_connection()
+        cursor = connection.cursor(dictionary=True)
+        
+        # Obtener información de la práctica
+        query = """
+            SELECT p.*, m.nombre as nombre_materia, g.nombre as nombre_clase
+            FROM practicas p
+            JOIN materias m ON p.materia_id = m.id
+            LEFT JOIN grupos g ON p.grupo_id = g.id
+            WHERE p.id = %s
+        """
+        cursor.execute(query, (practica_id,))
+        practica = cursor.fetchone()
+        
+        if not practica:
+            flash("Práctica no encontrada.", "error")
+            return redirect(url_for('practicas'))
+        
+        # Obtener contenido generado si existe
+        cursor.execute("""
+            SELECT contenido FROM contenido_generado WHERE practica_id = %s
+        """, (practica_id,))
+        contenido_generado_row = cursor.fetchone()
+        
+        # Obtener evaluación si existe
+        cursor.execute("""
+            SELECT * FROM evaluaciones WHERE practica_id = %s AND estudiante_id = %s
+        """, (practica_id, current_user.id))
+        evaluacion = cursor.fetchone()
+        
+        connection.close()
+        
+        # Si hay contenido generado, procesarlo
+        if contenido_generado_row and contenido_generado_row['contenido']:
+            contenido_generado = json.loads(contenido_generado_row['contenido'])
+        else:
+            # Generar datos de ejemplo si no hay contenido
+            contenido_generado = {
+                'descripcion': f"Descripción de la práctica: {practica['titulo']}",
+                'objetivos_aprendizaje': [
+                    "Comprender los conceptos básicos relacionados con el tema",
+                    "Aplicar los conocimientos adquiridos en situaciones prácticas",
+                    "Desarrollar habilidades de análisis y resolución de problemas"
+                ],
+                'actividades': [
+                    "Investigar sobre el tema asignado",
+                    "Realizar ejercicios prácticos",
+                    "Elaborar un informe con los resultados obtenidos"
+                ],
+                'recursos': [
+                    {'titulo': 'Material de clase', 'descripcion': 'Consultar las presentaciones y apuntes de clase'},
+                    {'titulo': 'Biblioteca digital', 'descripcion': 'Acceder a los recursos electrónicos de la biblioteca UNAM'}
+                ],
+                'criterios_evaluacion': [
+                    {'titulo': 'Contenido', 'descripcion': 'Profundidad y precisión del contenido (40%)'},
+                    {'titulo': 'Metodología', 'descripcion': 'Aplicación correcta de la metodología (30%)'},
+                    {'titulo': 'Presentación', 'descripcion': 'Claridad y organización del trabajo (20%)'},
+                    {'titulo': 'Originalidad', 'descripcion': 'Aportaciones originales y creatividad (10%)'}
+                ],
+                'recomendaciones': [
+                    "Comenzar con suficiente anticipación",
+                    "Consultar múltiples fuentes de información",
+                    "Revisar cuidadosamente el trabajo antes de entregarlo"
+                ]
+            }
+        
+        # Procesar evaluación si existe
+        if evaluacion:
+            # Convertir campos JSON si existen
+            if evaluacion.get('metricas') and isinstance(evaluacion['metricas'], str):
+                evaluacion['metricas'] = json.loads(evaluacion['metricas'])
+            
+            if evaluacion.get('fortalezas') and isinstance(evaluacion['fortalezas'], str):
+                evaluacion['fortalezas'] = json.loads(evaluacion['fortalezas'])
+            else:
+                evaluacion['fortalezas'] = ["Buena estructura", "Contenido relevante", "Claridad en la exposición"]
+            
+            if evaluacion.get('debilidades') and isinstance(evaluacion['debilidades'], str):
+                evaluacion['debilidades'] = json.loads(evaluacion['debilidades'])
+            else:
+                evaluacion['debilidades'] = ["Podría mejorar la profundidad", "Algunas secciones requieren más desarrollo"]
+            
+            if evaluacion.get('recursos_recomendados') and isinstance(evaluacion['recursos_recomendados'], str):
+                evaluacion['recursos_recomendados'] = json.loads(evaluacion['recursos_recomendados'])
+            else:
+                evaluacion['recursos_recomendados'] = [
+                    {'titulo': 'Guía de estudio', 'url': 'https://www.unam.mx/recursos/guia-estudio'},
+                    {'titulo': 'Biblioteca digital UNAM', 'url': 'https://www.bibliotecadigital.unam.mx'}
+                ]
+            
+            # Asegurar que existan campos necesarios
+            if 'relevancia' not in evaluacion:
+                evaluacion['relevancia'] = 85
+            
+            if 'comentarios' not in evaluacion:
+                evaluacion['comentarios'] = "Buen trabajo en general. La práctica cumple con los objetivos establecidos."
+            
+            if 'sugerencias' not in evaluacion:
+                evaluacion['sugerencias'] = "Para mejorar, considera profundizar más en los conceptos teóricos y añadir más ejemplos prácticos."
+        
+        # Registrar actividad
+        from routes.actividades import registrar_actividad_sistema
+        registrar_actividad_sistema(
+            f"Visualización de detalles de la práctica: {practica['titulo']}",
+            'practica',
+            practica_id
         )
-        entrega = cursor.fetchone()
-
-        if entrega and entrega.get('evaluacion_id'):
-            try:
-                try:
-                    from modelo_ml_enhanced import EnhancedModeloEvaluacionInteligente as ModeloML
-                    modelo = ModeloML(db_config=DB_CONFIG)
-                except ImportError:
-                    from modelo_ml_scikit import ModeloEvaluacionInteligente as ModeloML
-                    modelo = ModeloML()
-
-                cursor.execute(
-                    "SELECT estilos_aprendizaje FROM perfiles_estudiante WHERE estudiante_id = %s",
-                    (current_user.id,)
-                )
-                resultado = cursor.fetchone()
-                estilo_aprendizaje = resultado['estilos_aprendizaje'] if resultado else None
-
-                evaluacion = modelo.analizar_contenido(
-                    entrega['contenido'],
-                    practica_data['titulo'],
-                    practica_data['objetivo'],
-                    estilo_aprendizaje
-                )
-            except Exception as e:
-                app.logger.error(f"Error al analizar contenido: {str(e)}")
-                evaluacion = {
-                    "calificacion": 0,
-                    "comentarios": "No hay comentarios disponibles",
-                    "sugerencias": "No hay sugerencias disponibles",
-                    "relevancia": 0,
-                    "metricas": {},
-                    "fortalezas": [],
-                    "debilidades": [],
-                    "recursos_recomendados": []
-                }
-
-    connection.close()
-
-    return render_template(
-        'ver_practica_detalle.html',
-        practica=practica_data,
-        contenido=contenido,
-        evaluacion=evaluacion
-    )
+        
+        return render_template(
+            'ver_practica_detalle.html',
+            practica=practica,
+            contenido=contenido_generado,
+            evaluacion=evaluacion
+        )
+    except Exception as e:
+        flash(f"Error al cargar los detalles de la práctica: {str(e)}", "error")
+        return redirect(url_for('practicas'))
 
 @app.route('/api/generar_practica', methods=['POST'])
 def api_generar_practica():
@@ -3917,7 +4072,6 @@ def aulas():
         cursor.fetchall()
         if criterios:
             grupos[grupo_id]['criterios'] = criterios
-
     
     # Obtener materias y semestres para los formularios
     cursor.execute("SELECT id, nombre FROM materias")
