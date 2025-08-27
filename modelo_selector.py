@@ -1,9 +1,9 @@
 try:
-    from modelo_ml_enhanced import EnhancedModeloEvaluacionInteligente as GeneradorPracticasML
+    from modelo_ml_enhanced import GeneradorPracticasML as GeneradorPracticasML
     print("Usando modelo mejorado (EnhancedModeloEvaluacionInteligente)")
 except ImportError:
     try:
-        from modelo_ml_enhanced import EnhancedModeloEvaluacionInteligente as GeneradorPracticasML
+        from modelo_ml_enhanced import GeneradorPracticasML as GeneradorPracticasML
         print("Usando modelo original mejorado (EnhancedModeloEvaluacionInteligente)")
     except ImportError:
         from modelo_ml_scikit import ModeloEvaluacionInteligente as GeneradorPracticasML
