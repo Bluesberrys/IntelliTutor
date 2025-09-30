@@ -1,0 +1,46 @@
+{
+  "visual": {
+    "programacion": [
+      {
+        "titulo": "Visualización de algoritmos",
+        "url": "https://visualgo.net/en"
+      },
+      {
+        "titulo": "Diagramas de flujo interactivos",
+        "url": "https://app.diagrams.net/"
+      }
+    ],
+    "matematicas": [
+      {
+        "titulo": "Visualizaciones de conceptos matemáticos",
+        "url": "https://www.geogebra.org/"
+      },
+      {
+        "titulo": "Videos de explicaciones visuales",
+        "url": "https://www.3blue1brown.com/"
+      }
+    ]
+  },
+  "auditivo": {
+    "programacion": [
+      {
+        "titulo": "Podcast sobre desarrollo de software",
+        "url": "https://www.codingblocks.net/"
+      },
+      {
+        "titulo": "Conferencias grabadas sobre programación",
+        "url": "https://www.youtube.com/c/GOTO-"
+      }
+    ],
+    "matematicas": [
+      {
+        "titulo": "Podcast de matemáticas",
+        "url": "https://www.bbc.co.uk/programmes/p01gyd7j/episodes/downloads"
+      },
+      {
+        "titulo": "Explicaciones verbales de conceptos",
+        "url": "https://www.khanacademy.org/math"
+      }
+    ]
+  }
+}

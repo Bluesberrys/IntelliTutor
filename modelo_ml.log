@@ -1,0 +1,646 @@
+2025-09-29 18:30:43,235 - modelo_ml_enhanced - INFO - Inicializando GeneradorPracticasML mejorado
+2025-09-29 18:30:43,244 - modelo_ml_enhanced - INFO - GPU no disponible. Usando CPU.
+2025-09-29 18:30:57,281 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: distiluse-base-multilingual-cased-v1
+2025-09-29 18:30:58,940 - huggingface_hub.file_download - WARNING - Xet Storage is enabled for this repo, but the 'hf_xet' package is not installed. Falling back to regular HTTP download. For better performance, install the package with: `pip install huggingface_hub[hf_xet]` or `pip install hf_xet`
+2025-09-29 18:31:27,830 - huggingface_hub.file_download - WARNING - Xet Storage is enabled for this repo, but the 'hf_xet' package is not installed. Falling back to regular HTTP download. For better performance, install the package with: `pip install huggingface_hub[hf_xet]` or `pip install hf_xet`
+2025-09-29 18:31:28,375 - modelo_ml_enhanced - INFO - Modelo SBERT cargado correctamente en dispositivo: cpu
+2025-09-29 18:31:28,376 - modelo_ml_enhanced - INFO - Plantillas de retroalimentación guardadas en archivo
+2025-09-29 18:31:28,378 - modelo_ml_enhanced - INFO - Recursos educativos guardados en archivo
+2025-09-29 18:31:28,412 - modelo_ml_enhanced - ERROR - Error al cargar modelos: Error(s) in loading state_dict for EnhancedContenidoEvaluator:
+	Missing key(s) in state_dict: "head_estructura.weight", "head_estructura.bias". 
+	Unexpected key(s) in state_dict: "head_originalidad.weight", "head_originalidad.bias". 
+2025-09-29 18:31:28,417 - modelo_ml_enhanced - INFO - Matriz TF-IDF creada correctamente
+2025-09-29 18:31:28,417 - modelo_ml_enhanced - INFO - Inicializando GeneradorPracticasML mejorado
+2025-09-29 18:31:28,418 - modelo_ml_enhanced - INFO - GPU no disponible. Usando CPU.
+2025-09-29 18:31:28,623 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: distiluse-base-multilingual-cased-v1
+2025-09-29 18:31:30,327 - modelo_ml_enhanced - INFO - Modelo SBERT cargado correctamente en dispositivo: cpu
+2025-09-29 18:31:30,337 - modelo_ml_enhanced - INFO - Plantillas de retroalimentación cargadas desde archivo
+2025-09-29 18:31:30,350 - modelo_ml_enhanced - INFO - Recursos educativos cargados desde archivo
+2025-09-29 18:31:30,368 - modelo_ml_enhanced - ERROR - Error al cargar modelos: Error(s) in loading state_dict for EnhancedContenidoEvaluator:
+	Missing key(s) in state_dict: "head_estructura.weight", "head_estructura.bias". 
+	Unexpected key(s) in state_dict: "head_originalidad.weight", "head_originalidad.bias". 
+2025-09-29 18:31:30,372 - modelo_ml_enhanced - INFO - Conexión a la base de datos establecida correctamente
+2025-09-29 18:31:30,375 - modelo_ml_enhanced - INFO - Matriz TF-IDF creada correctamente
+2025-09-29 18:31:30,418 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-09-29 18:31:30,419 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-09-29 18:31:30,420 - werkzeug - INFO -  * Restarting with stat
+2025-09-29 18:31:33,723 - modelo_ml_enhanced - INFO - Inicializando GeneradorPracticasML mejorado
+2025-09-29 18:31:33,724 - modelo_ml_enhanced - INFO - GPU no disponible. Usando CPU.
+2025-09-29 18:31:36,445 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: distiluse-base-multilingual-cased-v1
+2025-09-29 18:31:38,602 - modelo_ml_enhanced - INFO - Modelo SBERT cargado correctamente en dispositivo: cpu
+2025-09-29 18:31:38,603 - modelo_ml_enhanced - INFO - Plantillas de retroalimentación cargadas desde archivo
+2025-09-29 18:31:38,604 - modelo_ml_enhanced - INFO - Recursos educativos cargados desde archivo
+2025-09-29 18:31:38,624 - modelo_ml_enhanced - ERROR - Error al cargar modelos: Error(s) in loading state_dict for EnhancedContenidoEvaluator:
+	Missing key(s) in state_dict: "head_estructura.weight", "head_estructura.bias". 
+	Unexpected key(s) in state_dict: "head_originalidad.weight", "head_originalidad.bias". 
+2025-09-29 18:31:38,627 - modelo_ml_enhanced - INFO - Matriz TF-IDF creada correctamente
+2025-09-29 18:31:38,627 - modelo_ml_enhanced - INFO - Inicializando GeneradorPracticasML mejorado
+2025-09-29 18:31:38,628 - modelo_ml_enhanced - INFO - GPU no disponible. Usando CPU.
+2025-09-29 18:31:38,852 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: distiluse-base-multilingual-cased-v1
+2025-09-29 18:31:40,843 - modelo_ml_enhanced - INFO - Modelo SBERT cargado correctamente en dispositivo: cpu
+2025-09-29 18:31:40,844 - modelo_ml_enhanced - INFO - Plantillas de retroalimentación cargadas desde archivo
+2025-09-29 18:31:40,845 - modelo_ml_enhanced - INFO - Recursos educativos cargados desde archivo
+2025-09-29 18:31:40,864 - modelo_ml_enhanced - ERROR - Error al cargar modelos: Error(s) in loading state_dict for EnhancedContenidoEvaluator:
+	Missing key(s) in state_dict: "head_estructura.weight", "head_estructura.bias". 
+	Unexpected key(s) in state_dict: "head_originalidad.weight", "head_originalidad.bias". 
+2025-09-29 18:31:40,866 - modelo_ml_enhanced - INFO - Conexión a la base de datos establecida correctamente
+2025-09-29 18:31:40,869 - modelo_ml_enhanced - INFO - Matriz TF-IDF creada correctamente
+2025-09-29 18:31:40,893 - werkzeug - WARNING -  * Debugger is active!
+2025-09-29 18:31:40,896 - werkzeug - INFO -  * Debugger PIN: 122-970-173
+2025-09-29 18:31:40,951 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:31:40] "GET / HTTP/1.1" 200 -
+2025-09-29 18:31:41,044 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:31:41] "GET /static/img/Escudo-UNAM-white.svg HTTP/1.1" 200 -
+2025-09-29 18:31:41,109 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:31:41] "[35m[1mGET /static/music/login.mp3 HTTP/1.1[0m" 206 -
+2025-09-29 18:31:54,344 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:31:54] "[36mGET /static/img/Escudo-UNAM-white.svg HTTP/1.1[0m" 304 -
+2025-09-29 18:31:54,518 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:31:54] "[32mPOST /login HTTP/1.1[0m" 302 -
+2025-09-29 18:31:54,531 - modelo_ml_enhanced - INFO - Inicializando GeneradorPracticasML mejorado
+2025-09-29 18:31:54,532 - modelo_ml_enhanced - INFO - GPU no disponible. Usando CPU.
+2025-09-29 18:31:54,881 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: distiluse-base-multilingual-cased-v1
+2025-09-29 18:31:56,786 - modelo_ml_enhanced - INFO - Modelo SBERT cargado correctamente en dispositivo: cpu
+2025-09-29 18:31:56,787 - modelo_ml_enhanced - INFO - Plantillas de retroalimentación cargadas desde archivo
+2025-09-29 18:31:56,787 - modelo_ml_enhanced - INFO - Recursos educativos cargados desde archivo
+2025-09-29 18:31:56,807 - modelo_ml_enhanced - ERROR - Error al cargar modelos: Error(s) in loading state_dict for EnhancedContenidoEvaluator:
+	Missing key(s) in state_dict: "head_estructura.weight", "head_estructura.bias". 
+	Unexpected key(s) in state_dict: "head_originalidad.weight", "head_originalidad.bias". 
+2025-09-29 18:31:56,813 - modelo_ml_enhanced - INFO - Matriz TF-IDF creada correctamente
+2025-09-29 18:31:57,166 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:31:57] "[35m[1mGET /inicio HTTP/1.1[0m" 500 -
+2025-09-29 18:31:57,238 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:31:57] "GET /inicio?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2025-09-29 18:31:57,282 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:31:57] "GET /inicio?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2025-09-29 18:31:57,315 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:31:57] "GET /inicio?__debugger__=yes&cmd=resource&f=console.png&s=e0omzbAphzs1TrVPZTyC HTTP/1.1" 200 -
+2025-09-29 18:31:57,373 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:31:57] "GET /inicio?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2025-09-29 18:42:52,030 - modelo_ml_enhanced - INFO - Inicializando GeneradorPracticasML mejorado
+2025-09-29 18:42:52,030 - modelo_ml_enhanced - INFO - GPU no disponible. Usando CPU.
+2025-09-29 18:42:52,221 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: distiluse-base-multilingual-cased-v1
+2025-09-29 18:42:53,599 - modelo_ml_enhanced - INFO - Inicializando GeneradorPracticasML mejorado
+2025-09-29 18:42:53,601 - modelo_ml_enhanced - INFO - GPU no disponible. Usando CPU.
+2025-09-29 18:42:53,794 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: distiluse-base-multilingual-cased-v1
+2025-09-29 18:42:53,987 - modelo_ml_enhanced - INFO - Modelo SBERT cargado correctamente en dispositivo: cpu
+2025-09-29 18:42:53,988 - modelo_ml_enhanced - INFO - Plantillas de retroalimentación cargadas desde archivo
+2025-09-29 18:42:53,988 - modelo_ml_enhanced - INFO - Recursos educativos cargados desde archivo
+2025-09-29 18:42:54,003 - modelo_ml_enhanced - ERROR - Error al cargar modelos: Error(s) in loading state_dict for EnhancedContenidoEvaluator:
+	Missing key(s) in state_dict: "head_estructura.weight", "head_estructura.bias". 
+	Unexpected key(s) in state_dict: "head_originalidad.weight", "head_originalidad.bias". 
+2025-09-29 18:42:54,006 - modelo_ml_enhanced - INFO - Matriz TF-IDF creada correctamente
+2025-09-29 18:42:54,077 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:42:54] "[35m[1mGET /inicio HTTP/1.1[0m" 500 -
+2025-09-29 18:42:54,194 - modelo_ml_enhanced - INFO - Inicializando GeneradorPracticasML mejorado
+2025-09-29 18:42:54,194 - modelo_ml_enhanced - INFO - GPU no disponible. Usando CPU.
+2025-09-29 18:42:54,388 - modelo_ml_enhanced - WARNING - Memoria insuficiente para SBERT. Desactivando.
+2025-09-29 18:42:54,390 - modelo_ml_enhanced - INFO - Plantillas de retroalimentación cargadas desde archivo
+2025-09-29 18:42:54,390 - modelo_ml_enhanced - INFO - Recursos educativos cargados desde archivo
+2025-09-29 18:42:54,405 - modelo_ml_enhanced - ERROR - Error al cargar modelos: Error(s) in loading state_dict for EnhancedContenidoEvaluator:
+	Missing key(s) in state_dict: "head_estructura.weight", "head_estructura.bias". 
+	Unexpected key(s) in state_dict: "head_originalidad.weight", "head_originalidad.bias". 
+2025-09-29 18:42:54,409 - modelo_ml_enhanced - INFO - Matriz TF-IDF creada correctamente
+2025-09-29 18:42:54,426 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:42:54] "[35m[1mGET /inicio HTTP/1.1[0m" 500 -
+2025-09-29 18:42:54,449 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:42:54] "[36mGET /inicio?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2025-09-29 18:42:54,450 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:42:54] "[36mGET /inicio?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2025-09-29 18:42:54,483 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:42:54] "[36mGET /inicio?__debugger__=yes&cmd=resource&f=console.png&s=e0omzbAphzs1TrVPZTyC HTTP/1.1[0m" 304 -
+2025-09-29 18:42:54,498 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:42:54] "[36mGET /inicio?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-09-29 18:42:55,403 - modelo_ml_enhanced - INFO - Modelo SBERT cargado correctamente en dispositivo: cpu
+2025-09-29 18:42:55,404 - modelo_ml_enhanced - INFO - Plantillas de retroalimentación cargadas desde archivo
+2025-09-29 18:42:55,404 - modelo_ml_enhanced - INFO - Recursos educativos cargados desde archivo
+2025-09-29 18:42:55,419 - modelo_ml_enhanced - ERROR - Error al cargar modelos: Error(s) in loading state_dict for EnhancedContenidoEvaluator:
+	Missing key(s) in state_dict: "head_estructura.weight", "head_estructura.bias". 
+	Unexpected key(s) in state_dict: "head_originalidad.weight", "head_originalidad.bias". 
+2025-09-29 18:42:55,423 - modelo_ml_enhanced - INFO - Matriz TF-IDF creada correctamente
+2025-09-29 18:42:55,435 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:42:55] "[35m[1mGET /inicio HTTP/1.1[0m" 500 -
+2025-09-29 18:43:12,158 - modelo_ml_enhanced - INFO - Inicializando GeneradorPracticasML mejorado
+2025-09-29 18:43:12,159 - modelo_ml_enhanced - INFO - GPU no disponible. Usando CPU.
+2025-09-29 18:43:12,351 - modelo_ml_enhanced - WARNING - Memoria insuficiente para SBERT. Desactivando.
+2025-09-29 18:43:12,351 - modelo_ml_enhanced - INFO - Plantillas de retroalimentación cargadas desde archivo
+2025-09-29 18:43:12,351 - modelo_ml_enhanced - INFO - Recursos educativos cargados desde archivo
+2025-09-29 18:43:12,370 - modelo_ml_enhanced - ERROR - Error al cargar modelos: Error(s) in loading state_dict for EnhancedContenidoEvaluator:
+	Missing key(s) in state_dict: "head_estructura.weight", "head_estructura.bias". 
+	Unexpected key(s) in state_dict: "head_originalidad.weight", "head_originalidad.bias". 
+2025-09-29 18:43:12,375 - modelo_ml_enhanced - INFO - Matriz TF-IDF creada correctamente
+2025-09-29 18:43:12,437 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:43:12] "[35m[1mGET /inicio HTTP/1.1[0m" 500 -
+2025-09-29 18:43:12,467 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:43:12] "[36mGET /inicio?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2025-09-29 18:43:12,467 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:43:12] "[36mGET /inicio?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2025-09-29 18:43:12,488 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:43:12] "[36mGET /inicio?__debugger__=yes&cmd=resource&f=console.png&s=e0omzbAphzs1TrVPZTyC HTTP/1.1[0m" 304 -
+2025-09-29 18:43:12,503 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:43:12] "[36mGET /inicio?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-09-29 18:45:23,951 - modelo_ml_enhanced - INFO - Inicializando GeneradorPracticasML mejorado
+2025-09-29 18:45:23,951 - modelo_ml_enhanced - INFO - GPU no disponible. Usando CPU.
+2025-09-29 18:45:24,149 - modelo_ml_enhanced - WARNING - Memoria insuficiente para SBERT. Desactivando.
+2025-09-29 18:45:24,150 - modelo_ml_enhanced - INFO - Plantillas de retroalimentación cargadas desde archivo
+2025-09-29 18:45:24,151 - modelo_ml_enhanced - INFO - Recursos educativos cargados desde archivo
+2025-09-29 18:45:24,167 - modelo_ml_enhanced - ERROR - Error al cargar modelos: Error(s) in loading state_dict for EnhancedContenidoEvaluator:
+	Missing key(s) in state_dict: "head_estructura.weight", "head_estructura.bias". 
+	Unexpected key(s) in state_dict: "head_originalidad.weight", "head_originalidad.bias". 
+2025-09-29 18:45:24,172 - modelo_ml_enhanced - INFO - Matriz TF-IDF creada correctamente
+2025-09-29 18:45:24,237 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:45:24] "[35m[1mGET /inicio HTTP/1.1[0m" 500 -
+2025-09-29 18:45:24,267 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:45:24] "[36mGET /inicio?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2025-09-29 18:45:24,267 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:45:24] "[36mGET /inicio?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2025-09-29 18:45:24,285 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:45:24] "[36mGET /inicio?__debugger__=yes&cmd=resource&f=console.png&s=e0omzbAphzs1TrVPZTyC HTTP/1.1[0m" 304 -
+2025-09-29 18:45:24,298 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:45:24] "[36mGET /inicio?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-09-29 18:46:50,087 - modelo_ml_enhanced - INFO - Inicializando GeneradorPracticasML mejorado
+2025-09-29 18:46:50,088 - modelo_ml_enhanced - INFO - GPU no disponible. Usando CPU.
+2025-09-29 18:46:50,291 - modelo_ml_enhanced - WARNING - Memoria insuficiente para SBERT. Desactivando.
+2025-09-29 18:46:50,292 - modelo_ml_enhanced - INFO - Plantillas de retroalimentación cargadas desde archivo
+2025-09-29 18:46:50,292 - modelo_ml_enhanced - INFO - Recursos educativos cargados desde archivo
+2025-09-29 18:46:50,308 - modelo_ml_enhanced - ERROR - Error al cargar modelos: Error(s) in loading state_dict for EnhancedContenidoEvaluator:
+	Missing key(s) in state_dict: "head_estructura.weight", "head_estructura.bias". 
+	Unexpected key(s) in state_dict: "head_originalidad.weight", "head_originalidad.bias". 
+2025-09-29 18:46:50,310 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1019.99 MB. Liberando recursos...
+2025-09-29 18:46:50,407 - modelo_ml_enhanced - INFO - Matriz TF-IDF creada correctamente
+2025-09-29 18:46:50,466 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:46:50] "[35m[1mGET /inicio HTTP/1.1[0m" 500 -
+2025-09-29 18:46:50,488 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:46:50] "[36mGET /inicio?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2025-09-29 18:46:50,490 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:46:50] "[36mGET /inicio?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2025-09-29 18:46:50,504 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:46:50] "[36mGET /inicio?__debugger__=yes&cmd=resource&f=console.png&s=e0omzbAphzs1TrVPZTyC HTTP/1.1[0m" 304 -
+2025-09-29 18:46:50,517 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:46:50] "[36mGET /inicio?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-09-29 18:46:54,001 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1019.98 MB. Liberando recursos...
+2025-09-29 18:46:54,001 - modelo_ml_enhanced - INFO - Modelo SBERT liberado para ahorrar memoria
+2025-09-29 18:46:54,403 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1003.14 MB. Liberando recursos...
+2025-09-29 18:46:55,416 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1003.14 MB. Liberando recursos...
+2025-09-29 18:46:55,416 - modelo_ml_enhanced - INFO - Modelo SBERT liberado para ahorrar memoria
+2025-09-29 18:47:23,676 - modelo_ml_enhanced - INFO - Inicializando GeneradorPracticasML mejorado
+2025-09-29 18:47:23,677 - modelo_ml_enhanced - INFO - GPU no disponible. Usando CPU.
+2025-09-29 18:47:23,871 - modelo_ml_enhanced - WARNING - Memoria insuficiente para SBERT. Desactivando.
+2025-09-29 18:47:23,872 - modelo_ml_enhanced - INFO - Plantillas de retroalimentación cargadas desde archivo
+2025-09-29 18:47:23,873 - modelo_ml_enhanced - INFO - Recursos educativos cargados desde archivo
+2025-09-29 18:47:23,890 - modelo_ml_enhanced - ERROR - Error al cargar modelos: Error(s) in loading state_dict for EnhancedContenidoEvaluator:
+	Missing key(s) in state_dict: "head_estructura.weight", "head_estructura.bias". 
+	Unexpected key(s) in state_dict: "head_originalidad.weight", "head_originalidad.bias". 
+2025-09-29 18:47:23,891 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1024.91 MB. Liberando recursos...
+2025-09-29 18:47:23,990 - modelo_ml_enhanced - INFO - Matriz TF-IDF creada correctamente
+2025-09-29 18:47:24,045 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:47:24] "[35m[1mGET /inicio HTTP/1.1[0m" 500 -
+2025-09-29 18:47:24,068 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:47:24] "[36mGET /inicio?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2025-09-29 18:47:24,070 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:47:24] "[36mGET /inicio?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2025-09-29 18:47:24,085 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:47:24] "[36mGET /inicio?__debugger__=yes&cmd=resource&f=console.png&s=e0omzbAphzs1TrVPZTyC HTTP/1.1[0m" 304 -
+2025-09-29 18:47:24,095 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:47:24] "[36mGET /inicio?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-09-29 18:47:24,167 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1025.33 MB. Liberando recursos...
+2025-09-29 18:47:38,605 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1025.34 MB. Liberando recursos...
+2025-09-29 18:47:38,605 - modelo_ml_enhanced - INFO - Modelo SBERT liberado para ahorrar memoria
+2025-09-29 18:47:40,848 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1008.04 MB. Liberando recursos...
+2025-09-29 18:47:40,849 - modelo_ml_enhanced - INFO - Modelo SBERT liberado para ahorrar memoria
+2025-09-29 18:47:57,541 - modelo_ml_enhanced - INFO - Inicializando GeneradorPracticasML mejorado
+2025-09-29 18:47:57,542 - modelo_ml_enhanced - INFO - GPU no disponible. Usando CPU.
+2025-09-29 18:47:57,742 - modelo_ml_enhanced - WARNING - Memoria insuficiente para SBERT. Desactivando.
+2025-09-29 18:47:57,743 - modelo_ml_enhanced - INFO - Plantillas de retroalimentación cargadas desde archivo
+2025-09-29 18:47:57,743 - modelo_ml_enhanced - INFO - Recursos educativos cargados desde archivo
+2025-09-29 18:47:57,759 - modelo_ml_enhanced - ERROR - Error al cargar modelos: Error(s) in loading state_dict for EnhancedContenidoEvaluator:
+	Missing key(s) in state_dict: "head_estructura.weight", "head_estructura.bias". 
+	Unexpected key(s) in state_dict: "head_originalidad.weight", "head_originalidad.bias". 
+2025-09-29 18:47:57,762 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1042.93 MB. Liberando recursos...
+2025-09-29 18:47:57,865 - modelo_ml_enhanced - INFO - Matriz TF-IDF creada correctamente
+2025-09-29 18:47:57,927 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:47:57] "[35m[1mGET /inicio HTTP/1.1[0m" 500 -
+2025-09-29 18:47:57,950 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:47:57] "[36mGET /inicio?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2025-09-29 18:47:57,951 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:47:57] "[36mGET /inicio?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2025-09-29 18:47:57,967 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:47:57] "[36mGET /inicio?__debugger__=yes&cmd=resource&f=console.png&s=e0omzbAphzs1TrVPZTyC HTTP/1.1[0m" 304 -
+2025-09-29 18:47:57,982 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:47:57] "[36mGET /inicio?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-09-29 18:48:12,369 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1042.89 MB. Liberando recursos...
+2025-09-29 18:48:22,346 - modelo_ml_enhanced - INFO - Inicializando GeneradorPracticasML mejorado
+2025-09-29 18:48:22,347 - modelo_ml_enhanced - INFO - GPU no disponible. Usando CPU.
+2025-09-29 18:48:22,448 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1042.94 MB
+2025-09-29 18:48:22,448 - modelo_ml_enhanced - WARNING - Recursos limitados. Inicializando modelos simples.
+2025-09-29 18:48:22,449 - modelo_ml_enhanced - INFO - Inicializando modelo dummy
+2025-09-29 18:48:22,449 - modelo_ml_enhanced - INFO - Inicializando modelo dummy
+2025-09-29 18:48:22,451 - modelo_ml_enhanced - INFO - Plantillas de retroalimentación cargadas desde archivo
+2025-09-29 18:48:22,451 - modelo_ml_enhanced - INFO - Recursos educativos cargados desde archivo
+2025-09-29 18:48:22,453 - modelo_ml_enhanced - ERROR - Error al cargar modelos: 'DummyModel' object has no attribute 'load_state_dict'
+2025-09-29 18:48:22,456 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1042.96 MB. Liberando recursos...
+2025-09-29 18:48:22,464 - modelo_ml_enhanced - INFO - Matriz TF-IDF creada correctamente
+2025-09-29 18:48:22,632 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:48:22] "[35m[1mGET /inicio HTTP/1.1[0m" 500 -
+2025-09-29 18:48:22,647 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:48:22] "[36mGET /inicio?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2025-09-29 18:48:22,648 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:48:22] "[36mGET /inicio?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2025-09-29 18:48:22,669 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:48:22] "[36mGET /inicio?__debugger__=yes&cmd=resource&f=console.png&s=e0omzbAphzs1TrVPZTyC HTTP/1.1[0m" 304 -
+2025-09-29 18:48:22,683 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:48:22] "[36mGET /inicio?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-09-29 18:48:23,988 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1042.92 MB. Liberando recursos...
+2025-09-29 18:48:24,270 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1042.92 MB. Liberando recursos...
+2025-09-29 18:48:32,328 - modelo_ml_enhanced - INFO - Inicializando GeneradorPracticasML mejorado
+2025-09-29 18:48:32,328 - modelo_ml_enhanced - INFO - GPU no disponible. Usando CPU.
+2025-09-29 18:48:32,429 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1042.96 MB
+2025-09-29 18:48:32,429 - modelo_ml_enhanced - WARNING - Recursos limitados. Inicializando modelos simples.
+2025-09-29 18:48:32,429 - modelo_ml_enhanced - INFO - Inicializando modelo dummy
+2025-09-29 18:48:32,430 - modelo_ml_enhanced - INFO - Inicializando modelo dummy
+2025-09-29 18:48:32,430 - modelo_ml_enhanced - INFO - Plantillas de retroalimentación cargadas desde archivo
+2025-09-29 18:48:32,432 - modelo_ml_enhanced - INFO - Recursos educativos cargados desde archivo
+2025-09-29 18:48:32,433 - modelo_ml_enhanced - ERROR - Error al cargar modelos: 'DummyModel' object has no attribute 'load_state_dict'
+2025-09-29 18:48:32,434 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1042.99 MB. Liberando recursos...
+2025-09-29 18:48:32,437 - modelo_ml_enhanced - INFO - Matriz TF-IDF creada correctamente
+2025-09-29 18:48:32,609 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:48:32] "[35m[1mGET /inicio HTTP/1.1[0m" 500 -
+2025-09-29 18:48:32,632 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:48:32] "[36mGET /inicio?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2025-09-29 18:48:32,634 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:48:32] "[36mGET /inicio?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2025-09-29 18:48:32,648 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:48:32] "[36mGET /inicio?__debugger__=yes&cmd=resource&f=console.png&s=e0omzbAphzs1TrVPZTyC HTTP/1.1[0m" 304 -
+2025-09-29 18:48:32,663 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:48:32] "[36mGET /inicio?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-09-29 18:48:38,719 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1043.05 MB. Liberando recursos...
+2025-09-29 18:48:40,964 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1043.05 MB. Liberando recursos...
+2025-09-29 18:48:50,405 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1043.05 MB. Liberando recursos...
+2025-09-29 18:48:54,116 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1043.05 MB. Liberando recursos...
+2025-09-29 18:48:54,502 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1043.05 MB. Liberando recursos...
+2025-09-29 18:48:55,523 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1043.05 MB. Liberando recursos...
+2025-09-29 18:48:56,788 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1043.05 MB. Liberando recursos...
+2025-09-29 18:48:56,788 - modelo_ml_enhanced - INFO - Modelo SBERT liberado para ahorrar memoria
+2025-09-29 18:48:57,862 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:49:12,478 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:49:22,581 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:49:24,089 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:49:24,364 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:49:32,539 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:49:38,829 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:49:41,062 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:49:50,517 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:49:54,215 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:49:54,607 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:49:55,617 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:49:56,906 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:49:57,962 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:50:12,578 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:50:22,680 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:50:24,189 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:50:24,465 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:50:32,642 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:50:38,933 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:50:41,161 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:50:50,620 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:50:54,316 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:50:54,698 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:50:55,712 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:50:57,001 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:50:58,064 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:51:12,687 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:51:22,785 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:51:24,286 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:51:24,562 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:51:32,746 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:51:39,040 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:51:41,269 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:51:50,727 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:51:54,418 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:51:54,795 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:51:55,809 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:51:57,097 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:51:58,162 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:52:12,795 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:52:22,888 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:52:24,383 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:52:24,660 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:52:32,847 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:52:39,141 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:52:41,371 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:52:50,836 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:52:54,521 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:52:54,886 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:52:55,909 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:52:57,197 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:52:58,264 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:53:12,899 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1012.90 MB. Liberando recursos...
+2025-09-29 18:53:21,545 - modelo_ml_enhanced - INFO - Inicializando GeneradorPracticasML mejorado
+2025-09-29 18:53:21,546 - modelo_ml_enhanced - INFO - GPU no disponible. Usando CPU.
+2025-09-29 18:53:21,647 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1013.00 MB
+2025-09-29 18:53:21,647 - modelo_ml_enhanced - WARNING - Recursos limitados. Inicializando modelos simples.
+2025-09-29 18:53:21,647 - modelo_ml_enhanced - INFO - Inicializando modelo dummy
+2025-09-29 18:53:21,647 - modelo_ml_enhanced - INFO - Inicializando modelo dummy
+2025-09-29 18:53:21,648 - modelo_ml_enhanced - INFO - Plantillas de retroalimentación cargadas desde archivo
+2025-09-29 18:53:21,649 - modelo_ml_enhanced - INFO - Recursos educativos cargados desde archivo
+2025-09-29 18:53:21,649 - modelo_ml_enhanced - ERROR - Error al cargar modelos: 'DummyModel' object has no attribute 'load_state_dict'
+2025-09-29 18:53:21,650 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1013.06 MB. Liberando recursos...
+2025-09-29 18:53:21,753 - modelo_ml_enhanced - INFO - Matriz TF-IDF creada correctamente
+2025-09-29 18:53:21,767 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:53:21] "[35m[1mGET /inicio HTTP/1.1[0m" 500 -
+2025-09-29 18:53:21,798 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:53:21] "[36mGET /inicio?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2025-09-29 18:53:21,799 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:53:21] "[36mGET /inicio?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2025-09-29 18:53:21,834 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:53:21] "[36mGET /inicio?__debugger__=yes&cmd=resource&f=console.png&s=e0omzbAphzs1TrVPZTyC HTTP/1.1[0m" 304 -
+2025-09-29 18:53:21,847 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:53:21] "[36mGET /inicio?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-09-29 18:53:22,994 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1013.21 MB. Liberando recursos...
+2025-09-29 18:53:24,488 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1013.21 MB. Liberando recursos...
+2025-09-29 18:53:24,759 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1013.21 MB. Liberando recursos...
+2025-09-29 18:53:32,952 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1013.21 MB. Liberando recursos...
+2025-09-29 18:53:39,234 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1013.21 MB. Liberando recursos...
+2025-09-29 18:53:41,473 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1013.21 MB. Liberando recursos...
+2025-09-29 18:53:50,934 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1013.21 MB. Liberando recursos...
+2025-09-29 18:53:54,621 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1013.21 MB. Liberando recursos...
+2025-09-29 18:53:54,982 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1013.21 MB. Liberando recursos...
+2025-09-29 18:53:56,008 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1013.21 MB. Liberando recursos...
+2025-09-29 18:53:57,291 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1013.21 MB. Liberando recursos...
+2025-09-29 18:53:58,358 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1013.21 MB. Liberando recursos...
+2025-09-29 18:54:12,999 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1013.21 MB. Liberando recursos...
+2025-09-29 18:54:21,752 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1013.21 MB. Liberando recursos...
+2025-09-29 18:54:23,095 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1013.21 MB. Liberando recursos...
+2025-09-29 18:54:24,591 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1013.21 MB. Liberando recursos...
+2025-09-29 18:54:24,857 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1013.21 MB. Liberando recursos...
+2025-09-29 18:54:33,054 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1013.21 MB. Liberando recursos...
+2025-09-29 18:54:37,187 - werkzeug - INFO -  * Detected change in 'D:\\Projects\\IntelliTutor\\app.py', reloading
+2025-09-29 18:54:37,885 - werkzeug - INFO -  * Restarting with stat
+2025-09-29 18:54:40,820 - modelo_ml_enhanced - INFO - Inicializando GeneradorPracticasML mejorado
+2025-09-29 18:54:40,822 - modelo_ml_enhanced - INFO - GPU no disponible. Usando CPU.
+2025-09-29 18:54:43,247 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: distiluse-base-multilingual-cased-v1
+2025-09-29 18:54:45,231 - modelo_ml_enhanced - INFO - Modelo SBERT cargado correctamente en dispositivo: cpu
+2025-09-29 18:54:45,232 - modelo_ml_enhanced - INFO - Plantillas de retroalimentación cargadas desde archivo
+2025-09-29 18:54:45,233 - modelo_ml_enhanced - INFO - Recursos educativos cargados desde archivo
+2025-09-29 18:54:45,249 - modelo_ml_enhanced - ERROR - Error al cargar modelos: Error(s) in loading state_dict for EnhancedContenidoEvaluator:
+	Missing key(s) in state_dict: "head_estructura.weight", "head_estructura.bias". 
+	Unexpected key(s) in state_dict: "head_originalidad.weight", "head_originalidad.bias". 
+2025-09-29 18:54:45,253 - modelo_ml_enhanced - INFO - Matriz TF-IDF creada correctamente
+2025-09-29 18:54:45,253 - modelo_ml_enhanced - INFO - Inicializando GeneradorPracticasML mejorado
+2025-09-29 18:54:45,254 - modelo_ml_enhanced - INFO - GPU no disponible. Usando CPU.
+2025-09-29 18:54:45,448 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: distiluse-base-multilingual-cased-v1
+2025-09-29 18:54:47,066 - modelo_ml_enhanced - INFO - Modelo SBERT cargado correctamente en dispositivo: cpu
+2025-09-29 18:54:47,067 - modelo_ml_enhanced - INFO - Plantillas de retroalimentación cargadas desde archivo
+2025-09-29 18:54:47,068 - modelo_ml_enhanced - INFO - Recursos educativos cargados desde archivo
+2025-09-29 18:54:47,085 - modelo_ml_enhanced - ERROR - Error al cargar modelos: Error(s) in loading state_dict for EnhancedContenidoEvaluator:
+	Missing key(s) in state_dict: "head_estructura.weight", "head_estructura.bias". 
+	Unexpected key(s) in state_dict: "head_originalidad.weight", "head_originalidad.bias". 
+2025-09-29 18:54:47,088 - modelo_ml_enhanced - INFO - Conexión a la base de datos establecida correctamente
+2025-09-29 18:54:47,090 - modelo_ml_enhanced - INFO - Matriz TF-IDF creada correctamente
+2025-09-29 18:54:47,111 - werkzeug - WARNING -  * Debugger is active!
+2025-09-29 18:54:47,114 - werkzeug - INFO -  * Debugger PIN: 122-970-173
+2025-09-29 18:54:49,142 - werkzeug - INFO -  * Detected change in 'D:\\Projects\\IntelliTutor\\app.py', reloading
+2025-09-29 18:54:49,706 - werkzeug - INFO -  * Restarting with stat
+2025-09-29 18:54:52,509 - modelo_ml_enhanced - INFO - Inicializando GeneradorPracticasML mejorado
+2025-09-29 18:54:52,510 - modelo_ml_enhanced - INFO - GPU no disponible. Usando CPU.
+2025-09-29 18:54:54,951 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: distiluse-base-multilingual-cased-v1
+2025-09-29 18:54:56,864 - modelo_ml_enhanced - INFO - Modelo SBERT cargado correctamente en dispositivo: cpu
+2025-09-29 18:54:56,865 - modelo_ml_enhanced - INFO - Plantillas de retroalimentación cargadas desde archivo
+2025-09-29 18:54:56,866 - modelo_ml_enhanced - INFO - Recursos educativos cargados desde archivo
+2025-09-29 18:54:56,880 - modelo_ml_enhanced - ERROR - Error al cargar modelos: Error(s) in loading state_dict for EnhancedContenidoEvaluator:
+	Missing key(s) in state_dict: "head_estructura.weight", "head_estructura.bias". 
+	Unexpected key(s) in state_dict: "head_originalidad.weight", "head_originalidad.bias". 
+2025-09-29 18:54:56,883 - modelo_ml_enhanced - INFO - Matriz TF-IDF creada correctamente
+2025-09-29 18:54:56,884 - modelo_ml_enhanced - INFO - Inicializando GeneradorPracticasML mejorado
+2025-09-29 18:54:56,884 - modelo_ml_enhanced - INFO - GPU no disponible. Usando CPU.
+2025-09-29 18:54:57,075 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: distiluse-base-multilingual-cased-v1
+2025-09-29 18:54:58,690 - modelo_ml_enhanced - INFO - Modelo SBERT cargado correctamente en dispositivo: cpu
+2025-09-29 18:54:58,691 - modelo_ml_enhanced - INFO - Plantillas de retroalimentación cargadas desde archivo
+2025-09-29 18:54:58,691 - modelo_ml_enhanced - INFO - Recursos educativos cargados desde archivo
+2025-09-29 18:54:58,712 - modelo_ml_enhanced - ERROR - Error al cargar modelos: Error(s) in loading state_dict for EnhancedContenidoEvaluator:
+	Missing key(s) in state_dict: "head_estructura.weight", "head_estructura.bias". 
+	Unexpected key(s) in state_dict: "head_originalidad.weight", "head_originalidad.bias". 
+2025-09-29 18:54:58,713 - modelo_ml_enhanced - INFO - Conexión a la base de datos establecida correctamente
+2025-09-29 18:54:58,716 - modelo_ml_enhanced - INFO - Matriz TF-IDF creada correctamente
+2025-09-29 18:54:58,734 - werkzeug - WARNING -  * Debugger is active!
+2025-09-29 18:54:58,737 - werkzeug - INFO -  * Debugger PIN: 122-970-173
+2025-09-29 18:55:00,890 - modelo_ml_enhanced - INFO - Inicializando GeneradorPracticasML mejorado
+2025-09-29 18:55:00,890 - modelo_ml_enhanced - INFO - GPU no disponible. Usando CPU.
+2025-09-29 18:55:01,089 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: distiluse-base-multilingual-cased-v1
+2025-09-29 18:55:02,917 - modelo_ml_enhanced - INFO - Modelo SBERT cargado correctamente en dispositivo: cpu
+2025-09-29 18:55:02,918 - modelo_ml_enhanced - INFO - Plantillas de retroalimentación cargadas desde archivo
+2025-09-29 18:55:02,918 - modelo_ml_enhanced - INFO - Recursos educativos cargados desde archivo
+2025-09-29 18:55:02,934 - modelo_ml_enhanced - ERROR - Error al cargar modelos: Error(s) in loading state_dict for EnhancedContenidoEvaluator:
+	Missing key(s) in state_dict: "head_estructura.weight", "head_estructura.bias". 
+	Unexpected key(s) in state_dict: "head_originalidad.weight", "head_originalidad.bias". 
+2025-09-29 18:55:02,938 - modelo_ml_enhanced - INFO - Matriz TF-IDF creada correctamente
+2025-09-29 18:55:02,976 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:55:02] "[35m[1mGET /inicio HTTP/1.1[0m" 500 -
+2025-09-29 18:55:03,046 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:55:03] "[36mGET /inicio?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2025-09-29 18:55:03,047 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:55:03] "[36mGET /inicio?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2025-09-29 18:55:03,062 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:55:03] "GET /inicio?__debugger__=yes&cmd=resource&f=console.png&s=A6e0pTvVWUv8nYrnTv7x HTTP/1.1" 200 -
+2025-09-29 18:55:03,074 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:55:03] "[36mGET /inicio?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-09-29 18:55:31,090 - werkzeug - INFO -  * Detected change in 'D:\\Projects\\IntelliTutor\\app.py', reloading
+2025-09-29 18:55:31,633 - werkzeug - INFO -  * Restarting with stat
+2025-09-29 18:55:34,501 - modelo_ml_enhanced - INFO - Inicializando GeneradorPracticasML mejorado
+2025-09-29 18:55:34,504 - modelo_ml_enhanced - INFO - GPU no disponible. Usando CPU.
+2025-09-29 18:55:36,852 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: distiluse-base-multilingual-cased-v1
+2025-09-29 18:55:38,698 - modelo_ml_enhanced - INFO - Modelo SBERT cargado correctamente en dispositivo: cpu
+2025-09-29 18:55:38,700 - modelo_ml_enhanced - INFO - Plantillas de retroalimentación cargadas desde archivo
+2025-09-29 18:55:38,700 - modelo_ml_enhanced - INFO - Recursos educativos cargados desde archivo
+2025-09-29 18:55:38,718 - modelo_ml_enhanced - ERROR - Error al cargar modelos: Error(s) in loading state_dict for EnhancedContenidoEvaluator:
+	Missing key(s) in state_dict: "head_estructura.weight", "head_estructura.bias". 
+	Unexpected key(s) in state_dict: "head_originalidad.weight", "head_originalidad.bias". 
+2025-09-29 18:55:38,722 - modelo_ml_enhanced - INFO - Matriz TF-IDF creada correctamente
+2025-09-29 18:55:38,724 - modelo_ml_enhanced - INFO - Inicializando GeneradorPracticasML mejorado
+2025-09-29 18:55:38,725 - modelo_ml_enhanced - INFO - GPU no disponible. Usando CPU.
+2025-09-29 18:55:38,918 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: distiluse-base-multilingual-cased-v1
+2025-09-29 18:55:40,709 - modelo_ml_enhanced - INFO - Modelo SBERT cargado correctamente en dispositivo: cpu
+2025-09-29 18:55:40,711 - modelo_ml_enhanced - INFO - Plantillas de retroalimentación cargadas desde archivo
+2025-09-29 18:55:40,712 - modelo_ml_enhanced - INFO - Recursos educativos cargados desde archivo
+2025-09-29 18:55:40,735 - modelo_ml_enhanced - ERROR - Error al cargar modelos: Error(s) in loading state_dict for EnhancedContenidoEvaluator:
+	Missing key(s) in state_dict: "head_estructura.weight", "head_estructura.bias". 
+	Unexpected key(s) in state_dict: "head_originalidad.weight", "head_originalidad.bias". 
+2025-09-29 18:55:40,736 - modelo_ml_enhanced - INFO - Conexión a la base de datos establecida correctamente
+2025-09-29 18:55:40,739 - modelo_ml_enhanced - INFO - Matriz TF-IDF creada correctamente
+2025-09-29 18:55:40,758 - werkzeug - WARNING -  * Debugger is active!
+2025-09-29 18:55:40,761 - werkzeug - INFO -  * Debugger PIN: 122-970-173
+2025-09-29 18:55:55,824 - modelo_ml_enhanced - INFO - Inicializando GeneradorPracticasML mejorado
+2025-09-29 18:55:55,825 - modelo_ml_enhanced - INFO - GPU no disponible. Usando CPU.
+2025-09-29 18:55:56,024 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: distiluse-base-multilingual-cased-v1
+2025-09-29 18:55:57,886 - modelo_ml_enhanced - INFO - Modelo SBERT cargado correctamente en dispositivo: cpu
+2025-09-29 18:55:57,887 - modelo_ml_enhanced - INFO - Plantillas de retroalimentación cargadas desde archivo
+2025-09-29 18:55:57,887 - modelo_ml_enhanced - INFO - Recursos educativos cargados desde archivo
+2025-09-29 18:55:57,903 - modelo_ml_enhanced - ERROR - Error al cargar modelos: Error(s) in loading state_dict for EnhancedContenidoEvaluator:
+	Missing key(s) in state_dict: "head_estructura.weight", "head_estructura.bias". 
+	Unexpected key(s) in state_dict: "head_originalidad.weight", "head_originalidad.bias". 
+2025-09-29 18:55:57,906 - modelo_ml_enhanced - INFO - Matriz TF-IDF creada correctamente
+2025-09-29 18:55:57,946 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:55:57] "[35m[1mGET /inicio HTTP/1.1[0m" 500 -
+2025-09-29 18:55:58,009 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:55:58] "[36mGET /inicio?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2025-09-29 18:55:58,010 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:55:58] "[36mGET /inicio?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2025-09-29 18:55:58,024 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:55:58] "GET /inicio?__debugger__=yes&cmd=resource&f=console.png&s=oDPweZQl6f6edq9rxzNf HTTP/1.1" 200 -
+2025-09-29 18:55:58,036 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:55:58] "[36mGET /inicio?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-09-29 18:56:25,186 - werkzeug - INFO -  * Detected change in 'D:\\Projects\\IntelliTutor\\app.py', reloading
+2025-09-29 18:56:25,801 - werkzeug - INFO -  * Restarting with stat
+2025-09-29 18:58:24,859 - modelo_ml_enhanced - INFO - Inicializando GeneradorPracticasML mejorado
+2025-09-29 18:58:24,860 - modelo_ml_enhanced - INFO - GPU no disponible. Usando CPU.
+2025-09-29 18:58:27,210 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: distiluse-base-multilingual-cased-v1
+2025-09-29 18:58:29,181 - modelo_ml_enhanced - INFO - Modelo SBERT cargado correctamente en dispositivo: cpu
+2025-09-29 18:58:29,182 - modelo_ml_enhanced - INFO - Plantillas de retroalimentación cargadas desde archivo
+2025-09-29 18:58:29,183 - modelo_ml_enhanced - INFO - Recursos educativos cargados desde archivo
+2025-09-29 18:58:29,201 - modelo_ml_enhanced - ERROR - Error al cargar modelos: Error(s) in loading state_dict for EnhancedContenidoEvaluator:
+	Missing key(s) in state_dict: "head_estructura.weight", "head_estructura.bias". 
+	Unexpected key(s) in state_dict: "head_originalidad.weight", "head_originalidad.bias". 
+2025-09-29 18:58:29,204 - modelo_ml_enhanced - INFO - Matriz TF-IDF creada correctamente
+2025-09-29 18:58:29,204 - modelo_ml_enhanced - INFO - Inicializando GeneradorPracticasML mejorado
+2025-09-29 18:58:29,205 - modelo_ml_enhanced - INFO - GPU no disponible. Usando CPU.
+2025-09-29 18:58:29,490 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: distiluse-base-multilingual-cased-v1
+2025-09-29 18:58:31,240 - modelo_ml_enhanced - INFO - Modelo SBERT cargado correctamente en dispositivo: cpu
+2025-09-29 18:58:31,241 - modelo_ml_enhanced - INFO - Plantillas de retroalimentación cargadas desde archivo
+2025-09-29 18:58:31,242 - modelo_ml_enhanced - INFO - Recursos educativos cargados desde archivo
+2025-09-29 18:58:31,263 - modelo_ml_enhanced - ERROR - Error al cargar modelos: Error(s) in loading state_dict for EnhancedContenidoEvaluator:
+	Missing key(s) in state_dict: "head_estructura.weight", "head_estructura.bias". 
+	Unexpected key(s) in state_dict: "head_originalidad.weight", "head_originalidad.bias". 
+2025-09-29 18:58:31,265 - modelo_ml_enhanced - INFO - Conexión a la base de datos establecida correctamente
+2025-09-29 18:58:31,267 - modelo_ml_enhanced - INFO - Matriz TF-IDF creada correctamente
+2025-09-29 18:58:31,289 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-09-29 18:58:31,290 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-09-29 18:58:31,291 - werkzeug - INFO -  * Restarting with stat
+2025-09-29 18:58:33,951 - modelo_ml_enhanced - INFO - Inicializando GeneradorPracticasML mejorado
+2025-09-29 18:58:33,953 - modelo_ml_enhanced - INFO - GPU no disponible. Usando CPU.
+2025-09-29 18:58:36,411 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: distiluse-base-multilingual-cased-v1
+2025-09-29 18:58:38,250 - modelo_ml_enhanced - INFO - Modelo SBERT cargado correctamente en dispositivo: cpu
+2025-09-29 18:58:38,250 - modelo_ml_enhanced - INFO - Plantillas de retroalimentación cargadas desde archivo
+2025-09-29 18:58:38,251 - modelo_ml_enhanced - INFO - Recursos educativos cargados desde archivo
+2025-09-29 18:58:38,272 - modelo_ml_enhanced - ERROR - Error al cargar modelos: Error(s) in loading state_dict for EnhancedContenidoEvaluator:
+	Missing key(s) in state_dict: "head_estructura.weight", "head_estructura.bias". 
+	Unexpected key(s) in state_dict: "head_originalidad.weight", "head_originalidad.bias". 
+2025-09-29 18:58:38,275 - modelo_ml_enhanced - INFO - Matriz TF-IDF creada correctamente
+2025-09-29 18:58:38,275 - modelo_ml_enhanced - INFO - Inicializando GeneradorPracticasML mejorado
+2025-09-29 18:58:38,276 - modelo_ml_enhanced - INFO - GPU no disponible. Usando CPU.
+2025-09-29 18:58:38,562 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: distiluse-base-multilingual-cased-v1
+2025-09-29 18:58:40,160 - modelo_ml_enhanced - INFO - Modelo SBERT cargado correctamente en dispositivo: cpu
+2025-09-29 18:58:40,161 - modelo_ml_enhanced - INFO - Plantillas de retroalimentación cargadas desde archivo
+2025-09-29 18:58:40,161 - modelo_ml_enhanced - INFO - Recursos educativos cargados desde archivo
+2025-09-29 18:58:40,181 - modelo_ml_enhanced - ERROR - Error al cargar modelos: Error(s) in loading state_dict for EnhancedContenidoEvaluator:
+	Missing key(s) in state_dict: "head_estructura.weight", "head_estructura.bias". 
+	Unexpected key(s) in state_dict: "head_originalidad.weight", "head_originalidad.bias". 
+2025-09-29 18:58:40,183 - modelo_ml_enhanced - INFO - Conexión a la base de datos establecida correctamente
+2025-09-29 18:58:40,188 - modelo_ml_enhanced - INFO - Matriz TF-IDF creada correctamente
+2025-09-29 18:58:40,207 - werkzeug - WARNING -  * Debugger is active!
+2025-09-29 18:58:40,214 - werkzeug - INFO -  * Debugger PIN: 122-970-173
+2025-09-29 18:58:40,230 - modelo_ml_enhanced - INFO - Inicializando GeneradorPracticasML mejorado
+2025-09-29 18:58:40,232 - modelo_ml_enhanced - INFO - GPU no disponible. Usando CPU.
+2025-09-29 18:58:40,427 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: distiluse-base-multilingual-cased-v1
+2025-09-29 18:58:42,041 - modelo_ml_enhanced - INFO - Modelo SBERT cargado correctamente en dispositivo: cpu
+2025-09-29 18:58:42,042 - modelo_ml_enhanced - INFO - Plantillas de retroalimentación cargadas desde archivo
+2025-09-29 18:58:42,043 - modelo_ml_enhanced - INFO - Recursos educativos cargados desde archivo
+2025-09-29 18:58:42,065 - modelo_ml_enhanced - ERROR - Error al cargar modelos: Error(s) in loading state_dict for EnhancedContenidoEvaluator:
+	Missing key(s) in state_dict: "head_estructura.weight", "head_estructura.bias". 
+	Unexpected key(s) in state_dict: "head_originalidad.weight", "head_originalidad.bias". 
+2025-09-29 18:58:42,068 - modelo_ml_enhanced - INFO - Matriz TF-IDF creada correctamente
+2025-09-29 18:58:42,097 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:58:42] "GET /inicio HTTP/1.1" 200 -
+2025-09-29 18:58:42,150 - modelo_ml_enhanced - INFO - Inicializando GeneradorPracticasML mejorado
+2025-09-29 18:58:42,150 - modelo_ml_enhanced - INFO - Inicializando GeneradorPracticasML mejorado
+2025-09-29 18:58:42,153 - modelo_ml_enhanced - INFO - Inicializando GeneradorPracticasML mejorado
+2025-09-29 18:58:42,153 - modelo_ml_enhanced - INFO - GPU no disponible. Usando CPU.
+2025-09-29 18:58:42,155 - modelo_ml_enhanced - INFO - GPU no disponible. Usando CPU.
+2025-09-29 18:58:42,155 - modelo_ml_enhanced - INFO - Inicializando GeneradorPracticasML mejorado
+2025-09-29 18:58:42,156 - modelo_ml_enhanced - INFO - GPU no disponible. Usando CPU.
+2025-09-29 18:58:42,156 - modelo_ml_enhanced - INFO - Inicializando GeneradorPracticasML mejorado
+2025-09-29 18:58:42,157 - modelo_ml_enhanced - INFO - Inicializando GeneradorPracticasML mejorado
+2025-09-29 18:58:42,157 - modelo_ml_enhanced - INFO - GPU no disponible. Usando CPU.
+2025-09-29 18:58:42,158 - modelo_ml_enhanced - INFO - GPU no disponible. Usando CPU.
+2025-09-29 18:58:42,158 - modelo_ml_enhanced - INFO - GPU no disponible. Usando CPU.
+2025-09-29 18:58:42,854 - modelo_ml_enhanced - WARNING - Memoria insuficiente para SBERT. Desactivando.
+2025-09-29 18:58:42,855 - modelo_ml_enhanced - INFO - Plantillas de retroalimentación cargadas desde archivo
+2025-09-29 18:58:42,855 - modelo_ml_enhanced - INFO - Recursos educativos cargados desde archivo
+2025-09-29 18:58:42,872 - modelo_ml_enhanced - ERROR - Error al cargar modelos: Error(s) in loading state_dict for EnhancedContenidoEvaluator:
+	Missing key(s) in state_dict: "head_estructura.weight", "head_estructura.bias". 
+	Unexpected key(s) in state_dict: "head_originalidad.weight", "head_originalidad.bias". 
+2025-09-29 18:58:42,876 - modelo_ml_enhanced - INFO - Matriz TF-IDF creada correctamente
+2025-09-29 18:58:42,885 - modelo_ml_enhanced - WARNING - Memoria insuficiente para SBERT. Desactivando.
+2025-09-29 18:58:42,886 - modelo_ml_enhanced - WARNING - Memoria insuficiente para SBERT. Desactivando.
+2025-09-29 18:58:42,886 - modelo_ml_enhanced - INFO - Plantillas de retroalimentación cargadas desde archivo
+2025-09-29 18:58:42,886 - modelo_ml_enhanced - INFO - Plantillas de retroalimentación cargadas desde archivo
+2025-09-29 18:58:42,887 - modelo_ml_enhanced - INFO - Recursos educativos cargados desde archivo
+2025-09-29 18:58:42,887 - modelo_ml_enhanced - INFO - Recursos educativos cargados desde archivo
+2025-09-29 18:58:42,901 - modelo_ml_enhanced - WARNING - Memoria insuficiente para SBERT. Desactivando.
+2025-09-29 18:58:42,903 - modelo_ml_enhanced - INFO - Plantillas de retroalimentación cargadas desde archivo
+2025-09-29 18:58:42,904 - modelo_ml_enhanced - INFO - Recursos educativos cargados desde archivo
+2025-09-29 18:58:42,908 - modelo_ml_enhanced - WARNING - Memoria insuficiente para SBERT. Desactivando.
+2025-09-29 18:58:42,910 - modelo_ml_enhanced - INFO - Plantillas de retroalimentación cargadas desde archivo
+2025-09-29 18:58:42,911 - modelo_ml_enhanced - INFO - Recursos educativos cargados desde archivo
+2025-09-29 18:58:42,913 - modelo_ml_enhanced - ERROR - Error al cargar modelos: Error(s) in loading state_dict for EnhancedContenidoEvaluator:
+	Missing key(s) in state_dict: "head_estructura.weight", "head_estructura.bias". 
+	Unexpected key(s) in state_dict: "head_originalidad.weight", "head_originalidad.bias". 
+2025-09-29 18:58:42,914 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1019.79 MB. Liberando recursos...
+2025-09-29 18:58:42,916 - modelo_ml_enhanced - INFO - Matriz TF-IDF creada correctamente
+2025-09-29 18:58:43,017 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:58:43] "GET /static/estudiante.css HTTP/1.1" 200 -
+2025-09-29 18:58:43,019 - modelo_ml_enhanced - ERROR - Error al cargar modelos: Error(s) in loading state_dict for EnhancedContenidoEvaluator:
+	Missing key(s) in state_dict: "head_estructura.weight", "head_estructura.bias". 
+	Unexpected key(s) in state_dict: "head_originalidad.weight", "head_originalidad.bias". 
+2025-09-29 18:58:43,022 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:58:43] "[36mGET /static/img/Escudo-UNAM-white.svg HTTP/1.1[0m" 304 -
+2025-09-29 18:58:43,031 - modelo_ml_enhanced - WARNING - Memoria insuficiente para SBERT. Desactivando.
+2025-09-29 18:58:43,035 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1021.38 MB. Liberando recursos...
+2025-09-29 18:58:43,035 - modelo_ml_enhanced - INFO - Plantillas de retroalimentación cargadas desde archivo
+2025-09-29 18:58:43,136 - modelo_ml_enhanced - INFO - Inicializando GeneradorPracticasML mejorado
+2025-09-29 18:58:43,137 - modelo_ml_enhanced - INFO - Matriz TF-IDF creada correctamente
+2025-09-29 18:58:43,140 - modelo_ml_enhanced - INFO - Recursos educativos cargados desde archivo
+2025-09-29 18:58:43,142 - modelo_ml_enhanced - INFO - GPU no disponible. Usando CPU.
+2025-09-29 18:58:43,146 - modelo_ml_enhanced - ERROR - Error al cargar modelos: Error(s) in loading state_dict for EnhancedContenidoEvaluator:
+	Missing key(s) in state_dict: "head_estructura.weight", "head_estructura.bias". 
+	Unexpected key(s) in state_dict: "head_originalidad.weight", "head_originalidad.bias". 
+2025-09-29 18:58:43,149 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1014.63 MB. Liberando recursos...
+2025-09-29 18:58:43,252 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1022.62 MB
+2025-09-29 18:58:43,253 - modelo_ml_enhanced - WARNING - Recursos limitados. Inicializando modelos simples.
+2025-09-29 18:58:43,254 - modelo_ml_enhanced - INFO - Inicializando modelo dummy
+2025-09-29 18:58:43,254 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:58:43] "GET /static/custom.css HTTP/1.1" 200 -
+2025-09-29 18:58:43,255 - modelo_ml_enhanced - INFO - Matriz TF-IDF creada correctamente
+2025-09-29 18:58:43,256 - modelo_ml_enhanced - INFO - Inicializando modelo dummy
+2025-09-29 18:58:43,260 - modelo_ml_enhanced - INFO - Plantillas de retroalimentación cargadas desde archivo
+2025-09-29 18:58:43,261 - modelo_ml_enhanced - INFO - Recursos educativos cargados desde archivo
+2025-09-29 18:58:43,262 - modelo_ml_enhanced - ERROR - Error al cargar modelos: Error(s) in loading state_dict for EnhancedContenidoEvaluator:
+	Missing key(s) in state_dict: "head_estructura.weight", "head_estructura.bias". 
+	Unexpected key(s) in state_dict: "head_originalidad.weight", "head_originalidad.bias". 
+2025-09-29 18:58:43,262 - modelo_ml_enhanced - ERROR - Error al cargar modelos: 'DummyModel' object has no attribute 'load_state_dict'
+2025-09-29 18:58:43,263 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1014.66 MB. Liberando recursos...
+2025-09-29 18:58:43,265 - modelo_ml_enhanced - INFO - Matriz TF-IDF creada correctamente
+2025-09-29 18:58:43,366 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:58:43] "GET /static/notification.css HTTP/1.1" 200 -
+2025-09-29 18:58:43,369 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1005.27 MB. Liberando recursos...
+2025-09-29 18:58:43,473 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:58:43] "GET /static/img/practicas.jpeg HTTP/1.1" 200 -
+2025-09-29 18:58:43,475 - modelo_ml_enhanced - INFO - Matriz TF-IDF creada correctamente
+2025-09-29 18:58:43,489 - modelo_ml_enhanced - INFO - Inicializando GeneradorPracticasML mejorado
+2025-09-29 18:58:43,491 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:58:43] "GET /static/inicio.css HTTP/1.1" 200 -
+2025-09-29 18:58:43,492 - modelo_ml_enhanced - INFO - GPU no disponible. Usando CPU.
+2025-09-29 18:58:43,493 - modelo_ml_enhanced - ERROR - Error al cargar modelos: Error(s) in loading state_dict for EnhancedContenidoEvaluator:
+	Missing key(s) in state_dict: "head_estructura.weight", "head_estructura.bias". 
+	Unexpected key(s) in state_dict: "head_originalidad.weight", "head_originalidad.bias". 
+2025-09-29 18:58:43,494 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1001.27 MB. Liberando recursos...
+2025-09-29 18:58:43,498 - modelo_ml_enhanced - INFO - Matriz TF-IDF creada correctamente
+2025-09-29 18:58:43,609 - modelo_ml_enhanced - INFO - Inicializando GeneradorPracticasML mejorado
+2025-09-29 18:58:43,611 - modelo_ml_enhanced - INFO - GPU no disponible. Usando CPU.
+2025-09-29 18:58:43,613 - modelo_ml_enhanced - INFO - Inicializando GeneradorPracticasML mejorado
+2025-09-29 18:58:43,616 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:58:43] "GET /static/img/programador.avif HTTP/1.1" 200 -
+2025-09-29 18:58:43,617 - modelo_ml_enhanced - INFO - Inicializando GeneradorPracticasML mejorado
+2025-09-29 18:58:43,618 - modelo_ml_enhanced - INFO - Inicializando GeneradorPracticasML mejorado
+2025-09-29 18:58:43,619 - modelo_ml_enhanced - INFO - GPU no disponible. Usando CPU.
+2025-09-29 18:58:43,621 - modelo_ml_enhanced - INFO - GPU no disponible. Usando CPU.
+2025-09-29 18:58:43,621 - modelo_ml_enhanced - INFO - GPU no disponible. Usando CPU.
+2025-09-29 18:58:43,629 - modelo_ml_enhanced - INFO - Inicializando GeneradorPracticasML mejorado
+2025-09-29 18:58:43,630 - modelo_ml_enhanced - INFO - GPU no disponible. Usando CPU.
+2025-09-29 18:58:43,723 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1002.50 MB
+2025-09-29 18:58:43,724 - modelo_ml_enhanced - WARNING - Recursos limitados. Inicializando modelos simples.
+2025-09-29 18:58:43,725 - modelo_ml_enhanced - INFO - Inicializando modelo dummy
+2025-09-29 18:58:43,725 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1001.29 MB
+2025-09-29 18:58:43,725 - modelo_ml_enhanced - INFO - Inicializando modelo dummy
+2025-09-29 18:58:43,726 - modelo_ml_enhanced - WARNING - Recursos limitados. Inicializando modelos simples.
+2025-09-29 18:58:43,726 - modelo_ml_enhanced - INFO - Inicializando modelo dummy
+2025-09-29 18:58:43,726 - modelo_ml_enhanced - INFO - Inicializando modelo dummy
+2025-09-29 18:58:43,727 - modelo_ml_enhanced - INFO - Plantillas de retroalimentación cargadas desde archivo
+2025-09-29 18:58:43,727 - modelo_ml_enhanced - INFO - Plantillas de retroalimentación cargadas desde archivo
+2025-09-29 18:58:43,728 - modelo_ml_enhanced - INFO - Recursos educativos cargados desde archivo
+2025-09-29 18:58:43,728 - modelo_ml_enhanced - INFO - Recursos educativos cargados desde archivo
+2025-09-29 18:58:43,728 - modelo_ml_enhanced - ERROR - Error al cargar modelos: 'DummyModel' object has no attribute 'load_state_dict'
+2025-09-29 18:58:43,730 - modelo_ml_enhanced - ERROR - Error al cargar modelos: 'DummyModel' object has no attribute 'load_state_dict'
+2025-09-29 18:58:43,730 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1025.66 MB. Liberando recursos...
+2025-09-29 18:58:43,733 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1003.57 MB
+2025-09-29 18:58:43,843 - modelo_ml_enhanced - INFO - Matriz TF-IDF creada correctamente
+2025-09-29 18:58:43,844 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1047.50 MB. Liberando recursos...
+2025-09-29 18:58:43,846 - modelo_ml_enhanced - INFO - Matriz TF-IDF creada correctamente
+2025-09-29 18:58:43,846 - modelo_ml_enhanced - WARNING - Recursos limitados. Inicializando modelos simples.
+2025-09-29 18:58:43,960 - modelo_ml_enhanced - INFO - Inicializando modelo dummy
+2025-09-29 18:58:43,961 - modelo_ml_enhanced - INFO - Inicializando modelo dummy
+2025-09-29 18:58:43,962 - modelo_ml_enhanced - INFO - Plantillas de retroalimentación cargadas desde archivo
+2025-09-29 18:58:43,962 - modelo_ml_enhanced - INFO - Recursos educativos cargados desde archivo
+2025-09-29 18:58:43,963 - modelo_ml_enhanced - ERROR - Error al cargar modelos: 'DummyModel' object has no attribute 'load_state_dict'
+2025-09-29 18:58:43,963 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1047.81 MB. Liberando recursos...
+2025-09-29 18:58:44,065 - modelo_ml_enhanced - INFO - Matriz TF-IDF creada correctamente
+2025-09-29 18:58:44,065 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:58:44] "GET /static/js/notification.js HTTP/1.1" 200 -
+2025-09-29 18:58:44,067 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:58:44] "GET /static/js/main.js HTTP/1.1" 200 -
+2025-09-29 18:58:44,076 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:58:44] "GET /static/img/fondo-administradores.webp HTTP/1.1" 200 -
+2025-09-29 18:58:44,078 - modelo_ml_enhanced - WARNING - Memoria insuficiente para SBERT. Desactivando.
+2025-09-29 18:58:44,078 - modelo_ml_enhanced - INFO - Plantillas de retroalimentación cargadas desde archivo
+2025-09-29 18:58:44,079 - modelo_ml_enhanced - INFO - Recursos educativos cargados desde archivo
+2025-09-29 18:58:44,100 - modelo_ml_enhanced - ERROR - Error al cargar modelos: Error(s) in loading state_dict for EnhancedContenidoEvaluator:
+	Missing key(s) in state_dict: "head_estructura.weight", "head_estructura.bias". 
+	Unexpected key(s) in state_dict: "head_originalidad.weight", "head_originalidad.bias". 
+2025-09-29 18:58:44,103 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1077.88 MB. Liberando recursos...
+2025-09-29 18:58:44,209 - modelo_ml_enhanced - INFO - Matriz TF-IDF creada correctamente
+2025-09-29 18:58:44,217 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:58:44] "GET /static/img/evaluacion.webp HTTP/1.1" 200 -
+2025-09-29 18:58:44,348 - modelo_ml_enhanced - WARNING - Memoria insuficiente para SBERT. Desactivando.
+2025-09-29 18:58:44,349 - modelo_ml_enhanced - WARNING - Memoria insuficiente para SBERT. Desactivando.
+2025-09-29 18:58:44,350 - modelo_ml_enhanced - INFO - Plantillas de retroalimentación cargadas desde archivo
+2025-09-29 18:58:44,350 - modelo_ml_enhanced - INFO - Plantillas de retroalimentación cargadas desde archivo
+2025-09-29 18:58:44,351 - modelo_ml_enhanced - INFO - Recursos educativos cargados desde archivo
+2025-09-29 18:58:44,351 - modelo_ml_enhanced - INFO - Recursos educativos cargados desde archivo
+2025-09-29 18:58:44,377 - modelo_ml_enhanced - ERROR - Error al cargar modelos: Error(s) in loading state_dict for EnhancedContenidoEvaluator:
+	Missing key(s) in state_dict: "head_estructura.weight", "head_estructura.bias". 
+	Unexpected key(s) in state_dict: "head_originalidad.weight", "head_originalidad.bias". 
+2025-09-29 18:58:44,378 - modelo_ml_enhanced - ERROR - Error al cargar modelos: Error(s) in loading state_dict for EnhancedContenidoEvaluator:
+	Missing key(s) in state_dict: "head_estructura.weight", "head_estructura.bias". 
+	Unexpected key(s) in state_dict: "head_originalidad.weight", "head_originalidad.bias". 
+2025-09-29 18:58:44,379 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1157.29 MB. Liberando recursos...
+2025-09-29 18:58:44,484 - modelo_ml_enhanced - INFO - Matriz TF-IDF creada correctamente
+2025-09-29 18:58:44,485 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1154.59 MB. Liberando recursos...
+2025-09-29 18:58:44,591 - modelo_ml_enhanced - INFO - Matriz TF-IDF creada correctamente
+2025-09-29 18:58:44,602 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:58:44] "GET /static/img/ayuda.jpg HTTP/1.1" 200 -
+2025-09-29 18:58:44,610 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:58:44] "GET /static/js/modal.js HTTP/1.1" 200 -
+2025-09-29 18:58:44,646 - modelo_ml_enhanced - INFO - Inicializando GeneradorPracticasML mejorado
+2025-09-29 18:58:44,647 - modelo_ml_enhanced - INFO - GPU no disponible. Usando CPU.
+2025-09-29 18:58:44,748 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1154.43 MB
+2025-09-29 18:58:44,749 - modelo_ml_enhanced - WARNING - Recursos limitados. Inicializando modelos simples.
+2025-09-29 18:58:44,749 - modelo_ml_enhanced - INFO - Inicializando modelo dummy
+2025-09-29 18:58:44,749 - modelo_ml_enhanced - INFO - Inicializando modelo dummy
+2025-09-29 18:58:44,749 - modelo_ml_enhanced - INFO - Plantillas de retroalimentación cargadas desde archivo
+2025-09-29 18:58:44,750 - modelo_ml_enhanced - INFO - Recursos educativos cargados desde archivo
+2025-09-29 18:58:44,751 - modelo_ml_enhanced - ERROR - Error al cargar modelos: 'DummyModel' object has no attribute 'load_state_dict'
+2025-09-29 18:58:44,752 - modelo_ml_enhanced - WARNING - Uso de memoria alto: 1154.44 MB. Liberando recursos...
+2025-09-29 18:58:44,758 - modelo_ml_enhanced - INFO - Matriz TF-IDF creada correctamente
+2025-09-29 18:58:44,877 - werkzeug - INFO - 127.0.0.1 - - [29/Sep/2025 18:58:44] "[36mGET /static/img/Escudo-UNAM-white.svg HTTP/1.1[0m" 304 -
+2025-09-29 18:59:00,740 - werkzeug - INFO -  * Detected change in 'D:\\Projects\\IntelliTutor\\app.py', reloading
+2025-09-29 18:59:01,408 - werkzeug - INFO -  * Restarting with stat

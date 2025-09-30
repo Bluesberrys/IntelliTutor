@@ -1,0 +1,101 @@
+{
+  "feedback_templates": {
+    "excellent": [
+      "Excelente trabajo. Has demostrado un dominio completo del tema, con un análisis profundo y bien estructurado.",
+      "Trabajo sobresaliente. Cumples con todos los requisitos y vas más allá, demostrando comprensión avanzada de los conceptos.",
+      "Felicitaciones por un trabajo excepcional. Tu análisis demuestra comprensión profunda y capacidad para conectar conceptos complejos.",
+      "Trabajo de calidad superior. Muestras dominio del tema y capacidad para aplicar los conceptos en situaciones diversas.",
+      "Excelente desempeño. Tu trabajo refleja un nivel de comprensión y análisis que supera las expectativas del curso."
+    ],
+    "very_good": [
+      "Muy buen trabajo. Demuestras una sólida comprensión del tema con un análisis bien desarrollado.",
+      "Trabajo de alta calidad. Has abordado todos los aspectos importantes del tema con claridad y precisión.",
+      "Muy buen desempeño. Tu trabajo muestra dominio de los conceptos clave y buena capacidad de análisis.",
+      "Trabajo muy completo. Has logrado integrar los conceptos de manera coherente y bien fundamentada.",
+      "Muy buen análisis. Tu trabajo demuestra comprensión profunda y capacidad para aplicar los conceptos adecuadamente."
+    ],
+    "good": [
+      "Buen trabajo. Cumples con la mayoría de los requisitos y demuestras comprensión del tema.",
+      "Trabajo sólido con varios aspectos destacables. Has abordado los puntos principales del tema.",
+      "Has demostrado buena comprensión del tema con algunas áreas para mejorar.",
+      "Trabajo bien desarrollado. Muestras dominio de los conceptos básicos y cierta capacidad de análisis.",
+      "Buen desempeño general. Tu trabajo cumple con los objetivos principales de la actividad."
+    ],
+    "average": [
+      "Trabajo aceptable. Cumples con los requisitos básicos, pero hay espacio para profundizar.",
+      "Has demostrado comprensión básica del tema. Tu trabajo cumple con lo mínimo esperado.",
+      "El trabajo cumple con los requisitos esenciales, aunque podría beneficiarse de un análisis más profundo.",
+      "Trabajo adecuado. Abordas los conceptos fundamentales, pero podrías desarrollarlos con mayor detalle.",
+      "Desempeño satisfactorio. Tu trabajo muestra comprensión de los conceptos básicos del tema."
+    ],
+    "needs_improvement": [
+      "El trabajo necesita mejoras significativas. Revisa cuidadosamente los requisitos de la actividad.",
+      "Hay áreas importantes que requieren más atención y desarrollo en tu trabajo.",
+      "Es necesario profundizar más en el tema y mejorar la estructura de tu trabajo.",
+      "Tu trabajo muestra cierta comprensión del tema, pero necesita mayor desarrollo y claridad.",
+      "Se requiere un análisis más detallado y mejor fundamentado para alcanzar los objetivos de la actividad."
+    ],
+    "poor": [
+      "El trabajo no cumple con los requisitos mínimos. Es necesario revisar los conceptos fundamentales.",
+      "Es necesario revisar completamente el trabajo y asegurarte de abordar los aspectos clave del tema.",
+      "Recomiendo volver a estudiar los conceptos básicos del tema y rehacer el trabajo.",
+      "Tu trabajo muestra dificultades importantes en la comprensión de los conceptos fundamentales.",
+      "Es necesario un replanteamiento completo del trabajo para cumplir con los objetivos de la actividad."
+    ],
+    "irrelevant": [
+      "El trabajo entregado no tiene relación con el tema solicitado. Es fundamental abordar el tema específico de la actividad.",
+      "Tu entrega no aborda el tema requerido. Revisa cuidadosamente el título y objetivo de la actividad.",
+      "El contenido no corresponde con lo solicitado. Es necesario enfocarse específicamente en el tema de la actividad.",
+      "Tu trabajo se desvía completamente del tema solicitado. Revisa las instrucciones y objetivos de la actividad.",
+      "La entrega no aborda el tema requerido. Es esencial centrarse en el objetivo específico de la actividad."
+    ]
+  },
+  "code_feedback_templates": {
+    "excellent": [
+      "Excelente implementación. Tu código es eficiente, bien estructurado y sigue las mejores prácticas de programación.",
+      "Código sobresaliente. Demuestra un dominio completo de los conceptos de programación y una implementación óptima.",
+      "Implementación excepcional. Tu código es claro, eficiente y resuelve el problema de manera elegante.",
+      "Código de alta calidad. Muestra un excelente manejo de las estructuras de datos y algoritmos apropiados.",
+      "Implementación superior. Tu código es robusto, eficiente y fácil de mantener."
+    ],
+    "very_good": [
+      "Muy buen código. Implementación eficiente y bien estructurada con buena documentación.",
+      "Implementación de alta calidad. Tu código resuelve correctamente el problema con un buen diseño.",
+      "Muy buen trabajo. Tu código es claro, funcional y sigue buenas prácticas de programación.",
+      "Código bien implementado. Muestra buen dominio de los conceptos y técnicas de programación.",
+      "Implementación sólida. Tu código es eficiente y está bien organizado."
+    ],
+    "good": [
+      "Buen código. Funciona correctamente y tiene una estructura adecuada.",
+      "Implementación correcta. Tu código resuelve el problema aunque podría optimizarse en algunos aspectos.",
+      "Buen trabajo. Tu código funciona según lo esperado con algunos aspectos a mejorar.",
+      "Código funcional. Implementa la solución requerida con una estructura aceptable.",
+      "Implementación adecuada. Tu código cumple con los requisitos básicos del problema."
+    ],
+    "average": [
+      "Código aceptable. Funciona pero podría mejorar en eficiencia y estructura.",
+      "Implementación básica. Tu código resuelve el problema pero necesita optimización.",
+      "Código funcional con limitaciones. Cumple con lo mínimo pero requiere mejoras importantes.",
+      "Implementación sencilla. Resuelve el problema de forma básica sin optimizaciones.",
+      "Código adecuado. Funciona para casos simples pero podría fallar en escenarios complejos."
+    ],
+    "needs_improvement": [
+      "El código necesita mejoras significativas. Revisa la lógica y estructura de tu implementación.",
+      "Hay problemas importantes en tu código. Es necesario corregir errores y mejorar la eficiencia.",
+      "Tu implementación requiere revisión. El código tiene errores o no sigue buenas prácticas.",
+      "Es necesario mejorar la calidad del código. Revisa la lógica, estructura y documentación.",
+      "Tu código necesita trabajo adicional. Hay problemas de funcionalidad y diseño que deben corregirse."
+    ],
+    "poor": [
+      "El código no cumple con los requisitos mínimos. Es necesario replantearlo completamente.",
+      "Implementación incorrecta. Tu código tiene errores graves que impiden su funcionamiento.",
+      "Es necesario revisar los conceptos fundamentales de programación y rehacer el código.",
+      "Tu implementación muestra dificultades importantes en la comprensión de los conceptos básicos.",
+      "El código no funciona correctamente. Es necesario un replanteamiento completo de la solución."
+    ]
+  },
+  "error_templates": {},
+  "code_error_templates": {},
+  "strength_templates": {},
+  "code_strength_templates": {}
+}
