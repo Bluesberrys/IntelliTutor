@@ -1,0 +1,254 @@
+{% extends 'layout.html' %}
+
+{% block title %}Generar Reportes - IntelliTutor UNAM{% endblock %}
+
+{% block extra_css %}
+<style>
+    .reportes-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .reportes-header h1 {
+        font-size: 2.5rem;
+        color: var(--text-color);
+        margin-bottom: 1rem;
+        font-weight: 700;
+    }
+    
+    .reportes-header p {
+        color: var(--gray-600);
+        max-width: 700px;
+        margin: 0 auto;
+        font-size: 1.1rem;
+        line-height: 1.6;
+    }
+    
+    .reportes-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    .reporte-card {
+        background-color: var(--card-bg);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+    }
+    
+    .reporte-header {
+        background-color: var(--accent-primary);
+        color: white;
+        padding: 1.5rem;
+    }
+    
+    .reporte-header h2 {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+    }
+    
+    .reporte-header p {
+        font-size: 0.9rem;
+        opacity: 0.9;
+    }
+    
+    .reporte-body {
+        padding: 1.5rem;
+    }
+    
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: var(--text-color);
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid var(--gray-300);
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    
+    .form-control:focus {
+        outline: none;
+        border-color: var(--accent-primary);
+        box-shadow: 0 0 0 3px rgba(0, 61, 121, 0.1);
+    }
+    
+    .btn-generar {
+        background-color: var(--accent-primary);
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.3s;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .btn-generar:hover {
+        background-color: var(--accent-primary-d1);
+        transform: translateY(-3px);
+    }
+    
+    .reporte-info {
+        background-color: var(--gray-100);
+        border-left: 4px solid var(--accent-primary);
+        padding: 1rem;
+        border-radius: 0 8px 8px 0;
+        margin-bottom: 1.5rem;
+    }
+    
+    .reporte-info h3 {
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+        color: var(--text-color);
+    }
+    
+    .reporte-info p {
+        color: var(--gray-600);
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .reporte-info ul {
+        margin-top: 0.5rem;
+        padding-left: 1.5rem;
+    }
+    
+    .reporte-info li {
+        color: var(--gray-600);
+        font-size: 0.9rem;
+        margin-bottom: 0.25rem;
+    }
+    
+    @media (max-width: 768px) {
+        .reportes-container {
+            padding: 0 1rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<main>
+    <div class="reportes-header">
+        <h1 class="alt-font">Generar Reportes</h1>
+        <p>Crea y envía reportes detallados sobre el desempeño de tus estudiantes.</p>
+    </div>
+    
+    <div class="reportes-container">
+        <div class="reporte-card">
+            <div class="reporte-header">
+                <h2>Reporte de Calificaciones</h2>
+                <p>Genera un reporte detallado de calificaciones por grupo.</p>
+            </div>
+            <div class="reporte-body">
+                <div class="reporte-info">
+                    <h3>Información del Reporte</h3>
+                    <p>Este reporte incluye:</p>
+                    <ul>
+                        <li>Calificaciones finales de todos los estudiantes del grupo</li>
+                        <li>Promedios por tipo de actividad (prácticas, exámenes, proyectos)</li>
+                        <li>Porcentajes de asistencia</li>
+                        <li>Criterios de evaluación aplicados</li>
+                    </ul>
+                    <p>El reporte se enviará automáticamente al departamento correspondiente a la carrera seleccionada.</p>
+                </div>
+                
+                <form method="POST" style="display: flex; flex-direction: column; gap: 1rem;">
+                    <label for="grupo_id"><strong>Grupo:</strong></label>
+                    <select name="grupo_id" required class="form-control">
+                        <option value="" disabled selected>Selecciona un grupo</option>
+                        {% for grupo in grupos %}
+                            <option value="{{ grupo.id }}">{{ grupo.nombre }} - {{ grupo.materia_nombre }}</option>
+                        {% endfor %}
+                    </select>
+                
+                    <label for="departamento"><strong>Departamento:</strong></label>
+                    <select name="departamento" required class="form-control">
+                        <option value="" disabled selected>Selecciona un departamento</option>
+                        {% for d in departamentos %}
+                            <option value="{{ d.nombre }}">{{ d.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                
+                    <label for="correo_destino"><strong>Correo destino:</strong></label>
+                    <input type="email" name="correo_destino" class="form-control" placeholder="correo@dominio.com" required>
+                
+                    <button type="submit" class="btn-generar">
+                        <i class="fas fa-paper-plane"></i> Enviar Reporte
+                    </button>
+                </form>
+                
+                
+            </div>
+        </div>
+        
+        <div class="reporte-card">
+            <div class="reporte-header">
+                <h2>Reporte de Asistencia</h2>
+                <p>Genera un reporte detallado de asistencia por grupo.</p>
+            </div>
+            <div class="reporte-body">
+                <div class="reporte-info">
+                    <h3>Información del Reporte</h3>
+                    <p>Este reporte incluye:</p>
+                    <ul>
+                        <li>Registro de asistencia de todos los estudiantes del grupo</li>
+                        <li>Porcentajes de asistencia individuales</li>
+                        <li>Fechas de ausencias justificadas e injustificadas</li>
+                        <li>Estadísticas generales del grupo</li>
+                    </ul>
+                    <p>El reporte se enviará automáticamente al departamento correspondiente a la carrera seleccionada.</p>
+                </div>
+                
+                <form action="{{ url_for('profesor.enviar_reporte') }}" method="POST">
+                    <input type="hidden" name="tipo_reporte" value="asistencia">
+                    
+                    <div class="form-group">
+                        <label for="grupo_id_asistencia" class="form-label">Grupo</label>
+                        <select id="grupo_id_asistencia" name="grupo_id" class="form-control" required>
+                            <option value="">Seleccionar grupo</option>
+                            {% for grupo in grupos %}
+                            <option value="{{ grupo.id }}">{{ grupo.nombre }} ({{ grupo.materia_nombre }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="carrera_asistencia" class="form-label">Carrera</label>
+                        <select id="carrera_asistencia" name="carrera" class="form-control" required>
+                            <option value="">Seleccionar carrera</option>
+                            {% for carrera in carreras %}
+                            <option value="{{ carrera.carrera }}">{{ carrera.carrera }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="comentarios_asistencia" class="form-label">Comentarios Adicionales</label>
+                        <textarea id="comentarios_asistencia" name="comentarios" class="form-control" rows="3" placeholder="Comentarios opcionales para incluir en el reporte..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn-generar">
+                        <i class="fas fa-file-export"></i> Generar y Enviar Reporte
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

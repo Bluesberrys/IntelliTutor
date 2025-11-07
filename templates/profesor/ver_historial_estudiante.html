@@ -1,0 +1,76 @@
+{% extends 'layout.html' %}
+{% block title %}Historial de {{ estudiante.nombre }}{% endblock %}
+
+{% block content %}
+<style>
+    .neo-table-container {
+        background: #f5f7fa;
+        border-radius: 20px;
+        padding: 2rem;
+    }
+    .neo-table thead {
+        background-color: #4a90e2;
+        color: white;
+        border-radius: 12px;
+    }
+    .neo-table tbody tr {
+        transition: background 0.2s ease;
+    }
+    .neo-btn {
+        border: none;
+        padding: 0.5rem 1rem;
+    }
+    .truncate {
+        max-width: 200px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+</style>
+
+<main class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="fw-bold text-dark">📜 Historial de {{ estudiante.nombre }}</h1>
+        <a href="{{ url_for('profesor.historial_sesiones') }}" class="neo-btn">
+            &larr; Volver
+        </a>
+    </div>
+
+    {% if historial %}
+    <div class="neo-table-container">
+        <div class="table-responsive">
+            <table class="table neo-table">
+                <thead>
+                    <tr>
+                        <th>Acción</th>
+                        <th>Fecha</th>
+                        <th>Hora</th>
+                        <th>IP</th>
+                        <th>User Agent</th>
+                        <th>Duración</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for evento in historial %}
+                    <tr>
+                        <td>{{ evento.accion | capitalize }}</td>
+                        <td>{{ evento.fecha }}</td>
+                        <td>{{ evento.hora }}</td>
+                        <td>{{ evento.detalles.ip if evento.detalles else '-' }}</td>
+                        <td class="truncate" title="{{ evento.detalles.user_agent if evento.detalles else '-' }}">
+                            {{ evento.detalles.user_agent if evento.detalles else '-' }}
+                        </td>
+                        <td>{{ evento.duracion if evento.duracion else '-' }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-info mt-4">
+        No hay sesiones registradas para este estudiante.
+    </div>
+    {% endif %}
+</main>
+{% endblock %}

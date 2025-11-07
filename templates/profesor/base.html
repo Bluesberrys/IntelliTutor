@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Historial de Sesiones</h2>
+
+{% if historial %}
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Acción</th>
+      <th>Fecha</th>
+      <th>Hora</th>
+      <th>IP</th>
+      <th>User Agent</th>
+      <th>Duración</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for sesion in historial %}
+    <tr>
+      <td>{{ sesion.accion }}</td>
+      <td>{{ sesion.fecha }}</td>
+      <td>{{ sesion.hora }}</td>
+      <td>{{ sesion.detalles.ip if sesion.detalles and 'ip' in sesion.detalles else 'N/A' }}</td>
+      <td>{{ sesion.detalles.user_agent if sesion.detalles and 'user_agent' in sesion.detalles else 'N/A' }}</td>
+      <td>{{ sesion.duracion if 'duracion' in sesion else 'N/A' }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>No hay registros de sesiones.</p>
+{% endif %}
+
+<a href="{{ url_for('profesor.enviar_reporte') }}" class="btn btn-secondary">Volver</a>
+{% endblock %}

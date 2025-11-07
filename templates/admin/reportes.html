@@ -1,0 +1,465 @@
+{% extends 'layout.html' %}
+
+{% block title %}Reportes Avanzados - IntelliTutor UNAM{% endblock %}
+
+{% block extra_css %}
+<style>
+    .reportes-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .reportes-header h1 {
+        font-size: 2.5rem;
+        color: var(--text-color);
+        margin-bottom: 1rem;
+        font-weight: 700;
+    }
+    
+    .reportes-header p {
+        color: var(--gray-600);
+        max-width: 700px;
+        margin: 0 auto;
+        font-size: 1.1rem;
+        line-height: 1.6;
+    }
+    
+    .reportes-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-top: 2rem;
+    }
+    
+    .reporte-card {
+        background-color: var(--card-bg);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+    
+    .reporte-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .reporte-header {
+        background-color: var(--accent-primary);
+        color: white;
+        padding: 1.5rem;
+        position: relative;
+    }
+    
+    .reporte-header h2 {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+    }
+    
+    .reporte-header p {
+        font-size: 0.9rem;
+        opacity: 0.9;
+    }
+    
+    .reporte-body {
+        padding: 1.5rem;
+    }
+    
+    .reporte-footer {
+        padding: 1rem 1.5rem;
+        border-top: 1px solid var(--gray-200);
+        display: flex;
+        justify-content: flex-end;
+    }
+    
+    .btn-generar {
+        background-color: var(--accent-primary);
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .btn-generar:hover {
+        background-color: var(--accent-primary-d1);
+        transform: translateY(-3px);
+    }
+    
+    .stats-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .stat-card {
+        background-color: var(--card-bg);
+        border-radius: 12px;
+        padding: 1.5rem;
+        text-align: center;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .stat-icon {
+        font-size: 2.5rem;
+        color: var(--accent-primary);
+        margin-bottom: 1rem;
+    }
+    
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-color);
+        margin-bottom: 0.5rem;
+    }
+    
+    .stat-label {
+        font-size: 1rem;
+        color: var(--gray-600);
+    }
+    
+    .chart-container {
+        background-color: var(--card-bg);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .chart-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+    
+    .chart-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--text-color);
+    }
+    
+    .chart-body {
+        height: 300px;
+        position: relative;
+    }
+    
+    .actividades-container {
+        background-color: var(--card-bg);
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .actividades-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+    
+    .actividades-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--text-color);
+    }
+    
+    .actividad-item {
+        display: flex;
+        align-items: flex-start;
+        padding: 1rem 0;
+        border-bottom: 1px solid var(--gray-200);
+    }
+    
+    .actividad-item:last-child {
+        border-bottom: none;
+    }
+    
+    .actividad-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: var(--accent-primary);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+        flex-shrink: 0;
+    }
+    
+    .actividad-content {
+        flex: 1;
+    }
+    
+    .actividad-title {
+        font-weight: 600;
+        color: var(--text-color);
+        margin-bottom: 0.25rem;
+    }
+    
+    .actividad-details {
+        color: var(--gray-600);
+        margin-bottom: 0.25rem;
+        font-size: 0.9rem;
+    }
+    
+    .actividad-time {
+        color: var(--gray-500);
+        font-size: 0.8rem;
+    }
+    
+    @media (max-width: 768px) {
+        .reportes-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .stats-container {
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<main>
+    <div class="reportes-header">
+        <h1 class="alt-font">Reportes Avanzados</h1>
+        <p>Visualiza y analiza datos importantes del sistema.</p>
+    </div>
+    
+    <div class="stats-container">
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-user-graduate"></i>
+            </div>
+            <div class="stat-value">{{ total_estudiantes }}</div>
+            <div class="stat-label">Estudiantes</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-chalkboard-teacher"></i>
+            </div>
+            <div class="stat-value">{{ total_profesores }}</div>
+            <div class="stat-label">Profesores</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-value">{{ total_grupos }}</div>
+            <div class="stat-label">Grupos</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-tasks"></i>
+            </div>
+            <div class="stat-value">{{ total_practicas }}</div>
+            <div class="stat-label">Prácticas</div>
+        </div>
+    </div>
+    
+    <div class="chart-container">
+        <div class="chart-header">
+            <h2 class="chart-title">Promedio por Materia</h2>
+        </div>
+        <div class="chart-body">
+            <canvas id="materiasChart"></canvas>
+        </div>
+    </div>
+    
+    <div class="chart-container">
+        <div class="chart-header">
+            <h2 class="chart-title">Estudiantes por Semestre</h2>
+        </div>
+        <div class="chart-body">
+            <canvas id="semestreChart"></canvas>
+        </div>
+    </div>
+    
+    <div class="actividades-container">
+        <div class="actividades-header">
+            <h2 class="actividades-title">Actividades Recientes</h2>
+        </div>
+        
+        {% if actividades_recientes %}
+            {% for actividad in actividades_recientes %}
+            <div class="actividad-item">
+                <div class="actividad-icon">
+                    <i class="fas fa-history"></i>
+                </div>
+                <div class="actividad-content">
+                    <div class="actividad-title">{{ actividad.descripcion }}</div>
+                    {% if actividad.usuario_nombre %}
+                    <div class="actividad-details">Por: {{ actividad.usuario_nombre }}</div>
+                    {% endif %}
+                    <div class="actividad-time">{{ actividad.fecha.strftime('%Y-%m-%d %H:%M:%S') }}</div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="actividad-item">
+                <div class="actividad-icon">
+                    <i class="fas fa-info-circle"></i>
+                </div>
+                <div class="actividad-content">
+                    <div class="actividad-title">No hay actividades recientes</div>
+                    <div class="actividad-details">Las actividades recientes aparecerán aquí</div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    
+    <div class="chart-container">
+        <div class="chart-header">
+            <h2 class="chart-title">Enviar Reporte de Calificaciones por Correo</h2>
+        </div>
+        <form method="POST" style="display: flex; flex-direction: column; gap: 1rem;">
+            <label for="grupo_id"><strong>Grupo:</strong></label>
+            <select name="grupo_id" required class="form-control">
+                <option value="" disabled selected>Selecciona un grupo</option>
+                {% for grupo in grupos %}
+                    <option value="{{ grupo.id }}">{{ grupo.nombre }} - {{ grupo.materia_nombre }}</option>
+                {% endfor %}
+            </select>
+    
+            <label for="correo_destino"><strong>Correo destino:</strong></label>
+            <input type="email" name="correo_destino" class="form-control" placeholder="correo@dominio.com" required>
+    
+            <button type="submit" class="btn-generar">
+                <i class="fas fa-paper-plane"></i> Enviar Reporte
+            </button>
+        </form>
+    </div>
+    
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Datos para el gráfico de materias
+        const materiasData = {
+            labels: [
+                {% for materia in promedios_materias %}
+                    "{{ materia.nombre }}",
+                {% endfor %}
+            ],
+            datasets: [{
+                label: 'Promedio',
+                data: [
+                    {% for materia in promedios_materias %}
+                        {{ materia.promedio }},
+                    {% endfor %}
+                ],
+                backgroundColor: 'rgba(0, 61, 121, 0.7)',
+                borderColor: 'rgba(0, 61, 121, 1)',
+                borderWidth: 1
+            }]
+        };
+        
+        // Configuración del gráfico de materias
+        const materiasConfig = {
+            type: 'bar',
+            data: materiasData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 10
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `Promedio: ${context.raw.toFixed(2)}`;
+                            }
+                        }
+                    }
+                }
+            }
+        };
+        
+        // Crear gráfico de materias
+        const materiasChart = new Chart(
+            document.getElementById('materiasChart'),
+            materiasConfig
+        );
+        
+        // Datos para el gráfico de semestres
+        const semestreData = {
+            labels: [
+                {% for semestre in estudiantes_por_semestre %}
+                    "{{ semestre.nombre }}",
+                {% endfor %}
+            ],
+            datasets: [{
+                label: 'Estudiantes',
+                data: [
+                    {% for semestre in estudiantes_por_semestre %}
+                        {{ semestre.total }},
+                    {% endfor %}
+                ],
+                backgroundColor: 'rgba(210, 157, 0, 0.7)',
+                borderColor: 'rgba(210, 157, 0, 1)',
+                borderWidth: 1
+            }]
+        };
+        
+        // Configuración del gráfico de semestres
+        const semestreConfig = {
+            type: 'bar',
+            data: semestreData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `Estudiantes: ${context.raw}`;
+                            }
+                        }
+                    }
+                }
+            }
+        };
+        
+        // Crear gráfico de semestres
+        const semestreChart = new Chart(
+            document.getElementById('semestreChart'),
+            semestreConfig
+        );
+    });
+</script>
+{% endblock %}
