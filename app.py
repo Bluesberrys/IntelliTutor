@@ -16,15 +16,15 @@ import re
 import admin_creator
 import mysql.connector
 import random
-from routes.code_editor import code_editor_bp
 # Importar el blueprint de configuración
+from routes.code_editor import code_editor_bp
 from routes.configuracion import config_bp, aplicar_configuracion, guardar_configuracion, obtener_configuracion, crear_configuracion_por_defecto, cargar_configuracion, obtener_configuracion_predeterminada
 from routes.admin import admin_bp
 from routes.profesor import profesor_bp
 from routes.api import api_bp
 from routes.actividades import actividades_bp
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
-from routes.juegos_educativos import juegos_bp
+# from routes.juegos_educativos import juegos_bp
 
 # Inicialización de la aplicación
 port = 5000
@@ -40,7 +40,7 @@ app.register_blueprint(admin_bp)
 app.register_blueprint(profesor_bp)
 app.register_blueprint(api_bp)
 app.register_blueprint(actividades_bp)
-app.register_blueprint(juegos_bp)
+# app.register_blueprint(juegos_bp)
 
 # Aplicar configuraciones globalmente
 aplicar_configuracion(app)
